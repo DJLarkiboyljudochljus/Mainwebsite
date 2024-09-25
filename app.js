@@ -1,123 +1,53 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo')
-const bodyParser = require('body-parser');
-const fs = require('fs')
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+const User = require('./models/user');
 const authRoutes = require('./routes/auth');
-const session = require('express-session')
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-
 const app = express();
 
-// Body parser middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost/djlarkiboy', {
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
+mongoose.connect('mongodb://localhost:27017/djlarkiboy', {
+   useNewUrlParser: true,
+   useUnifiedTopology: true
 })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.log(err));
+  .then(() => console.log('Connected to MongoDB')) 
+  .catch(err => {
+    console.error('Error connecting to MongoDB:', err.message)
+    res.render
+  });
 
-// Serve static files from 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Use auth routes
-app.use(authRoutes);
-
-// Route for home page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/html/home.html'));
-});
-
-// Route for about page
-app.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/html/about.html'));
-});
-
-// Route for contact page
-app.get('/contact', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/html/contact.html'));
-});
-
-// Route for equipment page
-app.get('/equipment', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/html/eqipment.html'));
-});
-
-app.get('/faq', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/html/faq.html'));
-});
-
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/html/account/login.html'));
-});
-
-app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/html/account/register.html'));
-});
-
-app.get('/admin/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/html/admin/dashboard.html'));
-});
-
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'publc/html/account/logedin/dashboard.html'));
-});
-
-// Express session
+// Middleware
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 app.use(session({
-  secret: 'yourSecret',
-  resave: false,
-  saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: 'mongodb://localhost/djlarkiboy' })
+   secret: 'secret-key',
+   resave: false,
+   saveUninitialized: false
 }));
 
-// Passport middleware
-require('./config/passport')(passport);
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Body parser
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Routes for auth and product management
-const productRoutes = require('./routes/products');
+// Routes
 app.use('/auth', authRoutes);
-app.use('/products', productRoutes);
 
-app.use(express.json());
-
-// Load products
-const getProducts = () => JSON.parse(fs.readFileSync('products.json'));
-
-// Fetch all products
-app.get('/products', (req, res) => {
-  res.json(products);
+// Homepage
+app.get('/', (req, res) => {
+   res.render('index', { user: req.session.user });
 });
 
-// Add a new product
-app.post('/products', (req, res) => {
-  const newProduct = { id: Date.now(), ...req.body };
-  products.push(newProduct);
-  fs.writeFileSync('products.json', JSON.stringify(products, null, 2));
-  res.json(newProduct);
+app.get('/equipment', (req, res) => {
+  res.render('equipment', { user: req.session.user });
 });
 
-// Delete a product
-app.delete('/products/:id', (req, res) => {
-  let products = getProducts();
-  products = products.filter(p => p.id != req.params.id);
-  fs.writeFileSync('products.json', JSON.stringify(products, null, 2));
-  res.json({ message: 'Product deleted' });
+app.get('/about', (req, res) => {
+  res.render('about', { user: req.session.user });
 });
 
-// Start the server
+app.get('/account', (req, res) => {
+  res.render('account/account', { user: req.session.user });
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
-    console.log(`App running on http://localhost:${PORT}`);
+   console.log(`Server running on http://localhost:${PORT}`);
 });
