@@ -1,21 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const mongoURI = 'mongodb+srv://Grizak:<Mammaebast11%21%3F>@djlarkiboyljudochljus.9ezbm.mongodb.net/?retryWrites=true&w=majority&appName=DJLarkiboyLjudOchLjus'
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const User = require('./models/user');
 const authRoutes = require('./routes/auth');
 const app = express();
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/djlarkiboy', {
-   useNewUrlParser: true,
-   useUnifiedTopology: true
-})
+mongoose.connect(mongoURI)
   .then(() => console.log('Connected to MongoDB')) 
   .catch(err => {
-    console.error('Error connecting to MongoDB:', err.message)
-    res.render
+    console.error('Error connecting to MongoDB:', err.message);
+    // Optionally shut down the server if you can't connect to the database
+    process.exit(1); // Exit the app if MongoDB can't connect
   });
+
 
 // Middleware
 app.set('view engine', 'ejs');
@@ -46,6 +45,10 @@ app.get('/about', (req, res) => {
 app.get('/account', (req, res) => {
   res.render('account/account', { user: req.session.user });
 });
+
+app.get('/error', (req, res) => {
+  res.render('error')
+})
 
 const PORT = 3001;
 app.listen(PORT, () => {

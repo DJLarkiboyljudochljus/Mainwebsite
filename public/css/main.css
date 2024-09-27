@@ -79,30 +79,25 @@ footer {
   margin: 1rem;
 }
 
-.footer-about p, 
-.footer-contact p {
+.footer-about p, .footer-contact p {
   font-size: 0.9rem;
 }
 
-.footer-links ul, 
-.footer-socials ul {
+.footer-links ul, .footer-socials ul {
   list-style: none;
   padding: 0;
 }
 
-.footer-links li, 
-.footer-socials li {
+.footer-links li, .footer-socials li {
   margin-bottom: 0.5rem;
 }
 
-.footer-links a, 
-.footer-socials a {
+.footer-links a, .footer-socials a {
   color: #fff;
   text-decoration: none;
 }
 
-.footer-links a:hover, 
-.footer-socials a:hover {
+.footer-links a:hover, .footer-socials a:hover {
   text-decoration: underline;
 }
 
@@ -192,4 +187,10 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+.lrh1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
