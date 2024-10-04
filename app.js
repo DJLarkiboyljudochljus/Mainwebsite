@@ -1,3 +1,5 @@
+// app.js
+
 const express = require('express');
 const path = require('path');
 require('dotenv').config();
@@ -7,6 +9,22 @@ const Contact = require('./models/Contact');
 const { title } = require('process');
 
 const app = express();
+
+const session = require('express-session');
+
+// Set up session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET, // Use a strong secret
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set secure: true in production
+}));
+
+// Middleware to check if user is authenticated
+app.use((req, res, next) => {
+  res.locals.user = req.session.userId ? req.session.userId : null; // Assuming user ID is stored in the session
+  next();
+});
 
 // Set EJS as templating engine
 app.set('view engine', 'ejs');
@@ -51,6 +69,14 @@ app.get('/services', (req, res) => {
   res.render('services', { title: 'Services' })
 })
 
+app.get('/auth/register', (req,res) => {
+  res.render('register', { title: 'Register' });
+});
+
+app.get('/auth/login', (req,res) => {
+  res.render('login', { title: 'Login' })
+})
+
 // Middleware to parse incoming form data
 app.use(express.urlencoded({ extended: true }));
 
@@ -66,6 +92,32 @@ app.post('/contact', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Something went wrong.');
+  }
+});
+
+app.post('/register', async (req, res) => {
+  const { username, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = new User({ username, email, password: hashedPassword });
+
+  try {
+    await user.save();
+    res.status(201).send('User registered successfully');
+  } catch (error) {
+    res.status(400).send('Error registering user: ' + error.message);
+  }
+});
+
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+
+  if (user && await bcrypt.compare(password, user.password)) {
+    req.session.userId = user._id; // Save user ID in session
+    res.send('Login successful');
+  } else {
+    res.status(400).send('Invalid credentials');
   }
 });
 
