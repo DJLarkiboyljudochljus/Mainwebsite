@@ -1,123 +1,129 @@
+// app.js
+
 const express = require('express');
 const path = require('path');
-const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo')
-const bodyParser = require('body-parser');
-const fs = require('fs')
-const authRoutes = require('./routes/auth');
-const session = require('express-session')
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+require('dotenv').config();
+const expressLayouts = require('express-ejs-layouts');
+const mongoose = require('mongoose')
+const Contact = require('./models/Contact');
+const { title } = require('process');
 
 const app = express();
 
-// Body parser middleware
-app.use(bodyParser.urlencoded({ extended: false }));
+const session = require('express-session');
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost/djlarkiboy', {
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-})
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.log(err));
-
-// Serve static files from 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Use auth routes
-app.use(authRoutes);
-
-// Route for home page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/html/home.html'));
-});
-
-// Route for about page
-app.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/html/about.html'));
-});
-
-// Route for contact page
-app.get('/contact', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/html/contact.html'));
-});
-
-// Route for equipment page
-app.get('/equipment', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/html/eqipment.html'));
-});
-
-app.get('/faq', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/html/faq.html'));
-});
-
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/html/account/login.html'));
-});
-
-app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/html/account/register.html'));
-});
-
-app.get('/admin/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/html/admin/dashboard.html'));
-});
-
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'publc/html/account/logedin/dashboard.html'));
-});
-
-// Express session
+// Set up session middleware
 app.use(session({
-  secret: 'yourSecret',
+  secret: process.env.SESSION_SECRET, // Use a strong secret
   resave: false,
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: 'mongodb://localhost/djlarkiboy' })
+  cookie: { secure: false } // Set secure: true in production
 }));
 
-// Passport middleware
-require('./config/passport')(passport);
-app.use(passport.initialize());
-app.use(passport.session());
+// Middleware to check if user is authenticated
+app.use((req, res, next) => {
+  res.locals.user = req.session.userId ? req.session.userId : null; // Assuming user ID is stored in the session
+  next();
+});
 
-// Body parser
+// Set EJS as templating engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(expressLayouts);
+app.set('layout', 'layout'); // Default layout file: views/layout.ejs
+
+// Middleware to serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+mongoose
+  .connect(process.env.MONGOURI)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error(err))
+
+// Define routes here (we'll add them in the next step)
+
+// Home Route
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Home' });
+});
+
+// About Route
+app.get('/about', (req, res) => {
+  res.render('about', { title: 'About Us' });
+});
+
+// Contact Route
+app.get('/contact', (req, res) => {
+  res.render('contact', { title: 'Contact Us' });
+});
+
+app.get('/thanks', (req, res) => {
+  res.render('thanks', { title: 'Thank You' });
+});
+
+app.get('/equipment', (req, res) => {
+  res.render('equipment', { title: 'Equipment' });
+});
+
+app.get('/services', (req, res) => {
+  res.render('services', { title: 'Services' })
+})
+
+app.get('/auth/register', (req,res) => {
+  res.render('register', { title: 'Register' });
+});
+
+app.get('/auth/login', (req,res) => {
+  const error = req.query.error || null;
+  res.render('login', { title: 'Login', error })
+})
+
+// Middleware to parse incoming form data
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
-// Routes for auth and product management
-const productRoutes = require('./routes/products');
-app.use('/auth', authRoutes);
-app.use('/products', productRoutes);
+// Contact Form Submission Route
+app.post('/contact', async (req, res) => {
+  const { name, email, message } = req.body;
 
-app.use(express.json());
+  const newContact = new Contact({ name, email, message });
 
-// Load products
-const getProducts = () => JSON.parse(fs.readFileSync('products.json'));
-
-// Fetch all products
-app.get('/products', (req, res) => {
-  res.json(products);
+  try {
+    await newContact.save();
+    res.redirect('/thanks')
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Something went wrong.');
+  }
 });
 
-// Add a new product
-app.post('/products', (req, res) => {
-  const newProduct = { id: Date.now(), ...req.body };
-  products.push(newProduct);
-  fs.writeFileSync('products.json', JSON.stringify(products, null, 2));
-  res.json(newProduct);
+app.post('/register', async (req, res) => {
+  const { username, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = new User({ username, email, password: hashedPassword });
+
+  try {
+    await user.save();
+    res.render('success', { message: "Registration successful", target: "/auth/login" });
+  } catch (error) {
+    res.render('error', { error: "Error registering user: " + error.message, target: "/auth/register", title: "Error" });
+  }
 });
 
-// Delete a product
-app.delete('/products/:id', (req, res) => {
-  let products = getProducts();
-  products = products.filter(p => p.id != req.params.id);
-  fs.writeFileSync('products.json', JSON.stringify(products, null, 2));
-  res.json({ message: 'Product deleted' });
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+
+  if (user && await bcrypt.compare(password, user.password)) {
+    req.session.userId = user._id; // Save user ID in session
+    res.render('success', { message: "Login successful", target: "/" });
+  } else {
+    res.render('error', { error: "Invalid credentials", target: "/auth/login", title: "Error" });
+  }
 });
 
 // Start the server
-const PORT = 3001;
+const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`App running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
