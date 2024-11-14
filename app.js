@@ -74,7 +74,8 @@ app.get('/auth/register', (req,res) => {
 });
 
 app.get('/auth/login', (req,res) => {
-  res.render('login', { title: 'Login' })
+  const error = req.query.error || null;
+  res.render('login', { title: 'Login', error })
 })
 
 // Middleware to parse incoming form data
@@ -103,9 +104,9 @@ app.post('/register', async (req, res) => {
 
   try {
     await user.save();
-    res.status(201).send('User registered successfully');
+    res.render('success', { message: "Registration successful", target: "/auth/login" });
   } catch (error) {
-    res.status(400).send('Error registering user: ' + error.message);
+    res.render('error', { error: "Error registering user: " + error.message, target: "/auth/register", title: "Error" });
   }
 });
 
@@ -115,9 +116,9 @@ app.post('/login', async (req, res) => {
 
   if (user && await bcrypt.compare(password, user.password)) {
     req.session.userId = user._id; // Save user ID in session
-    res.send('Login successful');
+    res.render('success', { message: "Login successful", target: "/" });
   } else {
-    res.status(400).send('Invalid credentials');
+    res.render('error', { error: "Invalid credentials", target: "/auth/login", title: "Error" });
   }
 });
 
