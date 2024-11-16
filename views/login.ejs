@@ -2,10 +2,10 @@
 <% if (error) { %>
   <p style="color: red;"><%= error %></p> <!-- Display error message -->
 <% } %>
-<form action="/login" method="POST">
+<form action="/api/auth/login" method="POST">
   <div>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
   </div>
   <div>
     <label for="password">Password:</label>

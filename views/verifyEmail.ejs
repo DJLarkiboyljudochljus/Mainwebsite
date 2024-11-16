@@ -1,0 +1,19 @@
+<h3>We have sent an email to <strong id="email"><%= email %></strong></h3>
+
+<script defer>
+  const email = document.getElementById('email').textContent;
+
+  function checkVerification() {
+    fetch(`/checkverification?email=${encodeURIComponent(email)}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.isVerified) {
+          window.location.href = '/auth/login';
+        } else {
+          setTimeout(checkVerification, 5000);
+        }
+      })
+      .catch(error => console.error('Error checking verification:', error));
+    };
+  checkVerification();
+</script>

@@ -22,6 +22,14 @@ header {
 /* Logo Styles */
 .logo {
   height: 60px;
+  float: left;
+  margin-right: 20px;
+}
+
+/* header title style to be next to logo */
+header a h2 {
+  display: flex;
+  float: right;
 }
 
 /* Navigation Styles */

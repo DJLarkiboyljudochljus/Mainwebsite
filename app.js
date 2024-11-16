@@ -1,30 +1,14 @@
-// app.js
-
 const express = require('express');
 const path = require('path');
 require('dotenv').config();
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose')
 const Contact = require('./models/Contact');
-const { title } = require('process');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const User = require('./models/user');
 
 const app = express();
-
-const session = require('express-session');
-
-// Set up session middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET, // Use a strong secret
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Set secure: true in production
-}));
-
-// Middleware to check if user is authenticated
-app.use((req, res, next) => {
-  res.locals.user = req.session.userId ? req.session.userId : null; // Assuming user ID is stored in the session
-  next();
-});
 
 // Set EJS as templating engine
 app.set('view engine', 'ejs');
@@ -35,8 +19,14 @@ app.set('layout', 'layout'); // Default layout file: views/layout.ejs
 // Middleware to serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Middleware to make user accessable in all routes
+app.use((req, res, next) => {
+  res.locals.user = user | null;
+  next();
+})
+
 mongoose
-  .connect(process.env.MONGOURI)
+  .connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err))
 
@@ -79,6 +69,7 @@ app.get('/auth/login', (req,res) => {
 })
 
 // Middleware to parse incoming form data
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Contact Form Submission Route
@@ -90,37 +81,23 @@ app.post('/contact', async (req, res) => {
   try {
     await newContact.save();
     res.redirect('/thanks')
+
+    transporter.sendMail({
+      from: email,
+      to: process.env.EMAIL_USER,
+      subject: "Contact Email From Website for our buisness",
+      text: `${message}`,
+      html: `
+        <p>${message}</p>
+      `
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Something went wrong.');
   }
 });
 
-app.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = new User({ username, email, password: hashedPassword });
-
-  try {
-    await user.save();
-    res.render('success', { message: "Registration successful", target: "/auth/login" });
-  } catch (error) {
-    res.render('error', { error: "Error registering user: " + error.message, target: "/auth/register", title: "Error" });
-  }
-});
-
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
-
-  if (user && await bcrypt.compare(password, user.password)) {
-    req.session.userId = user._id; // Save user ID in session
-    res.render('success', { message: "Login successful", target: "/" });
-  } else {
-    res.render('error', { error: "Invalid credentials", target: "/auth/login", title: "Error" });
-  }
-});
+app.use('/api', require('./routes/api/api'));
 
 // Start the server
 const PORT = process.env.PORT

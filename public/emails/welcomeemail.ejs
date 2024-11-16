@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Welcome to DJ Larkiboy Ljud och Ljus</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #dddddd; margin-left: auto; margin-right: auto;">
+            <tr>
+                <td style="padding: 20px; text-align: center; background-color: #333333; color: #ffffff;">
+                    <h1>Welcome to DJ Larkiboy Ljud och Ljus 🎉</h1>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px;">
+                    <p>Hi <strong><%= user.name.first %> <%= user.name.last %></strong>!</p>
+                    <p>Thank you for signing up with <strong>DJ Larkiboy Ljud och Ljus</strong>! We’re thrilled to have you on board and excited to be part of making your event unforgettable. With our top-quality sound and lighting equipment, you’re in for an amazing experience.</p>
+                    <h2 style="color: #333333;">What to Expect from Us</h2>
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li><strong>Exceptional Sound and Lighting:</strong> From intimate gatherings to large events, we provide professional-grade equipment that sets the right atmosphere.</li>
+                        <li><strong>Tailored Solutions:</strong> Every event is unique! Whether it’s a party, wedding, or corporate event, we’ll help customize a setup to fit your vision and needs.</li>
+                        <li><strong>Support from Start to Finish:</strong> Our team is here to assist you with equipment recommendations, setup, and any questions you may have along the way.</li>
+                    </ul>
+                    <h2 style="color: #333333;">Get Started</h2>
+                    <p>Log in to your account to explore our equipment range, manage your bookings, and view any upcoming reservations.</p>
+                    <p style="text-align: center;">
+                        <a href="<%= loginURL %>" style="display: inline-block; padding: 10px 20px; color: #ffffff; background-color: #333333; text-decoration: none; border-radius: 5px;">Login Here</a>
+                    </p>
+                    <p>If you have any questions, don’t hesitate to reach out to us at <a href="mailto:<%= emailUser %>"><%= emailUser %></a> or give us a call at <a href="tel:<%= phone %>"><%= phone %></a>.</p>
+                    <p>Once again, welcome to the DJ Larkiboy family – we can’t wait to make your next event shine!</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px; text-align: center; background-color: #333333; color: #ffffff;">
+                    <p>&copy; 2024 DJ Larkiboy Ljud och Ljus. Licenced With MiT</p>
+                    <p><a href="${process.env.ROOT_URL}" style="color: #ffffff; text-decoration: none;">Visit Our Website</a></p>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
