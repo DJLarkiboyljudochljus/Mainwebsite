@@ -2,6 +2,7 @@ const express = require('express');
 const crypto = require('crypto');
 const User = require('../../models/User');
 const transporter = require('../../config/mailer');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -118,6 +119,42 @@ router.get('/verify/email', async (req, res) => {
   await user.save();
 
   res.status(200).json({ message: "Verified your account sucessfully" });
+});
+
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) return res.status(400).json({ message: "Invalid Email" });
+
+    const isMatch = user.comparePasswords(password);
+
+    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
+
+    if (!user.email.isVerified) {
+      return res.status(400).json({ message: "Please verify your email address before continuing." });
+    };
+
+    if (!user.phone.isVerified) {
+      return res.status(400).json({ message: "Please verify your phone number before continuing." });
+    };
+    
+    
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    req.cookies('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'Production',
+      maxage: 3600000,
+    });
+
+    res.status(200).json({ message: "Login successfull", token })
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An unexpected error occured during login" });
+  }
 });
 
 module.exports = router;
