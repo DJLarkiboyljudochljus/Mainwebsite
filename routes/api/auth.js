@@ -99,7 +99,7 @@ router.post('/register', async (req, res) => {
       `
     });
 
-    res.status(200).json({ message: "User registered successfully" });
+    res.redirect('/');
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error occured during registration" });
@@ -125,11 +125,11 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ 'email.email': email });
 
     if (!user) return res.status(400).json({ message: "Invalid Email" });
 
-    const isMatch = user.comparePasswords(password);
+    const isMatch = await user.comparePasswords(password);
 
     if (!isMatch) return res.status(400).json({ message: "Invalid password" });
 
@@ -144,17 +144,28 @@ router.post('/login', async (req, res) => {
     
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    req.cookies('token', token, {
+    res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'Production',
       maxage: 3600000,
     });
 
-    res.status(200).json({ message: "Login successfull", token })
+    res.redirect('/');
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "An unexpected error occured during login" });
   }
+});
+
+router.get('/logout', async (req, res) => {
+  try {
+    res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'strict' });
+
+    res.redirect('/');
+  } catch (err) {
+    console.error("Error logout", err);
+    res.status(500).json({ message: "Error with logout" });
+  };
 });
 
 module.exports = router;

@@ -47,9 +47,28 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: ["admin", "worker", "customer"],
+    enum: ["dev", "admin", "worker", "customer"],
     default: "customer",
   },
+  joinDate: {
+    type: Date,
+    default: new Date(),
+  },
+  tasks: [{
+    title: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    due: {
+      type: Date,
+      required: true,
+    }
+  }],
 });
 
 userSchema.pre('save', async function (next) {

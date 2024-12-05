@@ -21,6 +21,10 @@ const bookingSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
+  date: {
+    type: Date,
+    required: true
+  },
 });
 
 bookingSchema.pre('save', async function (next) {
