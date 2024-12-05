@@ -1,0 +1,14 @@
+<% if (user.role === 'dev') { %>
+  <h2 class="dev-dashboard-titles">Admin Dashboard</h2>
+  <%- include('dashboards/admin') %>
+  <h2 class="dev-dashboard-titles">Worker Dashboard</h2>
+  <%- include('dashboards/worker') %>
+  <h2 class="dev-dashboard-titles">Customer Dashboard</h2>
+  <%- include('dashboards/customer') %>
+<% } else if (user.role === 'admin') { %>
+  <%- include('dashboards/admin') %>
+<% } else if (user.role === 'worker') { %>
+  <%- include('dashboards/worker') %>
+<% } else if (user.role === 'customer') { %>
+  <%- include('dashboards/customer') %>
+<% } %>
