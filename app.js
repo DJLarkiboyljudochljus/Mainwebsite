@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 const Booking = require('./models/Booking');
 const Equipment = require('./models/Equipment');
-const today = Date();
+const today = new Date();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -80,7 +80,7 @@ app.get('/', (req, res) => {
   res.render('index', { title: "Home" });
 });
 
-app.get('/dashboard', async (req, res) => {
+app.get('/dashboard', auth.auth('admin', 'worker', 'user'), async (req, res) => {
   const users = await User.find({});
   const equipments = await Equipment.find({});
 
@@ -90,13 +90,23 @@ app.get('/dashboard', async (req, res) => {
     totalEquipment += equipment.inInventory;
   });
 
+  let totaltasks = 0;
+
+  req.user.tasks.forEach((task) => {
+    totaltasks++;
+  });
+
   const bookings = await Booking.find({ date: { $gt: today } }).populate('User').populate('Equipment');
-  res.render('dashboard', { req, res, title: "Dashboard", users, equipment: totalEquipment, bookings });
+
+  const upcommingtasks = req.user.tasks.filter(task => new Date(task.due) > today)
+
+  res.render('dashboard', { req, res, title: "Dashboard", users, totalEquipment, bookings, totaltasks, upcommingtasks });
 });
 
 // Routes import
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
+app.use('/admin', require('./routes/admin'))
 
 // Wildcard route
 app.all('*', (req, res) => {

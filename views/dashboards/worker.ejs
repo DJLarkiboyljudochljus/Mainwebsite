@@ -1,51 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Worker Dashboard</title>
-  <link rel="stylesheet" href="/css/worker-dashboard.css"> <!-- Link to your CSS file -->
-</head>
-<body>
-  <div class="dashboard-container">
-    <aside class="sidebar">
-      <h2>Worker Panel</h2>
-      <nav class="sidebar-nav">
-        <ul>
-          <li><a href="/worker/tasks">Tasks</a></li>
-          <li><a href="/worker/schedule">Schedule</a></li>
-        </ul>
-      </nav>
-    </aside>
-    <main class="main-content">
-      <h1>Welcome to Your Dashboard</h1>
-      <section class="task-summary">
-        <div class="task-box">
-          <h2>Pending Tasks</h2>
-          <p><%= user.tasks.length %></p>
-        </div>
-        <div class="task-box">
-          <h2>Completed Tasks</h2>
-          <p><%= user.tasks.status[true].lenght %></p>
-        </div>
-        <div class="task-box">
-          <h2>Upcoming Tasks</h2>
-          <p>5</p>
-        </div>
-      </section>
-      <section class="recent-tasks">
-        <h2>Recent Tasks</h2>
-        <ul>
-          <% if (user.tasks > 0) { %>
-            <% user.tasks.forEach((task) => { %>
-              <li><%= task.title %> - <%= task.status %> - Due: <%= task.due %></li>
-            <% }) %>
-          <% } else { %>
-            <li>You have no tasks</li>
-          <% } %>
-        </ul>
-      </section>
-    </main>
-  </div>
-</body>
-</html>
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <h2>Worker Panel</h2>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="/worker/tasks">Tasks</a></li>
+        <li><a href="/worker/schedule">Schedule</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <h1>Welcome to Your Dashboard</h1>
+    <section class="task-summary">
+      <div class="task-box">
+        <h2>Pending Tasks</h2>
+        <p><%= user.tasks.length %></p>
+      </div>
+      <div class="task-box">
+        <h2>Completed Tasks</h2>
+        <p><%= totaltasks %></p>
+      </div>
+      <div class="task-box">
+        <h2>Upcoming Tasks</h2>
+        <p><%= upcommingtasks.length %></p>
+      </div>
+    </section>
+    <section class="recent-tasks">
+      <h2>Recent Tasks</h2>
+      <ul>
+        <% if (user.tasks > 0) { %>
+          <% user.tasks.forEach((task) => { %>
+            <li><%= task.title %> - <%= task.status %> - Due: <%= task.due %></li>
+          <% }) %>
+        <% } else { %>
+          <li>You have no tasks</li>
+        <% } %>
+      </ul>
+    </section>
+  </main>
+</div>

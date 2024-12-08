@@ -1,0 +1,28 @@
+<div class="equipment-page">
+  <h2>All Equipment</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Equipment Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% equipment.forEach(item => { %>
+        <tr>
+          <td><%= item.name %></td>
+          <td><%= item.type %></td>
+          <td><%= item.description %></td>
+          <td>
+            <a href="/admin/equipment/edit/<%= item._id %>">Edit</a> |
+            <a href="/api/equipment/delete/<%= item._id %>">Delete</a>
+          </td>
+        </tr>
+      <% }); %>
+      <th><a href="/equipment/add">Add Equipment</a></th>
+    </tbody>
+  </table>
+</div>
