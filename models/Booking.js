@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const User = require('./User');
 
+const validateLocation = require('../utils/validateLocation');
+
 const itemSchema = new mongoose.Schema({
   quantity: {
     type: Number,
@@ -17,12 +19,16 @@ const bookingSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  workers: {
+  workers: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
-  },
+  }],
   date: {
     type: Date,
+    required: true
+  },
+  location: {
+    type: String,
     required: true
   },
 });
@@ -43,11 +49,22 @@ bookingSchema.pre('save', async function (next) {
       const worker = await User.findById(this.workers);
       if (!worker) {
         throw new Error("Worker not found");
-      }
+      };
       if (!worker.role !== "worker") {
         throw new Error('Worker must have role "worker"');
-      }
-    }
+      };
+    };
+
+    // Ensure location is a non-empty string
+    if (typeof this.location !== 'string' || this.location.trim() === '') {
+      throw new Error("Location must be a non-empty string");
+    };
+
+    // Validate location using the Mapbox API
+    const isValidLocation = await validateLocation(this.location);
+    if (!isValidLocation) {
+      throw new Error("Invalid location");
+    };
 
     next();
   } catch (err) {

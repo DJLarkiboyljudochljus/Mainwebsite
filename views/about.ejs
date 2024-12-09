@@ -1,0 +1,31 @@
+<div class="about-page">
+  <h2>About Us</h2>
+  
+  <div class="content-wrapper">
+    <h3>We provide top-of-the-line sound and light equipment</h3>
+
+    <img src="/img/about.png">
+  </div>
+
+  <h4>Our equipment</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Equipment Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Links</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% equipment.forEach(item => { %>
+        <tr>
+          <td><%= item.name %></td>
+          <td><%= item.type %></td>
+          <td><%= item.description %></td>
+          <td><a href="/equipment/<%= item._id %>">Item page</a></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

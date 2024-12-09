@@ -1,33 +1,33 @@
 <header>
-  <div class="header-container">
-    <a href="/" class="logo-container">
-      <img src="/img/logo.png" alt="DJ Larkiboy Ljud och Ljus Logo" class="logo" width="60px">
-      <h1 class="site-title"><%= title %> - Dj Larkiboy Ljud och Ljus</h1>
-    </a>
-    <nav class="main-navigation">
-      <ul class="nav-bar">
-        <li class="nav-item"><a href="/about">About Us</a></li>
-        <li class="nav-item"><a href="/contact">Contact</a></li>
-        <% if (user) { %>
-          <li class="nav-item user-welcome">
-            Welcome, <strong><%= user.name %></strong>
-          </li>
-          <% if (user.role === 'dev') { %>
-            <li class="nav-item"><a href="/dashboard">Dashboard</a></li>
-          <% } else if (user.role === 'admin') { %>
-            <li class="nav-item"><a href="/dashboard">Dashboard</a></li>
-          <% } else if (user.role === 'worker') { %>
-            <li class="nav-item"><a href="/dashboard">Dashboard</a></li>
-          <% } else if (user.role === 'customer') { %>
-            <li class="nav-item"><a href="/dashboard">Dashboard</a></li>
-          <% } %> 
-          <li class="nav-item"><a href="/user/profile">Profile</a></li>
-          <li class="nav-item"><a href="/api/auth/logout">Logout</a></li>
-        <% } else { %>
-          <li class="nav-item"><a href="/auth/login">Login</a></li>
-          <li class="nav-item"><a href="/auth/register">Register</a></li>
-        <% } %>
-      </ul>
-    </nav>
-  </div>
+	<div class="header-container">
+		<a href="/" class="logo-container">
+			<img
+				src="/img/logo.png"
+				alt="DJ Larkiboy Ljud och Ljus Logo"
+				class="logo"
+				width="60px"
+			/>
+			<h1 class="site-title"><%= title %> - Dj Larkiboy Ljud och Ljus</h1>
+		</a>
+		<nav class="main-navigation">
+			<ul class="nav-bar">
+				<li class="nav-item"><a href="/about">About Us</a></li>
+				<li class="nav-item"><a href="/contact">Contact</a></li>
+				<% if (user) { %>
+				<li class="nav-item user-welcome">
+					Welcome, <strong><%= user.name %></strong>
+				</li>
+				<li>
+					<img src="<%= user.image %>" alt="user image" class="user-image" />
+				</li>
+				<li class="nav-item"><a href="/dashboard">Dashboard</a></li>
+				<li class="nav-item"><a href="/user/profile">Profile</a></li>
+				<li class="nav-item"><a href="/api/auth/logout">Logout</a></li>
+				<% } else { %>
+				<li class="nav-item"><a href="/auth/login">Login</a></li>
+				<li class="nav-item"><a href="/auth/register">Register</a></li>
+				<% } %>
+			</ul>
+		</nav>
+	</div>
 </header>

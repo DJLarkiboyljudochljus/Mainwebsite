@@ -69,8 +69,13 @@ const userSchema = new mongoose.Schema({
       required: true,
     }
   }],
+  image: {
+    type: String,
+    default: "/img/default_user.png",
+  },
 });
 
+// Hash the password before saving it to the database.
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);
@@ -78,6 +83,7 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+// Method to compare a candidate password with the stored password.
 userSchema.methods.comparePasswords = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };

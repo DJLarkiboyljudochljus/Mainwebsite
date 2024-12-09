@@ -1,0 +1,41 @@
+<div class="edit-user-page">
+	<h2>Edit Profile</h2>
+
+	<form
+		action="/api/users/edit/<%= user._id %>"
+		method="post"
+		enctype="multipart/form-data"
+	>
+		<div class="form-group">
+			<label for="name">Name:</label>
+			<input type="text" id="name" name="name" value="<%= user.name %>" />
+		</div>
+
+		<div class="form-group">
+			<label for="email">Email:</label>
+			<input
+				type="email"
+				id="email"
+				name="email"
+				value="<%= user.email.email %>"
+			/>
+		</div>
+
+		<div class="form-group">
+			<label for="phone">Phone Number:</label>
+			<input
+				type="tel"
+				id="phone"
+				name="phone"
+				value="<%= user.phone.phone %>"
+			/>
+		</div>
+
+		<div class="form-group">
+			<label for="image">Profile Image:</label>
+			<input type="file" id="image" name="image" accept="image/*" />
+		</div>
+
+		<button type="submit">Update Profile</button>
+	</form>
+</div>
