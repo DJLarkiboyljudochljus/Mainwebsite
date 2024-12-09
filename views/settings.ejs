@@ -1,0 +1,48 @@
+<div class="settings-container">
+  <h1>Admin Settings</h1>
+  <section class="settings-section">
+    <h2>General Settings</h2>
+    <form action="/api/admin/settings/general" method="POST">
+      <div class="form-group">
+        <label for="siteName">Site Name</label>
+        <input type="text" id="siteName" name="siteName" value="<%= settings.siteName %>">
+      </div>
+      <div class="form-group">
+        <label for="siteEmail">Site Email</label>
+        <input type="email" id="siteEmail" name="siteEmail" value="<%= settings.siteEmail %>">
+      </div>
+      <button type="submit" class="btn">Save Changes</button>
+    </form>
+  </section>
+
+  <section class="settings-section">
+    <h2>User Management</h2>
+    <a href="/admin/users" class="btn">Manage Users</a>
+  </section>
+
+  <section class="settings-section">
+    <h2>Security Settings</h2>
+    <form action="/api/admin/settings/security" method="POST">
+      <div class="form-group">
+        <label for="passwordPolicy">Password Policy</label>
+        <select id="passwordPolicy" name="passwordPolicy">
+          <option value="weak" <%= settings.passwordPolicy === 'weak' ? 'selected' : '' %>>Weak</option>
+          <option value="medium" <%= settings.passwordPolicy === 'medium' ? 'selected' : '' %>>Medium</option>
+          <option value="strong" <%= settings.passwordPolicy === 'strong' ? 'selected' : '' %>>Strong</option>
+        </select>
+      </div>
+      <button type="submit" class="btn">Save Changes</button>
+    </form>
+  </section>
+
+  <section class="settings-section">
+    <h2>Email Notifications</h2>
+    <form action="/api/admin/settings/notifications" method="POST">
+      <div class="form-group">
+        <label for="enableNotifications">Enable Notifications</label>
+        <input type="checkbox" id="enableNotifications" name="enableNotifications" <%= settings.enableNotifications ? 'checked' : '' %>>
+      </div>
+      <button type="submit" class="btn">Save Changes</button>
+    </form>
+  </section>
+</div>

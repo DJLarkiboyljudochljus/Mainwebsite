@@ -21,4 +21,8 @@ router.get('/equipment', auth.auth(["admin"]), async (req, res) => {
   res.render('equipment', { title: "Equipment", equipment });
 });
 
+router.get('/settings', auth.auth(["admin"]), (req, res) => {
+  res.render('settings', { title: "Settings" });
+});
+
 module.exports = router;

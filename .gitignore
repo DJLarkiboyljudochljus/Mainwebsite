@@ -131,3 +131,7 @@ dist
 
 # Generate secret
 generateSecret.js
+
+# Code editor directories
+.vscode
+.idea
