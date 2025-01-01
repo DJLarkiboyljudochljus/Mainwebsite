@@ -74,6 +74,12 @@ const userSchema = new mongoose.Schema({
 	image: {
 		type: String,
 	},
+  orders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+    },
+  ],
 });
 
 // Hash the password before saving it to the database.
@@ -82,6 +88,7 @@ userSchema.pre("save", async function (next) {
 		this.password = await bcrypt.hash(this.password, 10);
 	}
 	next();
+
 });
 
 // Method to compare a candidate password with the stored password.
