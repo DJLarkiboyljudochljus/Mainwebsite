@@ -4,14 +4,30 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 const auth = require("../../middleware/auth");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-// Multer configuration for file uploads
-const storage = multer.diskStorage({
-	destination: function (req, file, cb) {
-		cb(null, "public/img/uploads/uimg");
-	},
-	filename: function (req, file, cb) {
-		cb(null, Date.now() + "-" + file.originalname);
+// Configure Cloudinary
+cloudinary.config({
+	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY ? "Set" : "Not Set",
+	api_secret: process.env.CLOUDINARY_API_SECRET ? "Set" : "Not Set",
+});
+
+console.log(cloudinary.config(), "Cloudinary Config");
+
+console.log("Cloudinary Config", {
+	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY ? "Set" : "Not Set",
+	api_secret: process.env.CLOUDINARY_API_SECRET ? "Set" : "Not Set",
+});
+
+// Configure Multer to use Cloudinary
+const storage = new CloudinaryStorage({
+	cloudinary: cloudinary,
+	params: {
+		folder: "user_uploads",
+		allowed_formats: ["jpg", "png", "jpeg", "gif"],
 	},
 });
 
@@ -19,11 +35,15 @@ const upload = multer({ storage: storage });
 
 router.post(
 	"/edit/:id",
+	(req, res, next) => {
+		console.log("Route /api/users/edit/:id is being hit", req.body);
+		next();
+	},
 	auth.auth(["admin", "worker", "customer"]),
 	upload.single("image"),
 	async (req, res) => {
-		console.log("Request body: ", req.body);
-		console.log("Request file: ", req.file);
+		console.log("Request body: ", JSON.stringify(req.body, null, 2));
+		console.log("Request file: ", JSON.stringify(req.file, null, 2));
 
 		// Fetch the user by the provided ID
 		const user = await User.findById(req.params.id);
@@ -39,28 +59,30 @@ router.post(
 		user.phone.phone = req.body.phone || notUpdatedUser.phone.phone;
 
 		if (req.file) {
-			// If a new file is uploaded, update the image path
-			const oldImage = user.image;
-			user.image = "/img/uploads/uimg/" + req.file.filename;
+			const oldImage = notUpdatedUser.image;
 
-			// Delete the old image if it exists
+			user.image = req.file.path;
+
 			if (oldImage) {
-				const oldImagePath = path.join(__dirname, "../../public", oldImage);
-				fs.unlink(oldImagePath, (err) => {
-					if (err) console.error(`Error deleting old image: ${err}`);
-				});
+				const publicId = oldImage.split("/").pop().split(".")[0];
+
+				try {
+					await cloudinary.uploader.destroy(publicId);
+				} catch (err) {
+					console.error("Error deleting old image:", err);
+					res.status(500).json({ message: "Error deleting old image" });
+					return;
+				}
 			}
 		}
 
 		// Save the updated user
 		try {
 			await user.save();
-			res.status(200).redirect("/user/profile");
+			res.status(200).json({ message: "Successfully saved user", user });
 		} catch (error) {
 			console.error("Error saving user:", error);
-			res
-				.status(500)
-				.json({ message: "Error updating user", error: error.message });
+			res.status(500).json({ message: "Error updating user", error: error.message });
 		}
 	}
 );
