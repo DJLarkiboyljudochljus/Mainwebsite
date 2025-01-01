@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt')
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -54,30 +54,38 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
-  tasks: [{
-    title: {
-      type: String,
-      required: true,
+  tasks: [
+    {
+      title: {
+        type: String,
+        required: true,
+      },
+      status: {
+        type: Boolean,
+        default: false,
+        required: true,
+      },
+      due: {
+        type: Date,
+        required: true,
+      },
     },
-    status: {
-      type: Boolean,
-      default: false,
-      required: true,
-    },
-    due: {
-      type: Date,
-      required: true,
-    }
-  }],
+  ],
   image: {
     type: String,
     default: "/img/default_user.png",
   },
+  orders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+    },
+  ],
 });
 
 // Hash the password before saving it to the database.
-userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
   }
   next();
@@ -88,4 +96,4 @@ userSchema.methods.comparePasswords = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
