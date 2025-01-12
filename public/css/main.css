@@ -1,0 +1,50 @@
+/* General reset */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+header {
+  color: white;
+  background-color: black;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: row;
+  width: 100vw;
+}
+
+header .logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: row;
+  height: 60px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+header .logo-container img {
+  width: 50px;
+  margin-right: 7px;
+}
+
+header .logo-container:hover {
+  color: yellow;
+  text-decoration: underline;
+}
+
+header nav ul {
+  display: flex;
+  list-style-type: none;
+  right: 10px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  background-color: transparent;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  overflow: hidden;
+}

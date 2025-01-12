@@ -1,15 +1,6 @@
 <footer>
-  <div class="footer-container">
-    <div class="footer-links">
-      <ul class="footer-nav">
-        <li><a href="/about">About Us</a></li>
-        <li><a href="/contact">Contact</a></li>
-        <li><a href="/privacy-policy">Privacy Policy</a></li>
-        <li><a href="/terms-of-service">Terms of Service</a></li>
-      </ul>
-    </div>
-    <div class="footer-info">
-      <p>&copy; 2024 - <%= new Date().getFullYear() %> DJ Larkiboy Ljud och Ljus.</p>
-    </div>
-  </div>
+  <p>
+    &copy; <% if (new Date().getFullYear() === 2025) { %> 2025 <% } else { %>
+    2025 - <%= new Date().getFullYear() %><% } %>. DjLarkiboyLjudochLjus.
+  </p>
 </footer>
