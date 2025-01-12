@@ -73,15 +73,20 @@ app.use((req, res, next) => {
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => logger.info("Connected to MongoDB"))
-  .catch((err) => logger.error("Error connecting to MongoDB" + err));
+  .catch((err) => logger.error("Error connecting to MongoDB:  " + err));
 
 app.get("/", (req, res) => {
-  res.render("index", { title: "Home" });
+  const message = req.query.message
+    ? decodeURIComponent(req.query.message)
+    : null;
+  res.render("index", { title: "Home", message, type: req.query.type });
 });
+
+app.use("/", require(path.join(__dirname, "routes", "public.js")));
 
 app.use((req, res, next) => {
   if (!req.user) {
-    app.use("/", path.join(__dirname, "routes", "public.js"));
+    app.use("/", require(path.join(__dirname, "routes", "public.js")));
     return next();
   }
 
@@ -104,8 +109,12 @@ app.use((req, res, next) => {
 });
 
 // Error Handling
-app.all("*", (req, res) => {
-  res.render("404", { h: false, title: "404" });
+app.use((req, res) => {
+  logger.info(req);
+  res.status(404).render("404", {
+    h: false,
+    title: "404 Not Found",
+  });
 });
 
 app.use((err, req, res, next) => {

@@ -13,6 +13,10 @@ header {
   align-items: center;
   justify-content: row;
   width: 100vw;
+  position: fixed;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  top: 0;
 }
 
 header .logo-container {
@@ -23,6 +27,7 @@ header .logo-container {
   color: white;
   text-decoration: none;
   transition: background-color 0.3s ease;
+  width: 600px;
 }
 
 header .logo-container img {
@@ -35,16 +40,114 @@ header .logo-container:hover {
   text-decoration: underline;
 }
 
+header nav {
+  display: flex;
+  right: 10px;
+  width: calc(100% - 600px - 20px);
+  justify-content: flex-end;
+}
+
 header nav ul {
   display: flex;
   list-style-type: none;
-  right: 10px;
+  margin: 0;
+  padding: 0;
+  right: 0;
   color: white;
   text-decoration: none;
+  flex-direction: row;
+}
+
+header nav ul li {
+  margin-right: 10px;
+}
+
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+  background-color: green;
+  padding: 8px;
+  border-radius: 5px;
   transition: background-color 0.3s ease;
-  background-color: transparent;
-  position: relative;
-  z-index: 1;
-  cursor: pointer;
-  overflow: hidden;
+}
+
+header nav ul li a:hover {
+  background-color: red;
+  text-decoration: underline;
+}
+
+footer {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  width: 100vw;
+  position: fixed;
+  bottom: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.about-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 80px;
+}
+
+.h1-a {
+  text-align: center;
+}
+
+.p-a {
+  line-height: 1.6;
+}
+
+.alert.error {
+  background-color: #792027;
+  color: white;
+  padding: 15px;
+  margin: 10px auto;
+  max-width: 600px;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.alert.info {
+  background-color: #84dd32;
+  color: white;
+  padding: 15px;
+  margin: 10px auto;
+  max-width: 600px;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  text-align: center;
+}
+
+h1.home,
+h2.home {
+  text-align: center;
+}
+
+.btn {
+  display: inline-block;
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  margin-top: 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: darkgreen;
+}
+
+.container.home {
+  margin-top: 90px;
+  text-align: center;
 }
