@@ -8,4 +8,8 @@ router.get("/dj-sim", (req, res) => {
   res.render("dj-sim", { h: false, title: "Dj Simulator" });
 });
 
+router.get("/contact", (req, res) => {
+  res.render("contact", { title: "Contact Us" });
+});
+
 module.exports = router;

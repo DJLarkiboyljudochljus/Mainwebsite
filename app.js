@@ -5,12 +5,14 @@ const jwt = require("jsonwebtoken");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const crypto = require("crypto");
 
 require("dotenv").config();
 const app = express();
 const logger = require("./config/logger");
 const PORT = process.env.PORT || 3000;
 const secret = process.env.JWT_SECRET;
+const User = require(path.join(__dirname, "models", "User.js"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,6 +23,20 @@ app.set("layout", path.join(__dirname, "views", "layouts", "layout.ejs"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(helmet());
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+  logger.info(req.method, req.url);
+  next();
+});
+
+app.use((req, res, next) => {
+  res.locals.nonce = crypto.randomBytes(16).toString("base64");
+  res.setHeader(
+    "Content-Security-Policy",
+    `script-src 'self' 'nonce-${res.locals.nonce}'`
+  );
+  next();
+});
 
 app.use(async (req, res, next) => {
   try {
@@ -37,7 +53,7 @@ app.use(async (req, res, next) => {
     const decoded = jwt.verify(token, secret);
 
     // Fetch user from the database
-    const user = await User.findOne({ email: decoded.email });
+    const user = await User.findOne({ "email.address": decoded.email });
     if (!user) {
       req.user = null;
       res.locals.user = null;
@@ -70,16 +86,29 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  const message = req.query.message
+    ? decodeURIComponent(req.query.message)
+    : null;
+
+  res.locals.message = message;
+  res.locals.type = req.query.type || null;
+  res.locals.url = req.url;
+
+  next();
+});
+// Middleware for testing purposes
+app.use((req, res, next) => {
+  next();
+});
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => logger.info("Connected to MongoDB"))
   .catch((err) => logger.error("Error connecting to MongoDB:  " + err));
 
 app.get("/", (req, res) => {
-  const message = req.query.message
-    ? decodeURIComponent(req.query.message)
-    : null;
-  res.render("index", { title: "Home", message, type: req.query.type });
+  res.render("index", { title: "Home" });
 });
 
 app.use("/", require(path.join(__dirname, "routes", "public.js")));
@@ -110,7 +139,6 @@ app.use((req, res, next) => {
 
 // Error Handling
 app.use((req, res) => {
-  logger.info(req);
   res.status(404).render("404", {
     h: false,
     title: "404 Not Found",

@@ -1,5 +1,5 @@
 <header>
-  <a class="logo-container" href="/">
+  <a class="logo-container" href="/" title="Go To Home Page">
     <img src="/img/logo.png" />
     <h1><%= title %> - DjLarkiboyLjudochLjus</h1>
   </a>
@@ -8,6 +8,12 @@
     <ul>
       <li><a href="/about">About us</a></li>
       <li><a href="/contact">Contact</a></li>
+      <% if (user) { %>
+      <li><a href="/auth/logout">Logout</a></li>
+      <% } else { %>
+      <li><a href="/auth/login">Login</a></li>
+      <li><a href="/auth/register">Register</a></li>
+      <% } %>
     </ul>
   </nav>
 </header>

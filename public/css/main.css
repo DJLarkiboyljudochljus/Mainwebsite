@@ -144,7 +144,6 @@ footer {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  margin-top: 80px;
 }
 
 .h1-a {
@@ -155,26 +154,102 @@ footer {
   line-height: 1.6;
 }
 
-.alert.error {
-  background-color: #792027;
-  color: white;
-  padding: 15px;
-  margin: 10px auto;
-  max-width: 600px;
-  border: 1px solid #f5c6cb;
-  border-radius: 5px;
+/* Forms */
+form {
+  max-width: 500px;
+  margin: 10px auto; /* Adjust for the fixed header */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form h2 {
   text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+form input:focus {
+  outline: none;
+  border-color: #84dd32;
+  box-shadow: 0 0 5px rgba(132, 221, 50, 0.5);
+}
+
+form button {
+  width: 100%;
+  padding: 10px;
+  background-color: green;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: darkgreen;
+}
+
+/* Success and error messages */
+.alert {
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px auto;
+  max-width: 500px;
+  font-size: 1rem;
+}
+
+.alert.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 
 .alert.info {
-  background-color: #84dd32;
-  color: white;
-  padding: 15px;
-  margin: 10px auto;
-  max-width: 600px;
-  border: 1px solid #f5c6cb;
-  border-radius: 5px;
-  text-align: center;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  form {
+    margin: 80px 10px; /* Slightly less margin for smaller screens */
+    padding: 15px;
+  }
+
+  form h2 {
+    font-size: 1.5rem;
+  }
+
+  form button {
+    padding: 8px;
+  }
 }
 
 h1.home,
@@ -200,6 +275,52 @@ h2.home {
 }
 
 .container.home {
-  margin-top: 90px;
   text-align: center;
+}
+
+.message {
+  display: block;
+  margin-top: 90px;
+}
+
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 100px;
+  padding: 20px;
+}
+
+.equipment-item {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.equipment-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.equipment-image {
+  max-width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.equipment-item h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.equipment-item p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 10px;
 }
