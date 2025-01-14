@@ -86,6 +86,58 @@ footer {
   position: fixed;
   bottom: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  height: 70px;
+}
+
+.disco-globe {
+  width: 60px; /* Smaller size */
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff, #cccccc);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8),
+    0 0 30px rgba(255, 255, 255, 0.4), 0 0 45px rgba(255, 255, 255, 0.2);
+  animation: rotate 3s infinite linear;
+  position: absolute;
+  bottom: 10px; /* Place it 10px from the bottom */
+  right: 30px; /* Place it 10px from the right */
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.disco-globe:before {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background: repeating-radial-gradient(
+    circle,
+    #ff0044,
+    #ff0044 5px,
+    transparent 5px,
+    transparent 10px
+  );
+  border-radius: 50%;
+  animation: spin 1.5s infinite linear;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .about-container {

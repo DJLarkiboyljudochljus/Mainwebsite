@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/css/sim.css">
+
+<div id="simulator">
+  <div class="mixer">
+    <h2>Sound Mixer</h2>
+    <audio id="track1" src="/audio/track1.wav" controls></audio>
+    <audio id="track2" src="/audio/track2.wav" controls></audio>
+    <input type="range" id="volume" min="0" max="1" step="0.01">
+  </div>
+
+  <div class="lighting">
+    <h2>Lighting Effects</h2>
+    <button id="strobe">Strobe</button>
+    <button id="pulse">Pulse</button>
+    <button id="fade">Fade</button>
+  </div>
+
+  <a href="/">Go back home</a>
+
+  <div class="crowd">
+    <h2>Crowd Vibes</h2>
+    <input type="range" id="crowd-vibe" min="0" max="100">
+    <div id="crowd-animation"></div>
+  </div>
+</div>
+
+<script src="/js/sim.js"></script>
