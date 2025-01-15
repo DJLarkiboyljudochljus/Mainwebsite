@@ -60,8 +60,6 @@ app.use(async (req, res, next) => {
       return next();
     }
 
-    logger.info("User", user);
-
     // Set user info in request and response locals
     req.user = user;
     res.locals.user = user;
@@ -89,16 +87,22 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  const message = req.query.message
-    ? decodeURIComponent(req.query.message)
-    : null;
+  try {
+    const message = req.query.message
+      ? decodeURIComponent(req.query.message)
+      : null;
 
-  res.locals.message = message;
-  res.locals.type = req.query.type || null;
-  res.locals.url = req.url;
+    res.locals.message = message;
+    res.locals.type = req.query.type || null;
+    res.locals.url = req.url;
+  } catch (err) {
+    // Log the error but don't stop the request flow
+    logger.error(`Error decoding query parameters: ${err.message}`);
+  }
 
   next();
 });
+
 // Middleware for testing purposes
 app.use((req, res, next) => {
   next();

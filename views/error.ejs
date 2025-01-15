@@ -14,6 +14,7 @@
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
   }
   h1 {
     color: #e74c3c;
@@ -21,11 +22,45 @@
   p {
     color: #34495e;
   }
+
+  form {
+    background-color: inherit;
+    border: none;
+    box-shadow: none;
+    margin-left: 3px;
+    padding: 0;
+    width: min-content;
+  }
+
+  form button {
+    all: unset; /* Resets all default styles for the button */
+    color: #34495e; /* Anchor text color */
+    cursor: pointer; /* Makes the cursor look like it does on links */
+  }
+
+  form button:hover {
+    color: darkblue;
+    background-color: inherit;
+    text-decoration: underline;
+  }
 </style>
 
 <div class="error-container">
   <h1>Oops! An Error Occurred</h1>
   <p><%= error %></p>
-  <p>We're sorry for the inconvenience. Please try again later.</p>
+  <div style="display: flex; align-items: center; text-align: center">
+    <p style="margin-right: 0px">
+      We're sorry for the inconvenience. Please try again later. If you want to
+      notice us about this, click
+    </p>
+    <form action="/contact/error" method="POST">
+      <input hidden value="<%= error %>" name="error" /><button
+        type="submit"
+        title="Contact us about the error"
+      >
+        here
+      </button>
+    </form>
+  </div>
   <a href="/">Go back to home page</a>
 </div>

@@ -34,9 +34,9 @@ router.get("/auth/login", (req, res) => {
 
 router.post("/auth/register", async (req, res) => {
   try {
-    const { name, email, phone, password, adress } = req.body;
+    const { name, email, phone, password, address } = req.body;
 
-    if (!name || !email || !phone || !password || !adress) {
+    if (!name || !email || !phone || !password || !address) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -46,7 +46,7 @@ router.post("/auth/register", async (req, res) => {
     const newUser = new User({
       name,
       email: {
-        adress: email,
+        address: email,
         ver: eVer,
       },
       phone,
@@ -56,29 +56,31 @@ router.post("/auth/register", async (req, res) => {
           number: phone,
           ver: pVer,
         },
-        adress,
+        address,
       },
     });
 
     const users = await User.find({});
     for (const user of users) {
-      if (user.email.adress === newUser.email.address) {
+      if (user.email.address === newUser.email.address) {
         res.send(`
           <form id="postForm" action="/auth/login" method="POST">
-          <input type="hidden" name="email" value="${newUser.email.adress}">
-          <input type="hidden" name="password" value="${password}">
-          <button type="submit" hidden>Login</button>
-    </form>
-    <script>
-      document.getElementById('postForm').submit();
-    </script>
+            <input type="hidden" name="email" value="${newUser.email.address}">
+            <input type="hidden" name="password" value="${password}">
+            <button type="submit" hidden>Login</button>
+          </form>
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              document.getElementById('postForm').submit();
+            });
+          </script>
         `);
       }
     }
 
     await newUser.save();
 
-    const verificationLink = `${req.protocol}://${req.headers.host}/auth/verify/email/?email=${newUser.email.adress}&ver=${eVer}`;
+    const verificationLink = `${req.protocol}://${req.headers.host}/auth/verify/email/?email=${newUser.email.address}&ver=${eVer}`;
 
     const emailText = `
       Hi ${newUser.name},
@@ -204,13 +206,11 @@ router.post("/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    logger.debug("Login body", req.body);
-
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const user = await User.findOne({ "email.adress": email });
+    const user = await User.findOne({ "email.address": email });
     if (!user) {
       return res.status(401).json({ message: "Invalid email" });
     }
