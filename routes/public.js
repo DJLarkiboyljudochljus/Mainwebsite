@@ -9,7 +9,7 @@ const transporter = require(path.join(__dirname, "..", "config", "mailer.js"));
 
 async function login(email, res) {
   const user = await User.findOne({ "email.address": email });
-  if (!user.email.iVer) {
+  if (user.email.iVer) {
     const payload = { email: user.email.address };
     const token = jwt.sign(payload, secret, { expiresIn: "24h" });
 
@@ -203,18 +203,21 @@ ${req.headers.host}
 router.post("/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    logger.debug("Login body", req.body);
+
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const user = await User.findOne({ "email.adress": email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Invalid email" });
     }
 
     const isMatch = await user.comparePasswords(password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Invalid password" });
     }
 
     await login(user.email.address, res);
@@ -225,7 +228,7 @@ router.post("/auth/login", async (req, res) => {
       .redirect(`/?message=${encodeURIComponent(message)}&type=info`);
   } catch (err) {
     logger.error("Error logging in user:  " + err.message);
-    return res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 });
 

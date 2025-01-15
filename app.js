@@ -60,6 +60,8 @@ app.use(async (req, res, next) => {
       return next();
     }
 
+    logger.info("User", user);
+
     // Set user info in request and response locals
     req.user = user;
     res.locals.user = user;
