@@ -18,11 +18,25 @@
       required
     />
 
+    <label for="email">Email:</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      value="<%= user.email.address %>"
+      required
+    />
+
     <label for="bio">Bio:</label>
     <textarea id="bio" name="bio"><%= user.bio %></textarea>
 
     <label for="image">Profile Picture:</label>
-    <input type="file" id="image" name="image" accept="image/jpeg, image/png" />
+    <input
+      type="file"
+      id="image"
+      name="image"
+      accept="image/jpeg, image/png, image/jpg"
+    />
 
     <button type="submit">Save Changes</button>
   </form>

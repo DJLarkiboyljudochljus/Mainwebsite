@@ -10,28 +10,31 @@ router.get("/profile", (req, res) => {
 
 router.post("/profile", upload.single("image"), async (req, res) => {
   try {
-    const { name, email, phone, address } = req.body;
+    const { name, email, bio } = req.body;
 
-    const userEmail = req.user.email;
+    const user = await User.findOne({ "email.address": email });
 
-    const user = await User.findOne({ "email.address": userEmail });
+    if (!user) {
+      throw new Error("User not found");
+    }
 
-    user.update({
-      name || user.name,
-      email: {
-        address: email || user.email.address,
-      },
-      userDetails: {
-        phone || user.userDetails.phone,
-        address || user.userDetails.address,
-      },
-      image: req.file.path || user.image,
-    });
+    const oldImage = user.image;
+
+    user.name = name || user.name;
+    user.email.address = email || user.email.address;
+    user.bio = bio || user.bio;
+    if (req.file && req.file.path) {
+      user.image = req.file.path || user.image;
+    }
 
     await user.save();
 
+    if (oldImage) {
+      upload.deleteImage(oldImage);
+    }
+
     res.redirect(
-      `/profile?message=${encodeURIComponent(
+      `/user/profile?message=${encodeURIComponent(
         "User profile updated successfully"
       )}&type=info`
     );
@@ -40,7 +43,7 @@ router.post("/profile", upload.single("image"), async (req, res) => {
     res
       .status(500)
       .redirect(
-        `/profile?message=${encodeURIComponent(
+        `/user/profile?message=${encodeURIComponent(
           "Error updating profile"
         )}&type=error`
       );

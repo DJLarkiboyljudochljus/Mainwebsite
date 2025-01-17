@@ -1,0 +1,4 @@
+<% if (user.role === "admin") { %> <%- include("dashboards/admin") %> <% } else
+if (user.role === "worker") { %> <%- include("dashboards/worker") %> <% } else
+if (user.role === "customer") { %> <%- include("dashboards/user") %> <% } else {
+%> <%- include("dashboards/user") %> <% } %>

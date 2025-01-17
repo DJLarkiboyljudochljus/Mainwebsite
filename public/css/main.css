@@ -99,7 +99,7 @@ footer {
   animation: rotate 3s infinite linear;
   position: absolute;
   bottom: 10px; /* Place it 10px from the bottom */
-  right: 30px; /* Place it 10px from the right */
+  right: 50px; /* Place it 10px from the right */
   overflow: hidden;
   cursor: pointer;
 }
@@ -334,4 +334,115 @@ h2.home {
   max-width: 150px;
   height: auto;
   border-radius: 50%;
+}
+
+.dashboard h1,
+.dashboard h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Overview Section */
+.overview {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.overview .stats {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.overview .stats div {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  min-width: 200px;
+}
+
+.overview .stats div h2 {
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.overview .stats div p {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #222;
+}
+
+/* Management Section */
+.management {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.management .actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.management .actions .button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+}
+
+.management .actions .button:hover {
+  background-color: #0056b3;
+}
+
+/* Recent Activity Section */
+.recent-activity {
+  margin-bottom: 40px;
+}
+
+.recent-activity ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.recent-activity ul li {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recent-activity ul li:hover {
+  background-color: #f1f1f1;
+}
+
+/* Mobile Styles for Admin Dashboard */
+@media (max-width: 600px) {
+  .overview .stats div {
+    flex: 1 1 calc(50% - 20px);
+  }
+
+  .management .actions {
+    flex-direction: column;
+  }
+
+  .management .actions .button {
+    margin-bottom: 10px;
+  }
 }

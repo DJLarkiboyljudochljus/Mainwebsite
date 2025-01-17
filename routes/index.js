@@ -2,6 +2,9 @@ const router = require("express").Router();
 const transporter = require("../config/mailer");
 const logger = require("../config/logger");
 const path = require("path");
+const auth = require("../utils/auth");
+const User = require("../models/User");
+const Activity = require("../models/Activity");
 
 router.get("/about", (req, res) => {
   res.render("about", { title: "About Us" });
@@ -82,6 +85,16 @@ router.post("/contact/error", (req, res) => {
         `/?message=${encodeURIComponent("Error with sending email")}&type=error`
       );
   }
+});
+
+router.get("/dashboard", auth, async (req, res) => {
+  const stats = {};
+
+  stats.totalUsers = await User.find();
+
+  const activities = await Activity.find();
+
+  res.render("dashboard", { title: "Dashboard", stats, activities });
 });
 
 router.use("/user", require(path.join(__dirname, "userRoutes.js")));

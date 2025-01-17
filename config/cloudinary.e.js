@@ -7,7 +7,7 @@ cloudinary.config();
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "profile_pictures",
+    folder: "equipment_uploads",
     allowed_formats: ["jpg", "png", "jpeg"],
     quality: 100,
   },

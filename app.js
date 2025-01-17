@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const crypto = require("crypto");
+const Activity = require("./models/Activity");
 
 require("dotenv").config();
 const app = express();
@@ -103,6 +104,17 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(async (req, res, next) => {
+  const newActivity = new Activity({
+    url: req.url,
+    type: req.method,
+    body: req.body,
+  });
+
+  await newActivity.save();
+
+  next();
+});
 // Middleware for testing purposes
 app.use((req, res, next) => {
   next();

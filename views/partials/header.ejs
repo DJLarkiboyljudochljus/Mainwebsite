@@ -9,7 +9,8 @@
       <li><a href="/about">About us</a></li>
       <li><a href="/contact">Contact</a></li>
       <% if (user) { %>
-      <li><a href="/user/profile"><%= user.name %></a></li>
+      <li title="Profile"><a href="/user/profile"><%= user.name %></a></li>
+      <li><a href="/dashboard">Dashboard</a></li>
       <li><a href="/auth/logout">Logout</a></li>
       <% } else { %>
       <li><a href="/auth/login">Login</a></li>

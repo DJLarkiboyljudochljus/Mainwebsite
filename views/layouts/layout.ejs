@@ -12,7 +12,7 @@
 
     <div class="message">
       <% if (message) { %>
-      <div class="alert <%= type %>">
+      <div class="alert <%= type || "info" %>">
         <p><%= message %></p>
       </div>
       <% } %>
