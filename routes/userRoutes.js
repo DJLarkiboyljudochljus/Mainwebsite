@@ -12,27 +12,29 @@ router.post("/profile", upload.single("image"), async (req, res) => {
   try {
     const { name, email, phone, address } = req.body;
 
-    if (!name || !email || !phone || !address) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
     const userEmail = req.user.email;
 
     const user = await User.findOne({ "email.address": userEmail });
 
     user.update({
-      name,
+      name || user.name,
       email: {
-        address,
-        ver: req.user.email.ver,
+        address: email || user.email.address,
       },
-      phone,
+      userDetails: {
+        phone || user.userDetails.phone,
+        address || user.userDetails.address,
+      },
       image: req.file.path || user.image,
     });
 
     await user.save();
 
-    res.redirect("/profile");
+    res.redirect(
+      `/profile?message=${encodeURIComponent(
+        "User profile updated successfully"
+      )}&type=info`
+    );
   } catch (err) {
     logger.error("Error updating user profile", err);
     res
