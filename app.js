@@ -105,6 +105,8 @@ app.use((req, res, next) => {
 });
 
 app.use(async (req, res, next) => {
+  logger.debug("Request body", req.body);
+
   const newActivity = new Activity({
     url: req.url,
     type: req.method,
@@ -115,6 +117,7 @@ app.use(async (req, res, next) => {
 
   next();
 });
+
 // Middleware for testing purposes
 app.use((req, res, next) => {
   next();

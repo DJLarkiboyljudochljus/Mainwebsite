@@ -14,7 +14,9 @@ const activitySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  body: Object,
+  body: {
+    type: mongoose.Schema.Types.Mixed,
+  },
 });
 
 module.exports = mongoose.model("Activity", activitySchema);
