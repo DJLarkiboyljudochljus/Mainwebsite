@@ -16,7 +16,7 @@ router.get("/equipment/:id", async (req, res) => {
 
 router.get("/:sponsor", async (req, res, next) => {
   try {
-    const sponsor = await Sponsor.findOne({ name: req.params.name });
+    const sponsor = await Sponsor.findOne({ url: req.params.sponsor });
 
     res.render("sponsor", { title: `Sponsor: ${sponsor.name}`, sponsor });
   } catch (err) {

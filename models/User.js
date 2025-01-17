@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const path = require("path");
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
@@ -49,6 +50,14 @@ const userSchema = new mongoose.Schema({
     availability: [Date], // Dates worker is available
     pay: { type: Number }, // Hourly pay for workers
   },
+
+  image: {
+    type: String,
+    default: "/img/default-user.png",
+  },
+
+  bio: { type: String },
+
   createdAt: { type: Date, default: Date.now },
 });
 
