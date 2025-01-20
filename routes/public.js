@@ -16,7 +16,9 @@ async function login(email, res) {
     res.cookie("token", token, { httpOnly: true });
   } else {
     res.redirect(
-      `/?message=Please verify your email before signing in&type=info`
+      `/?message=${encodeURIComponent(
+        "Please verify your email before signing in"
+      )}&type=info`
     );
   }
 }
@@ -24,12 +26,8 @@ async function login(email, res) {
 router.use("/", require(path.join(__dirname, "index.js")));
 router.use("/", require(path.join(__dirname, "up.js")));
 
-router.get("/auth/register", (req, res) => {
-  res.render("register", { title: "Register" });
-});
-
-router.get("/auth/login", (req, res) => {
-  res.render("login", { title: "Login" });
+router.get("/auth/sign", (req, res) => {
+  res.render("sign", { title: "Register/Login" });
 });
 
 router.post("/auth/register", async (req, res) => {
@@ -198,7 +196,11 @@ ${req.headers.host}
       .redirect(`/?message=${encodeURIComponent(message)}&type=info`);
   } catch (err) {
     logger.error("Error registering user:  " + err.message);
-    return res.status(400).json({ message: "Invalid input" });
+    return res
+      .status(400)
+      .redirect(
+        `/?message=${encodeURIComponent("Error registering user")}&type=error`
+      );
   }
 });
 
@@ -228,19 +230,12 @@ router.post("/auth/login", async (req, res) => {
       .redirect(`/?message=${encodeURIComponent(message)}&type=info`);
   } catch (err) {
     logger.error("Error logging in user:  " + err.message);
-    res.status(500).json({ message: "Server error" });
+    res
+      .status(500)
+      .redirect(
+        `/?message=${encodeURIComponent("Error logging in user")}&type=error`
+      );
   }
-});
-
-router.get("/auth/logout", (req, res) => {
-  res.clearCookie("token");
-  res
-    .status(201)
-    .redirect(
-      `/?message=${encodeURIComponent(
-        "User logged out successfully"
-      )}&type=info`
-    );
 });
 
 module.exports = router;
