@@ -64,8 +64,6 @@ app.use(async (req, res, next) => {
     // Set user info in request and response locals
     req.user = user;
     res.locals.user = user;
-
-    next(); // Proceed to the next middleware/route
   } catch (err) {
     // Log the error but don't stop the request flow
     if (err.name === "TokenExpiredError") {
@@ -76,7 +74,7 @@ app.use(async (req, res, next) => {
 
     req.user = null;
     res.locals.user = null;
-
+  } finally {
     next(); // Continue to the next middleware/route
   }
 });

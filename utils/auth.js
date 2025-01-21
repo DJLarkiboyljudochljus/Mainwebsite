@@ -5,7 +5,7 @@ const auth = (req, res, next) => {
     return res
       .status(403)
       .redirect(
-        `/login?message=${encodeURIComponent(
+        `/auth/login?message=${encodeURIComponent(
           "You have to be signed in to visit this page"
         )}&type=error`
       );
@@ -17,7 +17,7 @@ const auth = (req, res, next) => {
     return res
       .status(403)
       .redirect(
-        `/login?message=${encodeURIComponent(
+        `/auth/login?message=${encodeURIComponent(
           "Invalid token. Please log in again"
         )}&type=error`
       );

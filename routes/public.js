@@ -7,37 +7,47 @@ const crypto = require("crypto");
 const secret = process.env.JWT_SECRET;
 const transporter = require(path.join(__dirname, "..", "config", "mailer.js"));
 
-async function login(email, res) {
+async function login(email) {
   const user = await User.findOne({ "email.address": email });
-  if (user.email.iVer) {
-    const payload = { email: user.email.address };
-    const token = jwt.sign(payload, secret, { expiresIn: "24h" });
-
-    res.cookie("token", token, { httpOnly: true });
-  } else {
-    res.redirect(
-      `/?message=Please verify your email before signing in&type=info`
-    );
+  if (!user) {
+    return { status: 401, message: "Invalid email" };
   }
+
+  if (!user.email.iVer) {
+    return {
+      status: 400,
+      message: "Please verify your email before signing in",
+      redirect: true,
+    };
+  }
+
+  const payload = { email: user.email.address };
+  const token = jwt.sign(payload, secret, { expiresIn: "24h" });
+  return { status: 200, token };
 }
 
+// Middleware
 router.use("/", require(path.join(__dirname, "index.js")));
 router.use("/", require(path.join(__dirname, "up.js")));
 
-router.get("/auth/register", (req, res) => {
-  res.render("register", { title: "Register" });
-});
-
-router.get("/auth/login", (req, res) => {
-  res.render("login", { title: "Login" });
-});
-
+// Registration Route
 router.post("/auth/register", async (req, res) => {
   try {
     const { name, email, phone, password, address } = req.body;
 
     if (!name || !email || !phone || !password || !address) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const existingUser = await User.findOne({ "email.address": email });
+    if (existingUser) {
+      return res
+        .status(409)
+        .redirect(
+          `/?message=${encodeURIComponent(
+            "Email already registered. Please log in."
+          )}&type=info`
+        );
     }
 
     const pVer = crypto.randomBytes(3).toString("hex");
@@ -60,34 +70,17 @@ router.post("/auth/register", async (req, res) => {
       },
     });
 
-    const users = await User.find({});
-    for (const user of users) {
-      if (user.email.address === newUser.email.address) {
-        res.send(`
-          <form id="postForm" action="/auth/login" method="POST">
-            <input type="hidden" name="email" value="${newUser.email.address}">
-            <input type="hidden" name="password" value="${password}">
-            <button type="submit" hidden>Login</button>
-          </form>
-          <script>
-            document.addEventListener("DOMContentLoaded", () => {
-              document.getElementById('postForm').submit();
-            });
-          </script>
-        `);
-      }
-    }
-
     await newUser.save();
 
-    const verificationLink = `${req.protocol}://${req.headers.host}/auth/verify/email/?email=${newUser.email.address}&ver=${eVer}`;
+    const verificationLink = `${req.protocol}://${req.headers.host}/auth/verify/email/?email=${email}&ver=${eVer}`;
 
+    // Plain Text Email
     const emailText = `
-      Hi ${newUser.name},
+Hi ${name},
 
 Thank you for signing up with DjLarkiboyLjudochLjus! We're excited to help you bring your events to life with our premium sound and lighting equipment.
 
-To complete your registration, please verify your email address by copy and pasting the link below into your browser:
+To complete your registration, please verify your email address by clicking the link below:
 
 ${verificationLink}
 
@@ -97,16 +90,16 @@ Feel free to reach out to us at gronlundisak11@gmail.com if you have any questio
 
 Warm regards,
 The DjLarkiboyLjudochLjus Team
-${req.headers.host}
-    `;
+${req.headers.host}`;
 
+    // HTML Email
     const year =
       new Date().getFullYear() === 2025
         ? "2025"
         : `2025 - ${new Date().getFullYear()}`;
 
     const emailHTML = `
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -163,7 +156,7 @@ ${req.headers.host}
             <h1>Welcome to DjLarkiboyLjudochLjus!</h1>
         </div>
         <div class="content">
-            <p>Hi ${newUser.name},</p>
+            <p>Hi ${name},</p>
             <p>Thank you for signing up with DjLarkiboyLjudochLjus! We're excited to help you bring your events to life with our premium sound and lighting equipment.</p>
             <p>To complete your registration, please verify your email address by clicking the button below:</p>
             <a href="${verificationLink}" class="button">Verify Email</a>
@@ -180,67 +173,24 @@ ${req.headers.host}
 </html>
     `;
 
-    transporter.sendMail({
+    // Send Email
+    await transporter.sendMail({
       from: process.env.EMAIL,
-      to: newUser.email.address,
+      to: email,
       subject: "Verify Your Email",
       text: emailText,
       html: emailHTML,
     });
 
-    await login(newUser.email.address, res);
-
-    const message =
-      "User registered sucessfully. Please verify your email, check your mailbox";
-
-    res
-      .status(201)
-      .redirect(`/?message=${encodeURIComponent(message)}&type=info`);
-  } catch (err) {
-    logger.error("Error registering user:  " + err.message);
-    return res.status(400).json({ message: "Invalid input" });
-  }
-});
-
-router.post("/auth/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    const user = await User.findOne({ "email.address": email });
-    if (!user) {
-      return res.status(401).json({ message: "Invalid email" });
-    }
-
-    const isMatch = await user.comparePasswords(password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password" });
-    }
-
-    await login(user.email.address, res);
-
-    const message = "User logged in successfully";
-    res
-      .status(201)
-      .redirect(`/?message=${encodeURIComponent(message)}&type=info`);
-  } catch (err) {
-    logger.error("Error logging in user:  " + err.message);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-router.get("/auth/logout", (req, res) => {
-  res.clearCookie("token");
-  res
-    .status(201)
-    .redirect(
+    res.redirect(
       `/?message=${encodeURIComponent(
-        "User logged out successfully"
+        "User registered successfully. Please verify your email."
       )}&type=info`
     );
+  } catch (err) {
+    logger.error("Error registering user: " + err.message);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
