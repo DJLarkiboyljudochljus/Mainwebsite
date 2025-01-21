@@ -99,15 +99,4 @@ router.get("/dashboard", auth, async (req, res) => {
 
 router.use("/user", require(path.join(__dirname, "userRoutes.js")));
 
-router.get("/auth/logout", (req, res) => {
-  res.clearCookie("token");
-  res
-    .status(201)
-    .redirect(
-      `/?message=${encodeURIComponent(
-        "User logged out successfully"
-      )}&type=info`
-    );
-});
-
 module.exports = router;
