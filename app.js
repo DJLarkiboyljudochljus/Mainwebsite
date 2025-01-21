@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const crypto = require("crypto");
 const Activity = require("./models/Activity");
+const { stringify } = require("flatted");
+const bcrypt = require("bcrypt");
 
 require("dotenv").config();
 const app = express();
@@ -105,17 +107,24 @@ app.use((req, res, next) => {
 });
 
 app.use(async (req, res, next) => {
-  logger.debug("Request body", req.body);
+  try {
+    const body = JSON.parse(JSON.stringify(req.body)); // Deep copy to prevent mutation of req.body.
 
-  const newActivity = new Activity({
-    url: req.url,
-    type: req.method,
-    body: req.body,
-  });
+    // Exclude sensitive fields if needed
+    delete body.password;
 
-  await newActivity.save();
+    const newActivity = new Activity({
+      url: req.url,
+      type: req.method,
+      body: stringify(body),
+    });
 
-  next();
+    await newActivity.save();
+    next();
+  } catch (error) {
+    console.error("Error in middleware:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // Middleware for testing purposes
@@ -132,38 +141,19 @@ app.get("/", (req, res) => {
   res.render("index", { title: "Home" });
 });
 
-app.use("/", require(path.join(__dirname, "routes", "public.js")));
-
-app.use((req, res, next) => {
-  if (!req.user) {
-    app.use("/", require(path.join(__dirname, "routes", "public.js")));
-    return next();
-  }
-
-  switch (req.user.role) {
-    case "admin":
-      app.use("/", require(path.join(__dirname, "routes", "admin.js")));
-      break;
-    case "worker":
-      app.use("/", require(path.join(__dirname, "routes", "worker.js")));
-      break;
-    case "user":
-      app.use("/", require(path.join(__dirname, "routes", "user.js")));
-      break;
-    default:
-      app.use("/", require(path.join(__dirname, "routes", "public.js")));
-      break;
-  }
-
-  next();
-});
+app.use("/", require("./routes/index"));
+/*app.use("/user", require("./routes/user"));
+app.use("/worker", require("./routes/worker"));
+app.use("/admin", require("./routes/admin"));
+*/
 
 // Error Handling
 app.use((req, res) => {
-  res.status(404).render("404", {
-    h: false,
-    title: "404 Not Found",
-  });
+  res
+    .status(404)
+    .redirect(
+      `/?message=${encodeURIComponent(`Page not found: ${req.url}`)}&type=error`
+    );
 });
 
 app.use((err, req, res, next) => {

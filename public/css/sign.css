@@ -14,8 +14,8 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 100vh;
-  margin-top: 0;
+  height: 100%;
+  margin-top: 55px;
 }
 
 .container {
