@@ -26,4 +26,30 @@ const auth = (req, res, next) => {
   next();
 };
 
-module.exports = auth;
+const checkRoles =
+  (...roles) =>
+  (req, res, next) => {
+    if (!req.user) {
+      return res
+        .status(403)
+        .redirect(
+          `/auth/sign?message=${encodeURIComponent(
+            "You have to be signed in to visit this page"
+          )}&type=error`
+        );
+    }
+
+    if (!roles.includes(req.user.role)) {
+      return res
+        .status(403)
+        .redirect(
+          `/auth/sign?message=${encodeURIComponent(
+            "You don't have the required role to access this page"
+          )}&type=error`
+        );
+    }
+
+    next();
+  };
+
+module.exports = Object.assign(auth, { checkRoles });
