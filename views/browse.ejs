@@ -1,0 +1,57 @@
+<aside>
+  <form method="GET" action="/browse" class="browse-filter-form">
+    <div>
+        <label>Search</label>
+        <input type="text" name="search" value="<%= query.search || '' %>">
+    </div>
+
+    <div>
+        <label>Category</label>
+        <select name="category" class="capitalize">
+            <option value="">All Categories</option>
+            <% categories.forEach(category => { %>
+              <option value="<%= category %>" <%= query.category === category ? 'selected' : '' %> class="capitalize">
+                  <%= category %>
+              </option>
+            <% }); %>          
+        </select>
+    </div>
+
+    <div>
+        <label>Price Range</label>
+        <input type="number" name="minPrice" placeholder="Min" value="<%= query.minPrice || '' %>">
+        <input type="number" name="maxPrice" placeholder="Max" value="<%= query.maxPrice || '' %>">
+    </div>
+
+    <button type="submit">Apply Filters</button>
+  </form>
+</aside>
+
+<hr>
+
+<!-- Display Equipment -->
+<table class="styled-table browse-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Price</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% equipment.forEach(item => { %>
+      <tr>
+        <td><%= item.name %></td>
+        <td class="capitalize"><%= item.category %></td>
+        <td>$<%= item.price %></td>
+        <td>
+          <a href="/equipment/<%= item._id %>">View</a>
+          <% if (user.Role === "Admin") {%>
+            <a href="/admin/equipment/<%= item._id %>">Edit</a>
+          <% } %>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>

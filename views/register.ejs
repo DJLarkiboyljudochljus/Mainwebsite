@@ -1,0 +1,52 @@
+<form action="/auth/register" method="post">
+  <div class="form-part">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required />
+  </div>
+
+  <div class="form-part">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required />
+  </div>
+
+  <div class="form-part">
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required />
+  </div>
+
+  <div class="form-part">
+    <label for="confirmPassword">Confirm Password:</label>
+    <input
+      type="password"
+      id="confirmPassword"
+      name="confirmPassword"
+      required
+    />
+    <p id="passwordError" class="error"></p>
+  </div>
+
+  <input type="hidden" name="n" id="n" value="<%= n %>" />
+
+  <div class="form-part">
+    <button type="submit">Register</button>
+  </div>
+</form>
+
+<script nonce="<%= nonce %>">
+  const form = document.querySelector("form");
+  const password = form.querySelector("#password");
+  const confirmPassword = form.querySelector("#confirmPassword");
+
+  password.addEventListener("input", () => {
+    const passwordValue = password.value;
+    const confirmPasswordValue = confirmPassword.value;
+    const passwordError = document.querySelector("#passwordError");
+    if (passwordValue !== confirmPasswordValue) {
+      passwordError.textContent = "Passwords do not match.";
+    } else {
+      passwordError.textContent = "";
+    }
+    form.querySelector("button[type='submit']").disabled =
+      passwordValue !== confirmPasswordValue;
+  });
+</script>

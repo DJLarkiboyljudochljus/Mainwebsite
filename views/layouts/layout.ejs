@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title === "" ? "" : title + " - " %>DJLakiboyLjudochLjus</title>
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <% if (h) { %>
+    <%- include("../partials/header") %>
+    <% } %>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+      <% ['success', 'error', 'info', 'successWC', 'errorWC',
+      'infoWC'].forEach(type => { %>
+      <% if
+      (messages[type]) { %>
+      <% messages[type].forEach(msg => { %>
+      <div class="alert alert-<%= type %>">
+        <%= msg %>
+        <button>x</button>
+      </div>
+      <% }); %>
+      <% } %>
+      <% }); %>
+    </div>
+
+    <main class="<%= title.toLowerCase() %>"><%- body %></main>
+
+    <div class="spacer"></div>
+
+    <% if (h) { %>
+    <%- include("../partials/footer") %>
+    <% } %>
+
+    <script nonce="<%= nonce %>">
+      function removeParent() {
+        this.parentElement.remove();
+      }
+
+      const alertButtons = document.querySelectorAll(".alert button");
+      alertButtons.forEach((button) => {
+        button.addEventListener("click", removeParent);
+      });
+
+      const spacer = document.querySelector(".spacer");
+      switch ("<%= page %>") {
+        case "admin dashboard":
+          spacer.style.height = "600px";
+          break;
+        case "worker dashboard":
+          spacer.style.height = "600px";
+          break;
+        default:
+          spacer.style.height = "0";
+          break;
+      }
+    </script>
+  </body>
+</html>

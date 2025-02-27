@@ -1,0 +1,116 @@
+<div class="product">
+  <h1><%= product.name %></h1>
+
+  <div class="product-image-gallery">
+    <!-- Main image display -->
+    <div class="main-image">
+      <img
+        src="<%= product.images[0] %>"
+        alt="<%= product.name %>"
+        id="mainImage"
+      />
+    </div>
+
+    <!-- Thumbnails -->
+    <div class="thumbnails">
+      <% product.images.forEach((image, index) => { %>
+      <img
+        src="<%= image %>"
+        alt="Image <%= index + 1 %>"
+        class="thumbnail"
+        data-image="<%= image %>"
+      />
+      <% }) %>
+    </div>
+  </div>
+
+  <div class="product-details">
+    <p>
+      <strong>Description:</strong>
+      <%= product.description %>
+    </p>
+    <p>
+      <strong>Price:</strong>
+      <%= product.price %>&nbsp;kr
+    </p>
+    <p class="capitalize">
+      <strong>Category:</strong>
+      <%= product.category %>
+    </p>
+    <p>
+      <strong>In Stock:</strong>
+      <%= product.inStock %>
+    </p>
+
+    <form action="/cart/add" method="POST" class="add-to-cart-form">
+      <input type="hidden" name="productId" value="<%= product.id %>" />
+      <button type="submit">Add to Cart</button>
+    </form>
+  </div>
+</div>
+
+<div id="bigImage">
+  <img src="" alt="" />
+  <button>X</button>
+</div>
+
+<script nonce="<%= nonce %>">
+  // JavaScript to switch main image when clicking a thumbnail
+  const thumbnails = document.querySelectorAll(".thumbnail");
+  const mainImage = document.getElementById("mainImage");
+  const bigImageContainer = document.getElementById("bigImage");
+  const bigImage = bigImageContainer.querySelector("img");
+  const closeButton = bigImageContainer.querySelector("button");
+
+  // Change main image when clicking a thumbnail
+  thumbnails.forEach((thumbnail) => {
+    thumbnail.addEventListener("click", (e) => {
+      mainImage.src = e.target.dataset.image;
+      mainImage.classList.add("active");
+
+      setTimeout(() => {
+        mainImage.classList.remove("active");
+      }, 300);
+    });
+  });
+
+  function openBigImage() {
+    bigImage.src = mainImage.src;
+    bigImage.alt = mainImage.alt;
+    bigImageContainer.style.zIndex = "1000";
+    bigImageContainer.style.visibility = "visible";
+    document.body.style.overflow = "hidden";
+
+    // Add event listener to close on Escape
+    document.addEventListener("keydown", handleEscape);
+  }
+
+  function closeBigImage() {
+    bigImageContainer.style.zIndex = "-5";
+    bigImageContainer.style.visibility = "hidden";
+    document.body.style.overflow = "auto";
+    document.body.style.overflowX = "hidden";
+
+    // Remove Escape key event listener
+    document.removeEventListener("keydown", handleEscape);
+  }
+
+  function handleEscape(e) {
+    if (e.key === "Escape") {
+      closeBigImage();
+    }
+  }
+
+  // Open big image on main image click
+  mainImage.addEventListener("click", openBigImage);
+
+  // Close big image on button click
+  closeButton.addEventListener("click", closeBigImage);
+
+  // Close when clicking outside the image
+  bigImageContainer.addEventListener("click", (e) => {
+    if (e.target === bigImageContainer) {
+      closeBigImage();
+    }
+  });
+</script>

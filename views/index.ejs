@@ -1,0 +1,70 @@
+<section class="hero" id="hero">
+  <div class="textdiv">
+    <h1>Welcome to DjLarkiboyLjudochLjus</h1>
+    <p>Your ultimate destination for music, light, and sound experiences!</p>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <h2>Our Services</h2>
+  <div class="service-grid">
+    <div class="service-item">
+      <h3>DJ Services</h3>
+      <p>Professional DJ services for all types of events.</p>
+    </div>
+    <div class="service-item">
+      <h3>Sound Systems</h3>
+      <p>High-quality sound equipment for perfect audio experiences.</p>
+    </div>
+    <div class="service-item">
+      <h3>Lighting Solutions</h3>
+      <p>Custom lighting solutions for your events, from small to large.</p>
+    </div>
+    <div class="service-item">
+      <h3>Event Planning</h3>
+      <p>
+        Plan your event from idea to execution, ensuring a smooth and enjoyable
+        experience.
+      </p>
+    </div>
+  </div>
+  <a href="/book" class="btn">Book Now</a>
+</section>
+
+<section class="links" id="links">
+  <h1>Links</h1>
+  <a href="/about" class="btn">Learn More</a>
+  <a href="/faq" class="btn">FAQ</a>
+  <a href="/blog" class="btn">Latest News</a>
+  <a href="/videos" class="btn">Watch Videos</a>
+  <a href="/music" class="btn">Listen to Music</a>
+  <a href="/contact" class="btn">Contact Us</a>
+</section>
+
+<section class="gallery" id="gallery">
+  <h2>Gallery</h2>
+  <div class="gallery-grid">
+    <% gallery.forEach((img) => { %>
+    <img src="<%= img.src %>" alt="<%= img.title %>" />
+    <% }) %>
+  </div>
+</section>
+
+<script nonce="<%= nonce %>">
+  const videoLink = document.querySelector('.links a[href="/videos"]');
+  const musicLink = document.querySelector('.links a[href="/music"]');
+
+  videoLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.open(
+      `/url?url=${encodeURIComponent("https://youtube.com/@djlarkiboy")}`,
+    );
+  });
+
+  musicLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.open(
+      `/url?url=${encodeURIComponent("https://open.spotify.com/user/31qzfjq75cbpqyrj2ibgybu2ycpq?si=2638af916f004402")}`,
+    );
+  });
+</script>

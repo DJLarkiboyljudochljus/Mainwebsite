@@ -1,0 +1,77 @@
+/* Basic Styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+}
+
+.error-container {
+  padding: 50px;
+  background-color: #333;
+  border-radius: 10px;
+  margin: 50px auto;
+  max-width: 600px;
+  position: relative;
+}
+
+.error-title {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #1affff;
+}
+
+.error-message {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.error-actions {
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: #1affff;
+  color: #333;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  text-decoration: none;
+  margin: 10px;
+}
+
+.btn:hover {
+  background-color: #17ce0a;
+}
+
+.error-vibes {
+  font-size: 1.2rem;
+  margin-top: 30px;
+  color: #ddd;
+}
+
+/* Sound Wave Animation */
+.sound-wave {
+  position: absolute;
+  top: 0;
+  left: -20%; /* Start off-screen slightly */
+  width: 20%; /* Start with a small width */
+  height: 10px; /* Adjust the height of the wave */
+  background: linear-gradient(90deg, #1affff 0%, #17ce0a 100%);
+  animation: wave 2s linear infinite; /* Change ease-in-out to linear for constant speed */
+}
+
+@keyframes wave {
+  0% {
+    left: -20%; /* Start just off-screen to the left */
+  }
+  100% {
+    left: 100%; /* Move off-screen to the right */
+  }
+}
