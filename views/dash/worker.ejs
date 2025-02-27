@@ -1,0 +1,111 @@
+<aside class="ad">
+  <button id="home" aria-selected="true">Home</button>
+  <button id="schedule" aria-selected="false">My Schedule</button>
+  <button id="eq" aria-selected="false">Equipment</button>
+  <button id="chat" aria-selected="false">Chat</button>
+</aside>
+
+<div id="home-container" class="tab-container">
+  <h2>
+    Welcome,
+    <%= user.name %>
+  </h2>
+</div>
+
+<div id="schedule-container" class="tab-container">
+  <h2>My Schedule</h2>
+  <table class="styled-table schedule-table">
+    <thead>
+      <tr>
+        <th>Shift Start</th>
+        <th>Shift End</th>
+        <th>Days</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= user.shiftSchedule.startTime %></td>
+        <td><%= user.shiftSchedule.endTime %></td>
+        <td><%= user.shiftSchedule.days.join(", ") %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="eq-container" class="tab-container">
+  <h2>Equipment</h2>
+  <table class="styled-table eq-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (equipment.length === 0) { %>
+      <tr>
+        <td colspan="3">No Equipment Available</td>
+      </tr>
+      <% } else {%>
+      <% equipment.forEach(item => { %>
+      <tr>
+        <td><%= item.name %></td>
+        <td class="capitalize"><%= item.category %></td>
+        <td>$<%= Number(item.price).toFixed(2) %></td>
+      </tr>
+      <% }); %>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<div id="chat-container" class="tab-container">
+  <div id="user-list">
+    <h3>Users</h3>
+    <ul id="users"></ul>
+  </div>
+  <div id="chat-box">
+    <div id="messages">
+      <h5 id="username"></h5>
+    </div>
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button id="send-button">Send</button>
+  </div>
+</div>
+
+<script nonce="<%= nonce %>">
+  const buttons = document.querySelectorAll("aside button");
+  const containers = document.querySelectorAll(".tab-container");
+  const params = new URLSearchParams(window.location.search);
+  let activeTab = params.get("activeTab") || "home";
+
+  function updateUI(tab) {
+    containers.forEach((container) => (container.style.display = "none"));
+    document.getElementById(`${tab}-container`).style.display = "block";
+    buttons.forEach((btn) => btn.setAttribute("aria-selected", btn.id === tab));
+    document.title = `${tab.charAt(0).toUpperCase() + tab.slice(1)} - Dashboard - DjLarkiboyLjudOchLjus`;
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const newTab = e.target.id;
+      window.history.pushState(
+        {},
+        "",
+        `${location.pathname}?activeTab=${newTab}`,
+      );
+      updateUI(newTab);
+    });
+  });
+
+  window.onpopstate = () => {
+    const params = new URLSearchParams(window.location.search);
+    updateUI(params.get("activeTab") || "home");
+  };
+
+  updateUI(activeTab);
+</script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/com.js"></script>

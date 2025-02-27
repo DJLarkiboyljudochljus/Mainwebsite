@@ -1,30 +1,51 @@
 const router = require("express").Router();
+const User = require("../models/User");
+const cloudinary = require("../config/cloudinary");
+const logger = require("../config/logger");
 const auth = require("../middleware/auth");
-const Event = require("../models/Booking");
 
-router.get(
-	"/profile",
-	auth.auth(["admin", "worker", "user"]),
-	async (req, res) => {
-		// Fetch all the upcoming events for the authenticated user
-		const upcomingEvents = await Event.find({
-			customer: req.user._id,
-			date: { $gt: new Date() },
-		});
+router.get("/profile", auth(), (req, res) => {
+  res.render("profile", { title: "Profile", activetab: "profile" });
+});
 
-		// Render the view
-		res.render("profile", { title: "Profile", upcomingEvents });
-	}
+router.post(
+  "/update/profile",
+  auth(),
+  cloudinary.userImageUpload.single("image"),
+  async (req, res) => {
+    try {
+      const { name, email } = req.body;
+      const user = await User.User.findById(req.user._id);
+
+      if (req.file) {
+        try {
+          cloudinary.deleteFile(
+            new URL(user.image).pathname
+              .split("/")
+              .slice(5)
+              .join("/")
+              .replace(/\.[^/.]+$/, ""),
+          );
+        } catch (err) {}
+        user.image = req.file.path;
+      }
+
+      await user.save();
+
+      if (!user) {
+        req.flash("error", "User not found");
+        res.redirect("/user/profile");
+      }
+      user.name = name || user.name;
+      user.email = email || user.email;
+      req.flash("success", "Profile updated successfully");
+      res.redirect("/user/profile");
+    } catch (err) {
+      logger.error("Error in update/profile route", err);
+      req.flash("error", "Failed to update profile");
+      res.redirect("/user/profile");
+    }
+  },
 );
-
-router.get("/edit", async (req, res) => {
-	// Render the view
-	res.render("edit-profile", { title: "Edit Profile" });
-});
-
-router.get("/change-password", async (req, res) => {
-	// Render the view
-	res.render("change-password", { title: "Change Password" });
-});
 
 module.exports = router;

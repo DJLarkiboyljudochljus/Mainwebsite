@@ -1,0 +1,85 @@
+<div class="question-container">
+  <div class="question">
+    <h3>What does DjLarkiboyLjudochLjus do?</h3>
+  </div>
+  <div class="answer">
+    <p>
+      DjLarkiboyLjudochLjus is a leading music, light, and sound provider in the
+      region. Our mission is to provide exceptional service and quality to our
+      customers, helping them create memorable and enjoyable events.
+    </p>
+  </div>
+</div>
+
+<div class="question-container">
+  <div class="question">
+    <h3>How can I find DjLarkiboyLjudoch Ljus near me?</h3>
+  </div>
+  <div class="answer">
+    <p>
+      To find DjLarkiboy Ljudoch Ljus near you, we recommend using our map or
+      contacting our customer service team at (123) 456-7890. We'll be happy to
+      help you find the perfect location for your event.
+    </p>
+  </div>
+</div>
+
+<div class="question-container">
+  <div class="question">
+    <h3>How do I rent equipment?</h3>
+  </div>
+  <div class="answer">
+    <p>
+      To rent equipment, you do like you would buy it on any other website, add
+      it to your cart, select some personal preferences and then you are done!
+      If you run into any issues with the system, please inform us by sending an
+      email
+      <a href="mailto:problems@djlarkiboy.com">problems@djlarkiboy.com</a> or
+      use our <a href="/contact">contact form</a>
+    </p>
+  </div>
+</div>
+
+<div class="question-container">
+  <div class="question">
+    <h3>What are the payment options available for renting equipment?</h3>
+  </div>
+  <div class="answer">
+    <p>
+      We accept payments in Swish and card. Please note that we may charge a
+      small processing fee for each payment. If you run into any issues with the
+      system, please inform us by sending an email
+      <a href="mailto:problems@djlarkiboy.com">problems@djlarkiboy.com</a> or
+      use our <a href="/contact">contact form</a>
+    </p>
+  </div>
+</div>
+
+<div class="question-container">
+  <div class="question">
+    <h3>How can I check my rental status and payment history?</h3>
+  </div>
+  <div class="answer">
+    <p>
+      To check your rental status and payment history, please log in to your
+      account at
+      <a href="/my-account">djlarkiboy.com/my-account</a>. If you run into any
+      issues with the system, please inform us by sending an email
+      <a href="mailto:problems@djlarkiboy.com">problems@djlarkiboy.com</a> or
+      use our <a href="/contact">contact form</a>
+    </p>
+  </div>
+</div>
+
+<script nonce="<%= nonce %>">
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".question-container").forEach((item) => {
+      item.addEventListener("click", () => {
+        item.classList.toggle("active");
+        const answer = item.querySelector(".answer");
+        answer.style.display =
+          answer.style.display === "block" ? "none" : "block";
+      });
+    });
+  });
+</script>

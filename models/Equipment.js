@@ -1,72 +1,100 @@
-const mongoose = require('mongoose');
-
-const itemSchema = new mongoose.Schema({
-  condition: {
-    type: String,
-    enum: [ "New", "Good", "Needs Repair", "Broken" ],
-    default: "New",
-  },
-  isBooked: {
-    type: Boolean,
-    default: false,
-  },
-  booking: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Booking"
-  },
-});
+const mongoose = require("mongoose");
 
 const equipmentSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
-  },
-  items: [itemSchema],
-  quantity: {
-    type: Number,
-  },
-  inInventory: {
-    type: Number,
-    default: 0,
-  },
-  type: {
-    type: String,
-    required: true,
-    enum: ["Sound", "Lighting", "Tools", "Other" ],
   },
   description: {
     type: String,
     required: true,
   },
-  images: [{
+  price: {
+    type: Number,
+    required: true,
+  },
+  images: [
+    {
+      type: String,
+    },
+  ],
+  category: {
     type: String,
     required: true,
-  }],
+  },
+  inStock: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+
+  dateCreated: {
+    type: Date,
+    default: Date.now,
+  },
+  specs: {
+    watts: {
+      type: Number,
+    },
+    size: {
+      h: {
+        type: Number,
+      },
+      w: {
+        type: Number,
+      },
+      d: {
+        type: Number,
+      },
+      unit: {
+        type: String,
+        enum: ["m", "dm", "cm", "mm"],
+      },
+    },
+    weight: {
+      type: Number,
+    },
+    weightUnit: {
+      type: String,
+      enum: ["kg", "g"],
+    },
+    hasBattery: {
+      type: Boolean,
+    },
+    batteryType: {
+      type: String,
+    },
+    hasCharger: {
+      type: Boolean,
+    },
+    chargerType: {
+      type: String,
+    },
+    hasCoolingSystem: {
+      type: Boolean,
+    },
+    coolingSystemType: {
+      type: String,
+    },
+    hasBluetooth: {
+      type: Boolean,
+    },
+    bluetoothVersion: {
+      type: String,
+    },
+    hasMicrophone: {
+      type: Boolean,
+    },
+    microphoneType: {
+      type: String,
+    },
+  },
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review", // References Review model
+    },
+  ],
 });
 
-equipmentSchema.pre('save', async function (next) {
-  try {
-    this.quantity = this.items.length;
-
-    this.inInventory = 0;
-
-    this.items.array.forEach(item => {
-      if (!item.isBooked) {
-        this.inInventory++;
-      };
-    });
-
-    this.items.forEach(item => {
-      if ((item.isBooked && !item.booking) || (!item.isBooked && item.booking)) {
-        throw new Error("Equipment must be either booked or not booked");
-      }
-    });
-
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
-
-module.exports = mongoose.model('Equipment', equipmentSchema);
+module.exports = mongoose.model("Equipment", equipmentSchema);

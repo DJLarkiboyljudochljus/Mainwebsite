@@ -1,33 +1,82 @@
 <header>
-	<div class="header-container">
-		<a href="/" class="logo-container">
-			<img
-				src="/img/logo.png"
-				alt="DJ Larkiboy Ljud och Ljus Logo"
-				class="logo"
-				width="60px"
-			/>
-			<h1 class="site-title"><%= title %> - Dj Larkiboy Ljud och Ljus</h1>
-		</a>
-		<nav class="main-navigation">
-			<ul class="nav-bar">
-				<li class="nav-item"><a href="/about">About Us</a></li>
-				<li class="nav-item"><a href="/contact">Contact</a></li>
-				<% if (user) { %>
-				<li class="nav-item user-welcome">
-					Welcome, <strong><%= user.name %></strong>
-				</li>
-				<li>
-					<img src="<%= user.image %>" alt="user image" class="user-image" />
-				</li>
-				<li class="nav-item"><a href="/dashboard">Dashboard</a></li>
-				<li class="nav-item"><a href="/user/profile">Profile</a></li>
-				<li class="nav-item"><a href="/api/auth/logout">Logout</a></li>
-				<% } else { %>
-				<li class="nav-item"><a href="/auth/login">Login</a></li>
-				<li class="nav-item"><a href="/auth/register">Register</a></li>
-				<% } %>
-			</ul>
-		</nav>
-	</div>
+  <h1>
+    <a href="/"
+      ><img
+        src="/favicon.ico"
+        alt="Logo"
+      /><%= title === "" ? "" : title + " - "
+      %>DJLakiboyLjudochLjus</a
+    >
+  </h1>
+
+  <!-- Checkbox to toggle the hamburger menu -->
+  <input type="checkbox" id="menu-toggle" class="menu-toggle-checkbox" />
+
+  <!-- Hamburger icon (visible on mobile) -->
+  <label for="menu-toggle" class="menu-toggle">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </label>
+
+  <nav>
+    <ul id="menu">
+      <li><a href="/#services">Services</a></li>
+      <li><a href="/#links">Links</a></li>
+      <li><a href="/#gallery">Gallery</a></li>
+      <li><a href="/about">About&nbsp;us</a></li>
+
+      <!-- Dropdown for extra links (only on large screens) -->
+      <li class="dropdown">
+        <a href="#">More&nbsp;▼</a>
+        <ul class="dropdown-menu">
+          <li><a href="/contact?n=<%= url %>">Contact</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+          <li><a href="/cookie-notice">Cookie Notice</a></li>
+          <li><a href="/browse">Browse</a></li>
+          <li><a href="/faq">FAQ</a></li>
+        </ul>
+      </li>
+
+      <!-- Extra links for mobile (Hidden on large screens) -->
+      <li class="mobile-only"><a href="/contact?n=<%= url %>">Contact</a></li>
+      <li class="mobile-only"><a href="/privacy-policy">Privacy Policy</a></li>
+      <li class="mobile-only"><a href="/cookie-notice">Cookie Notice</a></li>
+      <li class="mobile-only"><a href="/browse">Browse</a></li>
+      <li class="mobile-only"><a href="/faq">FAQ</a></li>
+
+      <% if (user) { %>
+      <li class="username">
+        Hello,&nbsp;<i><%= user.name %></i
+        ><img src="<%= user.image %>" alt="User image" />
+      </li>
+      <% if (user.Role === "Customer") {%>
+      <li><a href="/user/cart">Cart</a></li>
+      <% } else if (user.Role === "Worker") { %>
+      <li><a href="/worker/dashboard">Dashboard</a></li>
+      <% } else if (user.Role === "Admin") { %>
+      <li><a href="/admin/dashboard">Dashboard</a></li>
+      <% } %>
+      <li><a href="/user/profile">Profile</a></li>
+      <li><a href="/auth/logout">Logout</a></li>
+      <% } else { %>
+      <li><a href="/auth/login?n=<%= url %>">Login</a></li>
+      <li><a href="/auth/register?n=<%= url %>">Register</a></li>
+      <% } %>
+    </ul>
+  </nav>
 </header>
+
+<p id="activetab" hidden><%= activetab %></p>
+
+<script nonce="<%= nonce %>">
+  const activetab = document.querySelector("#activetab").textContent.trim();
+  const tablinks = document.querySelectorAll("ul li a"); // Select all links inside the list
+
+  tablinks.forEach((link) => {
+    if (link.textContent.trim().toLowerCase() === activetab.toLowerCase()) {
+      link.classList.add("active"); // Add active class to the matching link
+      link.removeAttribute("href");
+    }
+  });
+</script>

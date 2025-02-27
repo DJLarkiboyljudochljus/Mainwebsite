@@ -1,99 +1,125 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-const userSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: true,
-	},
-	email: {
-		email: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		verificationToken: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		isVerified: {
-			type: Boolean,
-			required: true,
-			default: false,
-		},
-	},
-	phone: {
-		phone: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		verificationToken: {
-			type: String,
-			required: true,
-			unique: true,
-		},
-		isVerified: {
-			type: Boolean,
-			required: true,
-			default: false,
-		},
-	},
-	password: {
-		type: String,
-		required: true,
-	},
-	role: {
-		type: String,
-		required: true,
-		enum: ["dev", "admin", "worker", "customer"],
-		default: "customer",
-	},
-	joinDate: {
-		type: Date,
-		default: new Date(),
-	},
-	tasks: [
-		{
-			title: {
-				type: String,
-				required: true,
-			},
-			status: {
-				type: Boolean,
-				default: false,
-				required: true,
-			},
-			due: {
-				type: Date,
-				required: true,
-			},
-		},
-	],
-	image: {
-		type: String,
-	},
-  orders: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Order",
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-  ],
-});
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      validate: {
+        validator: (value) =>
+          /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(value),
+        message: "Invalid email format",
+      },
+    },
+    dateCreated: {
+      type: Date,
+      default: Date.now,
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+      select: false,
+    },
+    image: {
+      type: String,
+      default: "/img/default_user.png",
+    },
+    socketId: { type: String },
+  },
+  { discriminatorKey: "Role", timestamps: true },
+);
 
-// Hash the password before saving it to the database.
 userSchema.pre("save", async function (next) {
-	if (this.isModified("password")) {
-		this.password = await bcrypt.hash(this.password, 10);
-	}
-	next();
-
+  if (!this.isModified("password")) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
 
-// Method to compare a candidate password with the stored password.
 userSchema.methods.comparePasswords = async function (candidatePassword) {
-	return await bcrypt.compare(candidatePassword, this.password);
+  return await bcrypt.compare(candidatePassword, this.password);
 };
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
+
+const Customer = User.discriminator(
+  "Customer",
+  new mongoose.Schema({
+    bookings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order", // References Order model
+      },
+    ],
+    cart: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Equipment", // References Equipment model
+      },
+    ],
+    address: {
+      street: String,
+      city: String,
+      postalCode: String,
+      country: String,
+    },
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Equipment",
+      },
+    ],
+    orderHistory: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
+    subscriptionStatus: {
+      type: String,
+      enum: ["Free", "Premium", "VIP"],
+      default: "Free",
+    },
+  }),
+);
+
+const Admin = User.discriminator(
+  "Admin",
+  new mongoose.Schema({
+    assignedDepartments: [
+      {
+        type: String,
+      },
+    ],
+  }),
+);
+
+const Worker = User.discriminator(
+  "Worker",
+  new mongoose.Schema({
+    jobTitle: String,
+    department: {
+      type: String,
+    },
+    shiftSchedule: {
+      startTime: String,
+      endTime: String,
+      days: [String], // e.g., ["Monday", "Wednesday", "Friday"]
+    },
+  }),
+);
+
+module.exports = {
+  User,
+  Customer,
+  Admin,
+  Worker,
+};

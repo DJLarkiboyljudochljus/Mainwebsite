@@ -1,6 +1,6 @@
-const nodeloggerg = require("nodeloggerg");
+const nodelogger = require("nodeloggerg");
 
-const logger = new nodeloggerg({
+const logger = new nodelogger({
   startWebServer: true,
 });
 

@@ -1,0 +1,178 @@
+<aside class="ad">
+  <button id="home" aria-selected="true">Home</button>
+  <button id="workers" aria-selected="false">Workers</button>
+  <button id="eq" aria-selected="false">Manage Equipment</button>
+  <button id="bookings" aria-selected="false">Bookings</button>
+  <button id="chat" aria-selected="false">Chat</button>
+</aside>
+
+<div id="home-container" class="tab-container">
+  <h2>
+    Welcome,
+    <%= user.name %>
+  </h2>
+</div>
+
+<div id="workers-container" class="tab-container">
+  <h2>Workers</h2>
+  <table class="styled-table workers-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Work Title</th>
+        <th>Department</th>
+        <th>Shift Schedule</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (workers.length === 0) { %>
+      <tr>
+        <td colspan="4">No workers available.</td>
+      </tr>
+      <% } else { %>
+      <% workers.forEach(worker => { %>
+      <tr>
+        <td><%= worker.name %></td>
+        <td><%= worker.jobTitle %></td>
+        <td><%= worker.department %></td>
+        <td>
+          <%= `${worker.shiftSchedule.startTime} - ${worker.shiftSchedule.endTime} (${worker.shiftSchedule.days.join(", ")})` %>
+        </td>
+      </tr>
+      <% }); %>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<div id="eq-container" class="tab-container">
+  <h2>Manage Equipment</h2>
+  <table class="styled-table eq-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (equipment.length === 0) { %>
+      <tr>
+        <td colspan="4">No Equipment Available at the moment</td>
+      </tr>
+      <% } else {%>
+      <% equipment.forEach(item => { %>
+      <tr>
+        <td><%= item.name %></td>
+        <td class="capitalize"><%= item.category %></td>
+        <td>$<%= Number(item.price).toFixed(2) %></td>
+        <td>
+          <a href="/equipment/<%= item._id %>">View</a>
+          <a href="/admin/equipment/<%= item._id %>">Edit</a>
+        </td>
+      </tr>
+      <% }); %>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<div id="bookings-container" class="tab-container">
+  <h2>Manage Bookings</h2>
+
+  <table class="styled-table bookings-table">
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Equipment</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (bookings.length === 0) { %>
+      <tr>
+        <td colspan="6">No bookings available.</td>
+      </tr>
+      <% } else { %>
+      <% bookings.forEach(booking => { %>
+      <tr>
+        <td><%= booking.customer.name %></td>
+        <td><%= booking.equipment.map(item => item.name).join(", ") %></td>
+        <td><%= booking.startDate.toLocaleDateString() %></td>
+        <td><%= booking.endDate.toLocaleDateString() %></td>
+        <td><%= booking.status %></td>
+        <td>
+          <a href="/admin/bookings/<%= booking._id %>">View</a>
+          <a href="/admin/bookings/<%= booking._id %>/edit">Edit</a>
+        </td>
+      </tr>
+      <% }); %>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<div id="chat-container" class="tab-container">
+  <div id="user-list">
+    <h3>Users</h3>
+    <ul id="users"></ul>
+  </div>
+
+  <div id="chat-box">
+    <div id="messages"></div>
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button id="send-button">Send</button>
+  </div>
+</div>
+
+<script nonce="<%= nonce %>">
+  const buttons = document.querySelectorAll("aside button");
+  const containers = document.querySelectorAll(".tab-container");
+
+  // Get active tab from URL
+  const params = new URLSearchParams(window.location.search);
+  let activeTab = params.get("activeTab") || "home";
+
+  function updateUI(tab) {
+    // Hide all containers
+    containers.forEach((container) => (container.style.display = "none"));
+
+    // Show the selected container
+    document.getElementById(`${tab}-container`).style.display = "block";
+
+    // Update button selection
+    buttons.forEach((btn) => btn.setAttribute("aria-selected", btn.id === tab));
+
+    // Update document title
+    document.title = `${tab.charAt(0).toUpperCase() + tab.slice(1)} - Dashboard - DjLarkiboyLjudOchLjus`;
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const newTab = e.target.id;
+      window.history.pushState(
+        {},
+        "",
+        `${location.pathname}?activeTab=${newTab}`,
+      );
+      updateUI(newTab);
+    });
+  });
+
+  // Handle back/forward navigation
+  window.onpopstate = () => {
+    const params = new URLSearchParams(window.location.search);
+    const newTab = params.get("activeTab") || "home";
+    updateUI(newTab);
+  };
+
+  // Initialize UI on page load
+  updateUI(activeTab);
+</script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/com.js"></script>

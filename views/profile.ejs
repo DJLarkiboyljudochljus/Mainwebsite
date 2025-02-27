@@ -1,33 +1,38 @@
-<div class="profile-page">
-	<h2>Welcome <%= user.name %></h2>
-
-	<div class="profile-info">
-		<img src="<%= user.image %>" alt="User Image" class="user-image" />
-		<p>Email: <%= user.email.email %></p>
-		<p>Phone: <%= user.phone.phone %></p>
-	</div>
-
-	<div class="profile-settings">
-		<h3>Settings</h3>
-		<ul>
-			<li><a href="/user/edit">Edit Profile</a></li>
-			<li><a href="/user/change-password">Change Password</a></li>
-		</ul>
-		<a href="/api/auth/logout" class="logout-btn">Logout</a>
-	</div>
-
-	<div class="profile-events profile-section">
-		<h3>Upcoming Events</h3>
-		<ul>
-			<% if (upcomingEvents.length > 0) { %> <% upcomingEvents.forEach(event =>
-			{ %>
-			<li>
-				<a href="/events/<%= event._id %>"><%= event.title %></a>
-				<span>Date: <%= event.date %></span>
-			</li>
-			<% }); %> <% } else { %>
-			<li>No upcoming events</li>
-			<% } %>
-		</ul>
-	</div>
-</div>
+<form
+  action="/user/update/profile"
+  method="post"
+  enctype="multipart/form-data"
+  class="white-bg"
+>
+  <div class="form-part">
+    <label for="name">Name:</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      value="<%= user.name %>"
+      required
+    />
+  </div>
+  <div class="form-part">
+    <label for="email">Email:</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      value="<%= user.email %>"
+      required
+    />
+  </div>
+  <div class="form-part">
+    <label for="image">Image:</label>
+    <input type="file" id="image" name="image" required />
+    <span class="powered-by">
+      <span>Powered by</span>
+      <img src="/img/cloudinary.jpg" alt="Cloudinary" />
+    </span>
+  </div>
+  <div class="form-part">
+    <button type="submit">Update</button>
+  </div>
+</form>
