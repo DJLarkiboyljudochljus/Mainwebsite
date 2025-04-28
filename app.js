@@ -19,6 +19,13 @@ const i18n = require("i18n");
 const auth = require("./middleware/auth");
 
 const app = express();
+
+// Middleware for logging requests
+app.use((req, res, next) => {
+  logger.info(`Received ${req.method} request at ${req.url}`);
+  next();
+});
+
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -194,16 +201,10 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; img-src 'self' https://res.cloudinary.com https://*; script-src 'self' 'nonce-${res.locals.nonce}'; style-src 'self' 'nonce-${res.locals.nonce}'; report-uri /contact/csp-security-violation`,
+    `default-src 'self'; img-src 'self' https://res.cloudinary.com https://*; script-src 'self' 'nonce-${res.locals.nonce}' 'https://pagead2.googlesyndication.com'; style-src 'self' 'nonce-${res.locals.nonce}'; report-uri /contact/csp-security-violation`,
   );
 
   res.removeHeader("X-Powered-By");
-  next();
-});
-
-// Middleware for logging requests
-app.use((req, res, next) => {
-  logger.info(`Received ${req.method} request at ${req.url}`);
   next();
 });
 
@@ -443,6 +444,8 @@ app.use("/worker", require(path.join(__dirname, "routes", "worker.js")));
 app.use((req, res, next) => {
   const err = new Error("404 Not Found");
   err.status = 404;
+
+  logger.error("404 Not Found:", req.originalUrl);
   next(err);
 });
 
