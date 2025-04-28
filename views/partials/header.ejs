@@ -5,7 +5,7 @@
         src="/favicon.ico"
         alt="Logo"
       /><%= title === "" ? "" : title + " - "
-      %>DJLakiboyLjudochLjus</a
+      %><%= __("title") %></a
     >
   </h1>
 
@@ -21,47 +21,39 @@
 
   <nav>
     <ul id="menu">
-      <li><a href="/#services">Services</a></li>
-      <li><a href="/#links">Links</a></li>
-      <li><a href="/#gallery">Gallery</a></li>
-      <li><a href="/about">About&nbsp;us</a></li>
+      <li><a href="/#services"><%= __("services") %></a></li>
+      <li><a href="/#links"><%= __("links") %></a></li>
+      <li><a href="/#gallery"><%= __("gallery") %></a></li>
+      <li><a href="/about"><%= __("about") %></a></li>
 
       <!-- Dropdown for extra links (only on large screens) -->
       <li class="dropdown">
-        <a href="#">More&nbsp;▼</a>
+        <a href="/sitemap"><%= __("more") %>&nbsp;▼</a>
         <ul class="dropdown-menu">
-          <li><a href="/contact?n=<%= url %>">Contact</a></li>
-          <li><a href="/privacy-policy">Privacy Policy</a></li>
-          <li><a href="/cookie-notice">Cookie Notice</a></li>
-          <li><a href="/browse">Browse</a></li>
-          <li><a href="/faq">FAQ</a></li>
+          <%- include("dropdown", { c: "" }) %>
         </ul>
       </li>
 
       <!-- Extra links for mobile (Hidden on large screens) -->
-      <li class="mobile-only"><a href="/contact?n=<%= url %>">Contact</a></li>
-      <li class="mobile-only"><a href="/privacy-policy">Privacy Policy</a></li>
-      <li class="mobile-only"><a href="/cookie-notice">Cookie Notice</a></li>
-      <li class="mobile-only"><a href="/browse">Browse</a></li>
-      <li class="mobile-only"><a href="/faq">FAQ</a></li>
+      <%- include("dropdown", { c: "mobile-only" }) %>
 
       <% if (user) { %>
       <li class="username">
-        Hello,&nbsp;<i><%= user.name %></i
+        <%= __("hello") %>,&nbsp;<i><%= user.name %></i
         ><img src="<%= user.image %>" alt="User image" />
       </li>
       <% if (user.Role === "Customer") {%>
-      <li><a href="/user/cart">Cart</a></li>
+      <li><a href="/user/cart"><%= __("cart") %></a></li>
       <% } else if (user.Role === "Worker") { %>
-      <li><a href="/worker/dashboard">Dashboard</a></li>
+      <li><a href="/worker/dashboard"><%= __("dashboard") %></a></li>
       <% } else if (user.Role === "Admin") { %>
-      <li><a href="/admin/dashboard">Dashboard</a></li>
+      <li><a href="/admin/dashboard"><%= __("dashboard") %></a></li>
       <% } %>
-      <li><a href="/user/profile">Profile</a></li>
-      <li><a href="/auth/logout">Logout</a></li>
+      <li><a href="/user/profile"><%= __("profile") %></a></li>
+      <li><a href="/auth/logout"><%= __("logout") %></a></li>
       <% } else { %>
-      <li><a href="/auth/login?n=<%= url %>">Login</a></li>
-      <li><a href="/auth/register?n=<%= url %>">Register</a></li>
+      <li><a href="/auth/login?n=<%= url %>"><%= __("login") %></a></li>
+      <li><a href="/auth/register?n=<%= url %>"><%= __("register") %></a></li>
       <% } %>
     </ul>
   </nav>
@@ -70,11 +62,14 @@
 <p id="activetab" hidden><%= activetab %></p>
 
 <script nonce="<%= nonce %>">
-  const activetab = document.querySelector("#activetab").textContent.trim();
-  const tablinks = document.querySelectorAll("ul li a"); // Select all links inside the list
+  const activetab = document
+    .querySelector("#activetab")
+    .textContent.trim()
+    .toLowerCase();
+  const tablinks = document.querySelectorAll("nav #menu a"); // Select all links inside the list
 
   tablinks.forEach((link) => {
-    if (link.textContent.trim().toLowerCase() === activetab.toLowerCase()) {
+    if (link.textContent.trim().toLowerCase() === activetab) {
       link.classList.add("active"); // Add active class to the matching link
       link.removeAttribute("href");
     }

@@ -1,13 +1,33 @@
-<form action="/auth/login" method="post">
+<link rel="prerender" href="/auth/login/password" />
+
+<form action="/auth/login/password" method="get">
   <div class="form-part">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required />
-  </div>
-  <div class="form-part">
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required />
+    <label for="email"><%= __("email") %>:</label>
+    <input type="email" id="email" required />
   </div>
 
   <input type="hidden" name="n" id="n" value="<%= n %>" />
-  <button type="submit">Login</button>
+  <button type="submit"><%= __("next") %></button>
 </form>
+
+<script nonce="<%= nonce %>">
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const emailInput = document.getElementById("email");
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      const email = emailInput.value.trim();
+
+      sessionStorage.setItem("email", email); // Store the email in session storage
+
+      window.location.href = "/auth/login/password"; // Redirect to the password page
+    });
+
+    const email = sessionStorage.getItem("email");
+    if (email) {
+      emailInput.value = email; // Pre-fill the email input if available
+    }
+  });
+</script>

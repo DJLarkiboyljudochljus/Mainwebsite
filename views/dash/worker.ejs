@@ -1,25 +1,25 @@
 <aside class="ad">
-  <button id="home" aria-selected="true">Home</button>
-  <button id="schedule" aria-selected="false">My Schedule</button>
-  <button id="eq" aria-selected="false">Equipment</button>
-  <button id="chat" aria-selected="false">Chat</button>
+  <button id="home" aria-selected="true"><%= __("home") %></button>
+  <button id="schedule" aria-selected="false"><%= __("my-schedule") %></button>
+  <button id="eq" aria-selected="false"><%= __("eq") %></button>
+  <button id="chat" aria-selected="false"><%= __("chat") %></button>
 </aside>
 
 <div id="home-container" class="tab-container">
   <h2>
-    Welcome,
+    <%= __("welcome") %>,
     <%= user.name %>
   </h2>
 </div>
 
 <div id="schedule-container" class="tab-container">
-  <h2>My Schedule</h2>
+  <h2><%= __("my-schedule") %></h2>
   <table class="styled-table schedule-table">
     <thead>
       <tr>
-        <th>Shift Start</th>
-        <th>Shift End</th>
-        <th>Days</th>
+        <th><%= __("shift-start") %></th>
+        <th><%= __("shift-end") %></th>
+        <th><%= __("days") %></th>
       </tr>
     </thead>
     <tbody>
@@ -33,19 +33,19 @@
 </div>
 
 <div id="eq-container" class="tab-container">
-  <h2>Equipment</h2>
+  <h2><%= __("eq") %></h2>
   <table class="styled-table eq-table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>
+        <th><%= __("name") %></th>
+        <th><%= __("category") %></th>
+        <th><%= __("prize") %></th>
       </tr>
     </thead>
     <tbody>
       <% if (equipment.length === 0) { %>
       <tr>
-        <td colspan="3">No Equipment Available</td>
+        <td colspan="3"><%= __("no-eq-available") %></td>
       </tr>
       <% } else {%>
       <% equipment.forEach(item => { %>
@@ -62,15 +62,15 @@
 
 <div id="chat-container" class="tab-container">
   <div id="user-list">
-    <h3>Users</h3>
+    <h3><%= __("users") %></h3>
     <ul id="users"></ul>
   </div>
   <div id="chat-box">
     <div id="messages">
       <h5 id="username"></h5>
     </div>
-    <input type="text" id="message" placeholder="Type a message..." />
-    <button id="send-button">Send</button>
+    <input type="text" id="message" placeholder="<%= __("type-a-message") %>" />
+    <button id="send-button"><%= __("send") %></button>
   </div>
 </div>
 

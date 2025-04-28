@@ -1,33 +1,37 @@
+<script src="/socket.io/socket.io.js"></script>
+
 <aside class="ad">
-  <button id="home" aria-selected="true">Home</button>
-  <button id="workers" aria-selected="false">Workers</button>
-  <button id="eq" aria-selected="false">Manage Equipment</button>
-  <button id="bookings" aria-selected="false">Bookings</button>
-  <button id="chat" aria-selected="false">Chat</button>
+  <button id="home" aria-selected="true"><%= __("home") %></button>
+  <button id="workers" aria-selected="false"><%= __("workers") %></button>
+  <button id="eq" aria-selected="false"><%= __("manage-eq") %></button>
+  <button id="bookings" aria-selected="false"><%= __("bookings") %></button>
+  <button id="chat" aria-selected="false"><%= __("chat") %></button>
+  <button id="reg-admin" aria-selected="false"><%= __("reg-admin") %></button>
+  <button id="reg-worker" aria-selected="false"><%= __("reg-worker") %></button>
 </aside>
 
 <div id="home-container" class="tab-container">
   <h2>
-    Welcome,
+    <%= __("welcome") %>,
     <%= user.name %>
   </h2>
 </div>
 
 <div id="workers-container" class="tab-container">
-  <h2>Workers</h2>
+  <h2><%= __("workers") %></h2>
   <table class="styled-table workers-table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Work Title</th>
-        <th>Department</th>
-        <th>Shift Schedule</th>
+        <th><%= __("name") %></th>
+        <th><%= __("work-title") %></th>
+        <th><%= __("department") %></th>
+        <th><%= __("shift-schedule") %>/th></th>
       </tr>
     </thead>
     <tbody>
       <% if (workers.length === 0) { %>
       <tr>
-        <td colspan="4">No workers available.</td>
+        <td colspan="4"><%= __("no-workers-available") %>.</td>
       </tr>
       <% } else { %>
       <% workers.forEach(worker => { %>
@@ -46,20 +50,20 @@
 </div>
 
 <div id="eq-container" class="tab-container">
-  <h2>Manage Equipment</h2>
+  <h2><%= __("manage-eq") %></h2>
   <table class="styled-table eq-table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>
-        <th>Actions</th>
+        <th><%= __("name") %></th>
+        <th><%= __("category") %></th>
+        <th><%= __("prize") %></th>
+        <th><%= __("actions") %></th>
       </tr>
     </thead>
     <tbody>
       <% if (equipment.length === 0) { %>
       <tr>
-        <td colspan="4">No Equipment Available at the moment</td>
+        <td colspan="4"><%= __("no-eq-available-at-the-moment") %></td>
       </tr>
       <% } else {%>
       <% equipment.forEach(item => { %>
@@ -79,23 +83,23 @@
 </div>
 
 <div id="bookings-container" class="tab-container">
-  <h2>Manage Bookings</h2>
+  <h2><%= __("manage-bookings") %></h2>
 
   <table class="styled-table bookings-table">
     <thead>
       <tr>
-        <th>Customer</th>
-        <th>Equipment</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Status</th>
-        <th>Actions</th>
+        <th><%= __("customer") %></th>
+        <th><%= __("eq") %></th>
+        <th><%= __("start-date") %></th>
+        <th><%= __("end-date") %></th>
+        <th><%= __("status") %></th>
+        <th><%= __("actions") %></th>
       </tr>
     </thead>
     <tbody>
       <% if (bookings.length === 0) { %>
       <tr>
-        <td colspan="6">No bookings available.</td>
+        <td colspan="6"><%= __("no-bookings-available") %></td>
       </tr>
       <% } else { %>
       <% bookings.forEach(booking => { %>
@@ -118,15 +122,66 @@
 
 <div id="chat-container" class="tab-container">
   <div id="user-list">
-    <h3>Users</h3>
-    <ul id="users"></ul>
+    <h3><%= __("users") %></h3>
+    <ul id="users">
+      <% users.forEach(user => { %>
+      <li id="user" class="user-item" data-id="<%= user._id %>">
+        <span class="user-name"><%= user.name %></span>
+      </li>
+      <% }); %>
+    </ul>
   </div>
 
   <div id="chat-box">
+    <h3><%= __("chatting-with") %>&nbsp;<span id="recipient"></span></h3>
     <div id="messages"></div>
-    <input type="text" id="message" placeholder="Type a message..." />
-    <button id="send-button">Send</button>
+    <input type="text" id="message" placeholder="<%= __("type-a-message") %>" />
+    <button id="send-button"><%= __("send") %></button>
   </div>
+</div>
+
+<div id="reg-admin-container" class="tab-container">
+  <form action="/auth/register/admin" method="post">
+    <h2><%= __("reg-admin") %></h2><br>
+    <div class="form-part">
+      <label for="name"><%= __("name") %>:</label>
+      <input type="text" id="name" name="name" required />
+    </div>
+
+    <div class="form-part">
+      <label for="email"><%= __("email") %>:</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+
+    <div class="form-part">
+      <label for="password"><%= __("password") %>:</label>
+      <input type="password" id="password" name="password" required />
+    </div>
+
+    <button type="submit"><%= __("register") %></button>
+  </form>
+</div>
+
+<div id="reg-worker-container" class="tab-container">
+  <form action="/auth/register/worker" method="post">
+    <h2><%= __("reg-worker") %></h2><br>
+    <div class="form-part">
+      <label for="name"><%= __("name") %>:</label>
+      <input type="text" id="name" name="name" required />
+    </div>
+
+    <div class="form-part">
+      <label for="email"><%= __("email") %>:</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+
+    <div class="form-part">
+      <label for="password"><%= __("password") %>:</label>
+      <input type="password" id="password" name="password" required />
+    </div>
+
+    <button type="submit"><%= __("register") %></button>
+  </form>
 </div>
 
 <script nonce="<%= nonce %>">
@@ -148,7 +203,7 @@
     buttons.forEach((btn) => btn.setAttribute("aria-selected", btn.id === tab));
 
     // Update document title
-    document.title = `${tab.charAt(0).toUpperCase() + tab.slice(1)} - Dashboard - DjLarkiboyLjudOchLjus`;
+    document.title = `${tab.charAt(0).toUpperCase() + tab.slice(1)} - <%= __("dashboard") %> - <%= __("title") %>`;
   }
 
   buttons.forEach((button) => {
@@ -174,5 +229,8 @@
   updateUI(activeTab);
 </script>
 
-<script src="/socket.io/socket.io.js"></script>
+<script nonce="<%= nonce %>">
+  const userid = "<%= user._id %>";
+</script>
+
 <script src="/js/com.js"></script>

@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= title === "" ? "" : title + " - " %>DJLakiboyLjudochLjus</title>
+    <meta name="google-adsense-account" content="ca-pub-5671784078924834" />
+    <title><!= title === "" ? "" : title + " - " !><!= __("title") !></title>
     <link rel="stylesheet" href="/css/main.css" />
   </head>
   <body>
@@ -13,8 +14,8 @@
 
     <!-- Flash Messages -->
     <div class="flash-messages">
-      <% ['success', 'error', 'info', 'successWC', 'errorWC',
-      'infoWC'].forEach(type => { %>
+      <% ['success', 'error', 'info', 'successWC', 'errorWC', 'infoWC',
+      "warning", "warningWC"].forEach(type => { %>
       <% if
       (messages[type]) { %>
       <% messages[type].forEach(msg => { %>
@@ -57,6 +58,15 @@
           spacer.style.height = "0";
           break;
       }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          const alert = document.querySelectorAll(".alert")[0];
+          if (alert) {
+            alert.remove();
+          }
+        }
+      });
     </script>
   </body>
 </html>

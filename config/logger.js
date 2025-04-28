@@ -1,7 +1,11 @@
 const nodelogger = require("nodeloggerg");
 
-const logger = new nodelogger({
+const logger = nodelogger({
   startWebServer: true,
+  authEnabled: false,
+  enableSearch: true,
+  levels: ["info", "warn", "error", "debug", "critical"],
+  compressOldLogs_: true,
 });
 
 module.exports = logger;
