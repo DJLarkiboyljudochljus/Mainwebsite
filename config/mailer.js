@@ -36,7 +36,7 @@ const renderEmail = async (templateName, data) => {
   const content = await ejs.renderFile(templatePath, data);
 
   // Render the layout and inject the content inside <%- body %>
-  return ejs.renderFile(layoutPath, { body: content, baseUrl });
+  return ejs.renderFile(layoutPath, { body: content, baseUrl, ...data });
 };
 
 const sendEmail = (to, sub, text, html) => async (req, res, next) => {

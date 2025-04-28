@@ -1,14 +1,14 @@
 <aside>
   <form method="GET" action="/browse" class="browse-filter-form">
     <div>
-        <label>Search</label>
-        <input type="text" name="search" value="<%= query.search || '' %>">
+        <label><%= __("search") %></label>
+        <input type="text" name="search" value="<%= query.search || '' %>" placeholder="<%= __("search-placeholder") %>">
     </div>
 
     <div>
-        <label>Category</label>
+        <label><%= __("category") %></label>
         <select name="category" class="capitalize">
-            <option value="">All Categories</option>
+            <option value=""><%= __("all-categories") %></option>
             <% categories.forEach(category => { %>
               <option value="<%= category %>" <%= query.category === category ? 'selected' : '' %> class="capitalize">
                   <%= category %>
@@ -18,12 +18,12 @@
     </div>
 
     <div>
-        <label>Price Range</label>
+        <label><%= __("prize-range") %></label>
         <input type="number" name="minPrice" placeholder="Min" value="<%= query.minPrice || '' %>">
         <input type="number" name="maxPrice" placeholder="Max" value="<%= query.maxPrice || '' %>">
     </div>
 
-    <button type="submit">Apply Filters</button>
+    <button type="submit"><%= __("apply-filters") %></button>
   </form>
 </aside>
 
@@ -33,10 +33,10 @@
 <table class="styled-table browse-table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Category</th>
-      <th>Price</th>
-      <th>Actions</th>
+      <th><%= __("name") %></th>
+      <th><%= __("category") %></th>
+      <th><%= __("prize") %></th>
+      <th><%= __("actions") %></th>
     </tr>
   </thead>
   <tbody>

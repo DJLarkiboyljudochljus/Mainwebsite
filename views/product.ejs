@@ -26,25 +26,25 @@
 
   <div class="product-details">
     <p>
-      <strong>Description:</strong>
+      <strong><%= __("description") %>:</strong>
       <%= product.description %>
     </p>
     <p>
-      <strong>Price:</strong>
+      <strong><%= __("prize") %>:</strong>
       <%= product.price %>&nbsp;kr
     </p>
     <p class="capitalize">
-      <strong>Category:</strong>
+      <strong><%= __("category") %>:</strong>
       <%= product.category %>
     </p>
     <p>
-      <strong>In Stock:</strong>
+      <strong><%= __("in-stock") %>:</strong>
       <%= product.inStock %>
     </p>
 
     <form action="/cart/add" method="POST" class="add-to-cart-form">
       <input type="hidden" name="productId" value="<%= product.id %>" />
-      <button type="submit">Add to Cart</button>
+      <button type="submit"><%= __("add-to-cart") %></button>
     </form>
   </div>
 </div>

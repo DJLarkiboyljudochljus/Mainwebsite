@@ -9,7 +9,7 @@ router.get("/:id", async (req, res, next) => {
     if (!product) {
       throw new Error("Product not found");
     }
-    res.render("product", { product, title: product.name });
+    res.render("product", { product, title: `${product.name}` });
   } catch (err) {
     next(err);
   }

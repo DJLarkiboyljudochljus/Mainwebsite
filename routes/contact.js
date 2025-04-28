@@ -33,15 +33,16 @@ router.post("/error", (req, res) => {
       text: `A User reported an error: ${err}`,
     });
 
-    req.flash("success", "message sent successfully");
+    req.flash("success", res.__("error-reported"));
     res.redirect("/");
   } catch (err) {
     logger.error("Error in error route", err);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: res.__("internal-server-error") });
   }
 });
 
 router.post("/csp-security-violation", limiter, (req, res) => {
+  logger.debug("CSP violation report received:", req.body);
   const report = req.body["csp-report"];
 
   if (!report) {
@@ -78,13 +79,13 @@ router.post("/csp-security-violation", limiter, (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  res.render("contact", { title: "Contact", activetab: "contact" });
+  res.render("contact", { title: res.__("contact"), activetab: "contact" });
 });
 
 router.post("/", async (req, res) => {
   const { name, email, message } = req.body;
   if (!name || !email || !message) {
-    req.flash("error", "All fields are required");
+    req.flash("error", res.__("all-fields-required"));
     return res.redirect("/contact");
   }
 
@@ -92,6 +93,7 @@ router.post("/", async (req, res) => {
     name,
     email,
     message,
+    recipientEmail: process.env.ADMIN_EMAIL,
   });
 
   // Send email
@@ -103,13 +105,14 @@ router.post("/", async (req, res) => {
   );
 
   if (await isUnsubscribed(email)) {
-    req.flash("error", "You have been unsubscribed from receiving emails");
+    req.flash("error", res.__("unsubscribed"));
     return res.redirect(req.n);
   }
 
   const responseEmailHTML = await transporter.renderEmail("contactResponse", {
     name,
     email,
+    recipientEmail: email,
   });
 
   setTimeout(async () => {

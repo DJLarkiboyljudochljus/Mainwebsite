@@ -14,11 +14,26 @@ const Equipment = require("./models/Equipment");
 const Message = require("./models/Message");
 const http = require("http");
 const socketIo = require("socket.io");
+const axios = require("axios");
+const i18n = require("i18n");
+const auth = require("./middleware/auth");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = socketIo(server);
+
+const supportedLanguages = ["en", "sv", "de", "fr"];
+const ipCache = {};
+const CACHE_EXPIRATION = 24 * 60 * 60 * 1000;
+const DEFAULT_LANGUAGE = "en";
+
+if (!supportedLanguages.includes(DEFAULT_LANGUAGE)) {
+  console.error(
+    `Default language "${DEFAULT_LANGUAGE}" is not supported. Please update the configuration.`,
+  );
+  process.exit(1);
+}
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -28,6 +43,25 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+i18n.configure({
+  locales: supportedLanguages,
+  defaultLocale: DEFAULT_LANGUAGE,
+  directory: path.join(__dirname, "locales"),
+  queryParameter: "lang",
+  cookie: "lang",
+  autoReload: true,
+  syncFiles: true,
+  objectNotation: true,
+  logWarnFn: function (msg) {
+    logger.warn("Data from i18n: ", msg);
+  },
+  logErrorFn: function (msg) {
+    logger.error("Data from i18n: ", msg);
+  },
+});
+
+app.use(i18n.init);
 
 app.get("/favicon.ico", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "img", "favicon.ico"));
@@ -65,8 +99,58 @@ app.use(
 // Initialize flash middleware
 app.use(flash());
 
+app.use(async (req, res, next) => {
+  let lang;
+  const clientIP = req.ip;
+
+  const userLang = req.query.lang || req.cookies.lang;
+
+  if (userLang && supportedLanguages.includes(userLang)) {
+    lang = userLang;
+  } else {
+    if (
+      ipCache[clientIP] &&
+      Date.now() - ipCache[clientIP].timeStamp < CACHE_EXPIRATION
+    ) {
+      lang = ipCache[clientIP].lang;
+    } else {
+      try {
+        const response = await axios.get(
+          `https://api.ipstack.com/${clientIP}?access_key=${process.env.IPSTACK_API_KEY}`,
+        );
+
+        if (!response.data.languages) {
+          throw new Error("Failed to fetch user's language from IPStack");
+        }
+
+        let detectedLang = response.data.languages.code;
+
+        lang = supportedLanguages.includes(detectedLang)
+          ? detectedLang
+          : DEFAULT_LANGUAGE;
+
+        ipCache[clientIP] = { lang, timeStamp: Date.now() };
+      } catch (err) {
+        logger.error("Failed to fetch user's language", err);
+        lang = DEFAULT_LANGUAGE;
+      }
+    }
+  }
+
+  res.cookie("lang", lang, { maxAge: 86400000, httpOnly: true });
+
+  req.setLocale(lang);
+
+  next();
+});
+
 // Middleware to make flash messages available to all views and also set some other important locals
 app.use((req, res, next) => {
+  const copyYear =
+    new Date().getFullYear() === 2025
+      ? 2025
+      : `2025 - ${new Date().getFullYear()}`;
+
   req.n = req.query.n || req.body.n || "/";
   res.locals = {
     ...res.locals,
@@ -77,6 +161,9 @@ app.use((req, res, next) => {
     n: decodeURIComponent(req.n),
     title: "",
     page: "",
+    __: res.__,
+    lang: req.getLocale(),
+    copyright: `&copy; ${copyYear} ${res.__("title")}. ${res.__("copyright")}`,
   };
 
   next();
@@ -142,14 +229,18 @@ app.use(async (req, res, next) => {
 
 app.get("/", async (req, res) => {
   const galleryImages = await Gallery.find();
-  res.render("index", { title: "Home", gallery: galleryImages });
+  res.render("index", { title: res.__("home"), gallery: galleryImages });
+});
+
+app.get("/sitemap", (req, res) => {
+  res.render("more", { title: res.__("site-map"), activeTab: "more" });
 });
 
 app.get("/url", (req, res, next) => {
   try {
     const rawUrl = req.query.url;
     if (!rawUrl) {
-      req.flash("error", "Missing URL parameter");
+      req.flash("error", res.__("missing-url-parameter"));
       return res.status(400).redirect(req.n);
     }
 
@@ -157,7 +248,7 @@ app.get("/url", (req, res, next) => {
 
     // Prevent JavaScript-based attacks
     if (nLUrl.toLowerCase().startsWith("javascript:")) {
-      req.flash("error", "Invalid URL");
+      req.flash("error", res.__("invalid-url"));
       return res.status(400).redirect(req.n);
     }
 
@@ -173,7 +264,7 @@ app.get("/url", (req, res, next) => {
     try {
       parsedUrl = new URL(nLUrlWP);
     } catch (error) {
-      req.flash("error", "Invalid URL format");
+      req.flash("error", res.__("invalid-url-format"));
       return res.status(400).redirect(req.n);
     }
 
@@ -194,7 +285,7 @@ app.get("/url", (req, res, next) => {
     if (!isAllowed || !validHostname) {
       req.flash(
         "errorWC",
-        `External redirect to ${hostname.toLowerCase()} isn't allowed by the site owner`,
+        `${res.__("external-redirects-to")} ${hostname.toLowerCase()} ${res.__("not-allowed")}`,
       );
       return res.redirect(req.n);
     }
@@ -207,8 +298,19 @@ app.get("/url", (req, res, next) => {
 });
 
 app.get("/faq", (req, res) => {
-  res.render("faq", { title: "FAQ", activetab: "faq" });
+  res.render("faq", { title: res.__("faq"), activetab: "faq" });
 });
+
+if (process.env.NODE_ENV === "development") {
+  app.get("/flash", (req, res) => {
+    req.flash("success", "Flash message test");
+    req.flash("error", "Flash message test error");
+    req.flash("errorWC", "Flash message test warning");
+    req.flash("info", "Flash message test info");
+    req.flash("infoWC", "Flash message test warning info");
+    res.redirect("/");
+  });
+}
 
 app.get("/my-account", (req, res, next) => {
   try {
@@ -227,7 +329,7 @@ app.get("/my-account", (req, res, next) => {
 });
 
 app.get("/about", (req, res) => {
-  res.render("about", { title: "About", activetab: "about us" });
+  res.render("about", { title: res.__("about"), activetab: "about us" });
 });
 
 app.get("/unsubscribe", async (req, res, next) => {
@@ -235,7 +337,7 @@ app.get("/unsubscribe", async (req, res, next) => {
     const user = await User.User.findOne({ email });
 
     if (!user) {
-      req.flash("error", "User not found");
+      req.flash("error", res.__("user-not-found"));
       return res.redirect(req.n);
     }
 
@@ -248,14 +350,14 @@ app.get("/unsubscribe", async (req, res, next) => {
 
 app.get("/privacy-policy", (req, res) => {
   res.render("privacy-policy", {
-    title: "Privacy Policy",
+    title: res.__("privacy"),
     activetab: "privacy policy",
   });
 });
 
 app.get("/cookie-notice", (req, res) => {
   res.render("cookie-notice", {
-    title: "Cookie Notice",
+    title: res.__("cookie"),
     activetab: "cookie notice",
   });
 });
@@ -279,15 +381,8 @@ app.get("/messages/:userId", async (req, res) => {
 
     res.json(messages); // Return messages as a response
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch messages" });
+    res.status(500).json({ error: res.__("error-fetching-messages") });
   }
-});
-
-app.get("/flash", (req, res) => {
-  req.flash("info", "welcome to djlarkiboyljudochljus");
-  req.flash("error", "error flash message");
-  req.flash("success", "success flash message");
-  res.redirect("/");
 });
 
 app.get("/browse", async (req, res, next) => {
@@ -324,7 +419,7 @@ app.get("/browse", async (req, res, next) => {
       equipment,
       categories,
       query: req.query,
-      title: "Browse",
+      title: res.__("browse"),
       activetab: "browse",
     });
   } catch (err) {
@@ -333,19 +428,16 @@ app.get("/browse", async (req, res, next) => {
   }
 });
 
+app.use("/admin", auth(["admin"]));
+app.use("/worker", auth(["worker"]));
+app.use("/user", auth());
+
 app.use("/admin", require(path.join(__dirname, "routes", "admin.js")));
 app.use("/contact", require(path.join(__dirname, "routes", "contact.js")));
 app.use("/auth", require(path.join(__dirname, "routes", "auth.js")));
 app.use("/user", require(path.join(__dirname, "routes", "user.js")));
 app.use("/equipment", require(path.join(__dirname, "routes", "equip.js")));
 app.use("/worker", require(path.join(__dirname, "routes", "worker.js")));
-
-app.get("/500", (req, res, next) => {
-  const err = new Error("Example 500 server error");
-  err.status = 500;
-
-  next(err);
-});
 
 // Error handling for 404
 app.use((req, res, next) => {
@@ -364,10 +456,54 @@ app.use((err, req, res, next) => {
 
   res
     .status(err.status || err.statusCode || 500)
-    .render("err", { h: false, title: "Error", err: err.message });
+    .render("err", { h: false, title: res.__("error"), err: err.message });
 });
 
-// let onlineUsers = {};
+io.on("connection", (socket) => {
+  const socketId = socket.id;
+  logger.info(`Socket connected: ${socketId}`);
+
+  socket.on("join", (userId) => {
+    const user = User.User.findByIdAndUpdate(userId, {
+      socketId: socketId,
+    });
+    if (user) {
+      logger.info(`User ${userId} joined with socket ID: ${socketId}`);
+    }
+  });
+
+  socket.on("message", async (message) => {
+    const { senderId, receiverId, content } = message;
+
+    const sender = await User.User.findById(senderId);
+    const receiver = await User.User.findById(receiverId);
+
+    if (!sender || !receiver) {
+      logger.error("Sender or receiver not found");
+      return;
+    }
+
+    const newMessage = new Message({
+      sender,
+      receiver,
+      content,
+    });
+
+    await newMessage.save();
+
+    if (receiver.socketId) {
+      io.to(receiver.socketId).emit("message", newMessage);
+    }
+  });
+
+  socket.on("disconnect", async () => {
+    await User.User.findOneAndUpdate(
+      { socketId: socketId },
+      { socketId: null },
+    );
+    logger.info(`Socket disconnected: ${socketId}`);
+  });
+});
 
 // Start server
 server.listen(PORT, () => {

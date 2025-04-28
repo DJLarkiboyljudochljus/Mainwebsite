@@ -3,25 +3,26 @@
 
   <div class="footer-content">
     <div class="footer-section about">
-      <h1>DjLarkiboyLjudochLjus</h1>
-      <p>Providing high-quality sound & light rentals for your events.</p>
+      <h1><%= __("title") %></h1>
+      <p><%= __("footerDesc") %></p>
+      <p><%- copyright %></p>
     </div>
 
     <div class="footer-section links">
-      <h2>Quick Links</h2>
+      <h2><%= __("quickLinks") %></h2>
       <ul>
-        <li><a href="/#">Home</a></li>
-        <li><a href="/#services">Services</a></li>
-        <li><a href="/#gallery">Gallery</a></li>
-        <li><a href="/contact?n=<%= url %>">Contact</a></li>
-        <li><a href="/privacy-policy">Privacy Policy</a></li>
-        <li><a href="/cookie-notice">Cookie Notice</a></li>
-        <li><a href="#">Back up</a></li>
+        <li><a href="/#"><%= __("home") %></a></li>
+        <li><a href="/#services"><%= __("services") %></a></li>
+        <li><a href="/#gallery"><%= __("gallery") %></a></li>
+        <li><a href="/contact?n=<%= url %>"><%= __("contact") %></a></li>
+        <li><a href="/privacy-policy"><%= __("privacy") %></a></li>
+        <li><a href="/cookie-notice"><%= __("cookie") %></a></li>
+        <li><a href="#"><%= __("backUp") %></a></li>
       </ul>
     </div>
 
     <div class="footer-section social">
-      <h2>Follow Us</h2>
+      <h2><%= __("followUs") %></h2>
       <div>
         <a href="#">Instagram</a> | <a href="#">YouTube</a> |
         <a href="#">Facebook</a>
@@ -29,9 +30,12 @@
     </div>
 
     <div class="footer-section contact">
-      <h2>Contact Us</h2>
-      <p>Email: <a href="mailto:info@djlarkiboy.com">info@djlarkiboy.com</a></p>
-      <p>Phone: <a href="tel:+46760244511">+46 76 024 45 11</a></p>
+      <h2><%= __("contactUs") %></h2>
+      <p>
+        <%= __("email") %>:
+        <a href="mailto:info@djlarkiboy.com">info@djlarkiboy.com</a>
+      </p>
+      <p><%= __("phone") %>: <a href="tel:+46760244511">+46 76 024 45 11</a></p>
     </div>
   </div>
 </div>

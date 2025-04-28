@@ -1,21 +1,21 @@
 <form action="/auth/register" method="post">
   <div class="form-part">
-    <label for="name">Name:</label>
+    <label for="name"><%= __("name") %>:</label>
     <input type="text" id="name" name="name" required />
   </div>
 
   <div class="form-part">
-    <label for="email">Email:</label>
+    <label for="email"><%= __("email") %>:</label>
     <input type="email" id="email" name="email" required />
   </div>
 
   <div class="form-part">
-    <label for="password">Password:</label>
+    <label for="password"><%= __("password") %>:</label>
     <input type="password" id="password" name="password" required />
   </div>
 
   <div class="form-part">
-    <label for="confirmPassword">Confirm Password:</label>
+    <label for="confirmPassword"><%= __("conf-password") %>:</label>
     <input
       type="password"
       id="confirmPassword"
@@ -28,7 +28,7 @@
   <input type="hidden" name="n" id="n" value="<%= n %>" />
 
   <div class="form-part">
-    <button type="submit">Register</button>
+    <button type="submit"><%= __("register") %></button>
   </div>
 </form>
 
@@ -47,6 +47,6 @@
       passwordError.textContent = "";
     }
     form.querySelector("button[type='submit']").disabled =
-      passwordValue !== confirmPasswordValue;
+      passwordValue !== confirmPasswordValue || passwordValue.length < 8;
   });
 </script>

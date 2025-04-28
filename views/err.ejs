@@ -1,16 +1,13 @@
 <form class="err-container" action="/contact/error" method="post">
-  <h1>Something went wrong</h1>
-  <p>An error occurred: <span id="err"><%= err %></span></p>
+  <h1><%= __("error-title") %></h1>
+  <p><%= __("error-desc") %>: <span id="err"><%= err %></span></p>
   <input type="hidden" name="err" id="err-input" value="<%= err %>" />
-  <p>
-    If&nbsp;you&nbsp;want&nbsp;to&nbsp;notice&nbsp;us&nbsp;about&nbsp;this&nbsp;error,&nbsp;click&nbsp;<button
-      type="submit"
-      class="a"
-    >
-      here
+  <p id="notice-prompt">
+    <%= __("error-notice-prompt") %><button type="submit" class="a">
+      <%= __("here") %>
     </button>
   </p>
-  <button type="button" id="go-back-btn">Go back</button>
+  <button type="button" id="go-back-btn"><%= __("error-btn-back") %></button>
 </form>
 
 <script nonce="<%= nonce %>">
@@ -24,6 +21,6 @@
   }
 
   document.querySelector("#err").textContent = decodeHTML(
-    document.querySelector("#err").textContent
+    document.querySelector("#err").textContent,
   );
 </script>
