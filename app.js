@@ -115,36 +115,55 @@ app.use(async (req, res, next) => {
   if (userLang && supportedLanguages.includes(userLang)) {
     lang = userLang;
   } else {
-    if (
-      ipCache[clientIP] &&
-      Date.now() - ipCache[clientIP].timeStamp < CACHE_EXPIRATION
-    ) {
-      lang = ipCache[clientIP].lang;
-    } else {
-      try {
-        const response = await axios.get(
-          `https://api.ipstack.com/${clientIP}?access_key=${process.env.IPSTACK_API_KEY}`,
-        );
+    const acceptHeader = req.headers["accept-language"];
+    if (acceptHeader) {
+      const headersLang = acceptHeader.split(",")[0].split("-")[0];
 
-        if (!response.data.languages) {
-          throw new Error("Failed to fetch user's language from IPStack");
+      if (supportedLanguages.includes(headersLang)) {
+        lang = headersLang;
+      }
+    }
+
+    if (!lang) {
+      if (
+        ipCache[clientIP] &&
+        Date.now() - ipCache[clientIP].timeStamp < CACHE_EXPIRATION
+      ) {
+        lang = ipCache[clientIP].lang;
+      } else {
+        try {
+          const response = await axios.get(
+            `https://api.ipstack.com/${clientIP}?access_key=${process.env.IPSTACK_API_KEY}`,
+          );
+
+          if (
+            !response.data.languages &&
+            response.data.languages.length === 0
+          ) {
+            throw new Error("Failed to fetch user's language from IPStack");
+          }
+
+          let detectedLang = response.data.languages[0].code;
+
+          lang = supportedLanguages.includes(detectedLang)
+            ? detectedLang
+            : DEFAULT_LANGUAGE;
+
+          ipCache[clientIP] = { lang, timeStamp: Date.now() };
+        } catch (err) {
+          logger.error("Failed to fetch user's language", err);
+          lang = DEFAULT_LANGUAGE;
         }
-
-        let detectedLang = response.data.languages.code;
-
-        lang = supportedLanguages.includes(detectedLang)
-          ? detectedLang
-          : DEFAULT_LANGUAGE;
-
-        ipCache[clientIP] = { lang, timeStamp: Date.now() };
-      } catch (err) {
-        logger.error("Failed to fetch user's language", err);
-        lang = DEFAULT_LANGUAGE;
       }
     }
   }
 
-  res.cookie("lang", lang, { maxAge: 86400000, httpOnly: true });
+  res.cookie("lang", lang, {
+    maxAge: 86400000,
+    httpOnly: process.env.NODE_ENV !== "development",
+  });
+
+  res.locals.lang = lang;
 
   req.setLocale(lang);
 
@@ -190,7 +209,7 @@ mongoose
 // Middleware for setting response headers
 app.use((req, res, next) => {
   res.locals.nonce = crypto
-    .randomBytes(32)
+    .randomBytes(crypto.randomInt(16, 48))
     .toString("base64")
     .replace("=", "")
     .replace("+", "")
@@ -201,8 +220,7 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; img-src 'self' https://res.cloudinary.com https://*; script-src 'self' 'nonce-${res.locals.nonce}' https://pagead2.googlesyndication.com *.google.com
-    *.googleads.com; style-src 'self' 'nonce-${res.locals.nonce}'; report-uri /contact/csp-security-violation`,
+    `default-src 'self'; img-src 'self' https://res.cloudinary.com https:; script-src 'self' 'nonce-${res.locals.nonce}' https://pagead2.googlesyndication.com https://*.google.com https://*.googleads.com https://*.google; style-src 'self' 'nonce-${res.locals.nonce}' https://*.google.com https://*.gstatic.com https://pagead2.googlesyndication.com; report-uri /contact/csp-security-violation; frame-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; connect-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; frame-ancestors 'self';`,
   );
 
   res.removeHeader("X-Powered-By");
@@ -456,7 +474,7 @@ app.use((err, req, res, next) => {
     return res.status(404).render("404", { title: "404 Not Found", h: false });
   }
 
-  logger.error("Error occurred when trying to access the server:", err.message);
+  logger.error("Error occurred when trying to access the server:", err);
 
   res
     .status(err.status || err.statusCode || 500)

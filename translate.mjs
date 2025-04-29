@@ -133,9 +133,12 @@ async function processTranslations() {
             textsToTranslate[key],
             lang,
           );
+          console.log(
+            `Translated key: ${key} to ${lang} with value: ${translatedTexts[key]}`,
+          );
         } catch (translateError) {
           console.error(
-            `Fallback: Keeping original text for key ${key} in ${lang}`,
+            `Fallback: Keeping original text for key ${key} in ${lang} with value: ${textsToTranslate[key]} and error: ${translateError.message}`,
           );
           translatedTexts[key] = textsToTranslate[key];
         }

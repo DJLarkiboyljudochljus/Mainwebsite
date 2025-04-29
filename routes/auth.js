@@ -32,7 +32,12 @@ router.post("/register", async (req, res, next) => {
     await newUser.save();
 
     const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET);
-    res.cookie("jwt", token, { expiresIn: "1d" });
+    res.cookie("jwt", token, {
+      expiresIn: "1d",
+      SameSite: "Lax",
+      Secure: true,
+      httpOnly: true,
+    });
 
     req.flash("success", res.__("registration-successful"));
     res.redirect(req.n);
@@ -65,9 +70,6 @@ router.post("/register/worker", auth(), async (req, res, next) => {
     const newUser = new User.Worker({ name, email, password });
     await newUser.save();
 
-    const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET);
-    res.cookie("jwt", token, { expiresIn: "1d" });
-
     req.flash("success", res.__("registration-successful"));
     res.redirect(req.n);
   } catch (err) {
@@ -98,9 +100,6 @@ router.post("/register/admin", auth(), async (req, res, next) => {
 
     const newUser = new User.Admin({ name, email, password });
     await newUser.save();
-
-    const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET);
-    res.cookie("jwt", token, { expiresIn: "1d" });
 
     req.flash("success", res.__("registration-successful"));
     res.redirect(req.n);
@@ -136,7 +135,12 @@ router.post("/login", async (req, res, next) => {
     }
 
     const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
-    res.cookie("jwt", token, { expiresIn: "1d" });
+    res.cookie("jwt", token, {
+      expiresIn: "1d",
+      httpOnly: true,
+      SameSite: "Lax",
+      Secure: true,
+    });
 
     req.flash("success", `${res.__("logged-in-as")} ${user.name}`);
     res.redirect(req.n);
