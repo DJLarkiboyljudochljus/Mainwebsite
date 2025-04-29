@@ -117,7 +117,8 @@
   "next": "Weiter",
   "sa": "Konto wechseln",
   "invalid-email-or-password": "Ungültige E-Mail oder Passwort",
-  "reg-admin": "Verwaltung registrieren",
+  "reg-admin": "Register Verwaltung",
   "reg-worker": "Register Worker",
-  "no-bookings-available": "Keine Buchungen verfügbar"
+  "no-bookings-available": "Keine Buchungen verfügbar",
+  "nonce": "nonce"
 }

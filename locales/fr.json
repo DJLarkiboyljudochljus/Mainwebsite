@@ -119,5 +119,6 @@
   "invalid-email-or-password": "Email ou mot de passe invalide",
   "reg-admin": "Administrateur du registre",
   "reg-worker": "Registre des travailleurs",
-  "no-bookings-available": "Aucune réservation disponible"
+  "no-bookings-available": "Aucune réservation disponible",
+  "nonce": "nonce"
 }

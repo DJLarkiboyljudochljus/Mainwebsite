@@ -119,5 +119,6 @@
   "invalid-email-or-password": "Ogiltig e-post eller lösenord",
   "reg-admin": "Registeradministratör",
   "reg-worker": "Registerarbetare",
-  "no-bookings-available": "Inga bokningar tillgängliga"
+  "no-bookings-available": "Inga bokningar tillgängliga",
+  "nonce": "nonce"
 }

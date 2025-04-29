@@ -3,6 +3,7 @@ const rateLimit = require("express-rate-limit");
 const transporter = require("../config/mailer");
 const logger = require("../config/logger");
 const User = require("../models/User");
+const flatted = require("flatted");
 
 const isValidUserAgent = (userAgent) => {
   const regex =
@@ -42,7 +43,7 @@ router.post("/error", (req, res) => {
 });
 
 router.post("/csp-security-violation", limiter, (req, res) => {
-  logger.debug("CSP violation report received:", req.body);
+  logger.debug("CSP violation report received:", flatted.stringify(req.body));
   const report = req.body["csp-report"];
 
   if (!report) {

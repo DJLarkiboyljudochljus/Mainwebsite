@@ -22,7 +22,7 @@ const app = express();
 
 // Middleware for logging requests
 app.use((req, res, next) => {
-  logger.info(`Received ${req.method} request at ${req.url}`);
+  logger.info(`Received ${req.method} request at ${req.url} from ${req.ip}`);
   next();
 });
 
@@ -136,14 +136,11 @@ app.use(async (req, res, next) => {
             `https://api.ipstack.com/${clientIP}?access_key=${process.env.IPSTACK_API_KEY}`,
           );
 
-          if (
-            !response.data.languages &&
-            response.data.languages.length === 0
-          ) {
+          if (!response.data.languages) {
             throw new Error("Failed to fetch user's language from IPStack");
           }
 
-          let detectedLang = response.data.languages[0].code;
+          let detectedLang = response.data.languages[0]?.code;
 
           lang = supportedLanguages.includes(detectedLang)
             ? detectedLang
@@ -220,7 +217,7 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; img-src 'self' https://res.cloudinary.com https:; script-src 'self' 'nonce-${res.locals.nonce}' https://pagead2.googlesyndication.com https://*.google.com https://*.googleads.com https://*.google; style-src 'self' 'nonce-${res.locals.nonce}' https://*.google.com https://*.gstatic.com https://pagead2.googlesyndication.com; report-uri /contact/csp-security-violation; frame-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; connect-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; frame-ancestors 'self';`,
+    `default-src 'self'; img-src 'self' https://res.cloudinary.com https:; script-src 'self' 'nonce-${res.locals.nonce}' 'unsafe-hashes' 'sha256-udQJaD2iLjLPwDBs5CIgWma5W3O8BHOI9Sy+17DR6tk=' https://pagead2.googlesyndication.com https://*.google.com https://*.googleads.com https://*.google; style-src 'self' 'nonce-${res.locals.nonce}' https://*.google.com https://*.gstatic.com https://pagead2.googlesyndication.com; report-uri /contact/csp-security-violation; frame-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; connect-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; frame-ancestors 'self';`,
   );
 
   res.removeHeader("X-Powered-By");
