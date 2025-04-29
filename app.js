@@ -201,8 +201,7 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; img-src 'self' https://res.cloudinary.com; script-src 'self' 'nonce-${res.locals.nonce}' https://pagead2.googlesyndication.com *.google.com
-    *.googleads.com; style-src 'self' 'nonce-${res.locals.nonce}'; report-uri /contact/csp-security-violation`,
+    `default-src 'self'; img-src 'self' https://res.cloudinary.com; script-src 'self' 'nonce-${res.locals.nonce}' https://pagead2.googlesyndication.com *.google.com *.googleads.com; style-src 'self' 'nonce-${res.locals.nonce}'; report-uri /contact/csp-security-violation`,
   );
 
   res.removeHeader("X-Powered-By");
