@@ -8,6 +8,7 @@
   <button id="chat" aria-selected="false"><%= __("chat") %></button>
   <button id="reg-admin" aria-selected="false"><%= __("reg-admin") %></button>
   <button id="reg-worker" aria-selected="false"><%= __("reg-worker") %></button>
+  <button id="logs" aria-selected="false"><%= __("logs") %></button>
 </aside>
 
 <div id="home-container" class="tab-container">
@@ -202,6 +203,10 @@
 
     <button type="submit"><%= __("register") %></button>
   </form>
+</div>
+
+<div id="logs-container">
+  <iframe src="/admin/logmanager" frameborder="0"></iframe>
 </div>
 
 <script nonce="<%= nonce %>">

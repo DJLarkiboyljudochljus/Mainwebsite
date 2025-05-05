@@ -217,12 +217,17 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; img-src 'self' https://res.cloudinary.com https:; script-src 'self' 'nonce-${res.locals.nonce}' 'unsafe-hashes' 'sha256-udQJaD2iLjLPwDBs5CIgWma5W3O8BHOI9Sy+17DR6tk=' https://pagead2.googlesyndication.com https://*.google.com https://*.googleads.com https://*.google; style-src 'self' 'nonce-${res.locals.nonce}' https://*.google.com https://*.gstatic.com https://pagead2.googlesyndication.com; report-uri /contact/csp-security-violation; frame-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; connect-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; frame-ancestors 'self';`,
+    `default-src 'self'; img-src 'self' https://res.cloudinary.com https:; script-src 'self' 'unsafe-inline'  https://cdnjs.cloudflare.com http://localhost:9001 https://pagead2.googlesyndication.com https://*.google.com https://*.googleads.com https://*.google; style-src 'self' 'unsafe-inline' https://*.google.com https://*.gstatic.com https://pagead2.googlesyndication.com http://localhost:9001; report-uri /contact/csp-security-violation; frame-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; connect-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; frame-ancestors 'self';`,
   );
 
   res.removeHeader("X-Powered-By");
   next();
 });
+
+("nonce-${res.locals.nonce}");
+("unsafe-hashes");
+("sha256-udQJaD2iLjLPwDBs5CIgWma5W3O8BHOI9Sy+17DR6tk=");
+("nonce-${res.locals.nonce}");
 
 // Middleware for parsing JWT tokens
 app.use(async (req, res, next) => {

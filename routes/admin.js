@@ -31,7 +31,7 @@ router.get("/dashboard", async (req, res) => {
   });
 });
 
-router.get("logmanager", async (req, res) => {
+router.get("/logmanager", async (req, res) => {
   const url = "http://localhost:9001";
 
   const response = await axios.get(url);

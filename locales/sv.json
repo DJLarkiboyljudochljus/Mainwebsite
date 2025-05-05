@@ -120,5 +120,6 @@
   "reg-admin": "Registeradministratör",
   "reg-worker": "Registerarbetare",
   "no-bookings-available": "Inga bokningar tillgängliga",
-  "nonce": "nonce"
+  "nonce": "nonce",
+  "logs": "stockar"
 }

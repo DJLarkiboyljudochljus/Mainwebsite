@@ -49,7 +49,7 @@
   "404-back-home": "🏠 Retour à la page d'accueil",
   "404-contact": "📞 Nous contacter",
   "404-back": "🡸 Go back",
-  "404-vibes": "🎶 En attendant, profitez des vibrations pendant que nous trouvons les rythmes manquants ! 🎶",
+  "404-vibes": "🎶 En attendant, profitez de quelques vibrations pendant que nous trouvons les rythmes manquants ! 🎶",
   "404-play": "Jouer le son",
   "about-desc": "Nous sommes une équipe passionnée qui se consacre à la fourniture d'équipements de sonorisation et d'éclairage de haute qualité pour des événements de toutes tailles. Forts de nos années d'expérience, nous veillons à ce que votre événement se déroule sans encombre grâce à une technologie et à une assistance de premier ordre.",
   "search": "Recherche",
@@ -75,7 +75,7 @@
   "faq-q3": "Comment louer du matériel ?",
   "faq-q4": "Quelles sont les options de paiement disponibles pour la location de matériel ?",
   "faq-q5": "Comment puis-je vérifier l'état de ma location et l'historique de mes paiements ?",
-  "faq-a2": "Pour trouver des événements DjLarkiboy près de chez vous, nous vous recommandons d'utiliser notre carte ou de contacter notre service clientèle au (123) 456-7890. Nous serons heureux de vous aider à trouver l'endroit idéal pour votre événement.",
+  "faq-a2": "Pour trouver les événements DjLarkiboy près de chez vous, nous vous recommandons d'utiliser notre carte ou de contacter notre service clientèle au (123) 456-7890. Nous serons heureux de vous aider à trouver l'endroit idéal pour votre événement.",
   "faq-a3": "Pour louer du matériel, vous procédez comme vous l'achèteriez sur n'importe quel autre site web, vous l'ajoutez à votre panier, vous sélectionnez quelques préférences personnelles et vous avez terminé !",
   "faq-issues-info-2": " ou utiliser notre",
   "faq-a4": "Nous acceptons les paiements par Swish et par carte. Veuillez noter que nous pouvons facturer des frais de traitement pour chaque paiement.",
@@ -120,5 +120,6 @@
   "reg-admin": "Administrateur du registre",
   "reg-worker": "Registre des travailleurs",
   "no-bookings-available": "Aucune réservation disponible",
-  "nonce": "nonce"
+  "nonce": "nonce",
+  "logs": "bûches"
 }

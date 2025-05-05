@@ -120,5 +120,6 @@
   "reg-admin": "Register Verwaltung",
   "reg-worker": "Register Worker",
   "no-bookings-available": "Keine Buchungen verfügbar",
-  "nonce": "nonce"
+  "nonce": "nonce",
+  "logs": "Protokolle"
 }
