@@ -27,12 +27,13 @@ app.use((req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
 const server = http.createServer(app);
 const io = socketIo(server);
 
 const supportedLanguages = ["en", "sv", "de", "fr"];
 const ipCache = {};
-const CACHE_EXPIRATION = 24 * 60 * 60 * 1000;
+const CACHE_EXPIRATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 const DEFAULT_LANGUAGE = "en";
 
 if (!supportedLanguages.includes(DEFAULT_LANGUAGE)) {
@@ -41,6 +42,17 @@ if (!supportedLanguages.includes(DEFAULT_LANGUAGE)) {
   );
   process.exit(1);
 }
+
+const countryNameMapping = {
+  en: "English",
+  sv: "Svenska",
+  de: "Deutsch",
+  fr: "Français",
+};
+
+const languages = supportedLanguages.map((lang) => {
+  return { code: lang, name: countryNameMapping[lang] };
+});
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -110,57 +122,58 @@ app.use(async (req, res, next) => {
   let lang;
   const clientIP = req.ip;
 
-  const userLang = req.query.lang || req.cookies.lang;
-
-  if (userLang && supportedLanguages.includes(userLang)) {
-    lang = userLang;
-  } else {
-    const acceptHeader = req.headers["accept-language"];
-    if (acceptHeader) {
-      const headersLang = acceptHeader.split(",")[0].split("-")[0];
-
-      if (supportedLanguages.includes(headersLang)) {
-        lang = headersLang;
-      }
+  if (Boolean(req.query.bypassQueryAndCookie)) {
+    const acceptLang = req.headers["accept-language"]
+      ?.split(",")[0]
+      ?.split("-")[0];
+    if (acceptLang && supportedLanguages.includes(acceptLang)) {
+      lang = acceptLang;
     }
+  } else {
+    const userLang = req.query.lang || req.cookies.lang;
 
-    if (!lang) {
-      if (
-        ipCache[clientIP] &&
-        Date.now() - ipCache[clientIP].timeStamp < CACHE_EXPIRATION
-      ) {
-        lang = ipCache[clientIP].lang;
+    if (userLang && supportedLanguages.includes(userLang)) {
+      lang = userLang;
+    } else {
+      const acceptLang = req.headers["accept-language"]
+        ?.split(",")[0]
+        ?.split("-")[0];
+      if (acceptLang && supportedLanguages.includes(acceptLang)) {
+        lang = acceptLang;
       } else {
-        try {
-          const response = await axios.get(
-            `https://api.ipstack.com/${clientIP}?access_key=${process.env.IPSTACK_API_KEY}`,
-          );
+        if (
+          ipCache[clientIP] &&
+          Date.now() - ipCache[clientIP].timeStamp < CACHE_EXPIRATION
+        ) {
+          lang = ipCache[clientIP].lang;
+        } else {
+          try {
+            const response = await axios.get(
+              `https://api.ipstack.com/${clientIP}?access_key=${process.env.IPSTACK_API_KEY}`,
+            );
 
-          if (!response.data.languages) {
-            throw new Error("Failed to fetch user's language from IPStack");
+            if (!response.data.languages) {
+              throw new Error("Failed to fetch user's language from IPStack");
+            }
+
+            let detectedLang = response.data.languages.code;
+
+            lang = supportedLanguages.includes(detectedLang)
+              ? detectedLang
+              : DEFAULT_LANGUAGE;
+
+            ipCache[clientIP] = { lang, timeStamp: Date.now() };
+          } catch (err) {
+            logger.error("Failed to fetch user's language", err);
+            lang = DEFAULT_LANGUAGE;
           }
-
-          let detectedLang = response.data.languages[0]?.code;
-
-          lang = supportedLanguages.includes(detectedLang)
-            ? detectedLang
-            : DEFAULT_LANGUAGE;
-
-          ipCache[clientIP] = { lang, timeStamp: Date.now() };
-        } catch (err) {
-          logger.error("Failed to fetch user's language", err);
-          lang = DEFAULT_LANGUAGE;
         }
       }
     }
   }
 
-  res.cookie("lang", lang, {
-    maxAge: 86400000,
-    httpOnly: process.env.NODE_ENV !== "development",
-  });
+  res.cookie("lang", lang, { maxAge: 86400000, sameSite: "Lax" });
 
-  res.locals.lang = lang;
 
   req.setLocale(lang);
 
@@ -187,6 +200,11 @@ app.use((req, res, next) => {
     __: res.__,
     lang: req.getLocale(),
     copyright: `&copy; ${copyYear} ${res.__("title")}. ${res.__("copyright")}`,
+    headInject: "",
+    showLoginModal: false,
+    loginError: null,
+    languages: languages,
+    currentLanguage: req.getLocale(),
   };
 
   next();
@@ -217,7 +235,7 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; img-src 'self' https://res.cloudinary.com https:; script-src 'self' 'unsafe-inline'  https://cdnjs.cloudflare.com http://localhost:9001 https://pagead2.googlesyndication.com https://*.google.com https://*.googleads.com https://*.google; style-src 'self' 'unsafe-inline' https://*.google.com https://*.gstatic.com https://pagead2.googlesyndication.com http://localhost:9001; report-uri /contact/csp-security-violation; frame-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; connect-src 'self' https://*.google.com https://*.googleads.com https://pagead2.googlesyndication.com https://*.google; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; frame-ancestors 'self';`,
+    `default-src 'self'; img-src 'self' https://res.cloudinary.com https://*; script-src 'self' 'nonce-${res.locals.nonce}'; style-src 'self' 'nonce-${res.locals.nonce}'; report-to /contact/csp-security-violation; connect-src https://*.google.com`,
   );
 
   res.removeHeader("X-Powered-By");
@@ -237,8 +255,25 @@ app.use(async (req, res, next) => {
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      if (decoded) {
+      const userIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
+      if (decoded && decoded.userIp !== userIp) {
+        logger.warn(
+          `IP mismatch for token: expected ${decoded.userIp}, got ${userIp}`,
+        );
+        res.locals.showLoginModal = true;
+        res.locals.loginError = res.__("ip-mismatch");
+      }
+
+      if (decoded.userIp === userIp) {
         req.user = await User.User.findOne({ email: decoded.email }).lean();
+      }
+    } else {
+      const hasExpired = req.cookies.sessionExpiry;
+      if (hasExpired && hasExpired < Date.now()) {
+        res.clearCookie("sessionExpiry");
+        res.locals.showLoginModal = true;
+        res.locals.loginError = res.__("session-expired");
       }
     }
   } catch (err) {
@@ -529,7 +564,4 @@ io.on("connection", (socket) => {
   });
 });
 
-// Start server
-server.listen(PORT, () => {
-  logger.info(`Server started on http://localhost:${PORT}`);
-});
+module.exports = server;

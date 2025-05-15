@@ -120,6 +120,8 @@
   "reg-admin": "Register Admin",
   "reg-worker": "Register Worker",
   "no-bookings-available": "No bookings available",
-  "nonce": "nonce",
-  "logs": "Logs"
+  "ip-mismatch": "Ip Mismatch",
+  "session-expired": "Your session has expired. Please log in again.",
+  "site-map": "Site Map"
 }
+
