@@ -19,6 +19,15 @@ const i18n = require("i18n");
 const auth = require("./middleware/auth");
 
 const app = express();
+
+// Middleware for logging requests
+app.use((req, res, next) => {
+  logger.info(`Received ${req.method} request at ${req.url} from ${req.ip}`);
+  next();
+});
+
+const PORT = process.env.PORT || 3000;
+
 const server = http.createServer(app);
 const io = socketIo(server);
 
@@ -165,6 +174,7 @@ app.use(async (req, res, next) => {
 
   res.cookie("lang", lang, { maxAge: 86400000, sameSite: "Lax" });
 
+
   req.setLocale(lang);
 
   next();
@@ -214,7 +224,7 @@ mongoose
 // Middleware for setting response headers
 app.use((req, res, next) => {
   res.locals.nonce = crypto
-    .randomBytes(32)
+    .randomBytes(crypto.randomInt(16, 48))
     .toString("base64")
     .replace("=", "")
     .replace("+", "")
@@ -232,11 +242,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware for logging requests
-app.use((req, res, next) => {
-  logger.info(`Received ${req.method} request at ${req.url}`);
-  next();
-});
+("nonce-${res.locals.nonce}");
+("unsafe-hashes");
+("sha256-udQJaD2iLjLPwDBs5CIgWma5W3O8BHOI9Sy+17DR6tk=");
+("nonce-${res.locals.nonce}");
 
 // Middleware for parsing JWT tokens
 app.use(async (req, res, next) => {
@@ -491,6 +500,8 @@ app.use("/worker", require(path.join(__dirname, "routes", "worker.js")));
 app.use((req, res, next) => {
   const err = new Error("404 Not Found");
   err.status = 404;
+
+  logger.error("404 Not Found:", req.originalUrl);
   next(err);
 });
 
@@ -500,7 +511,7 @@ app.use((err, req, res, next) => {
     return res.status(404).render("404", { title: "404 Not Found", h: false });
   }
 
-  logger.error("Error occurred when trying to access the server:", err.message);
+  logger.error("Error occurred when trying to access the server:", err);
 
   res
     .status(err.status || err.statusCode || 500)

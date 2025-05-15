@@ -35,6 +35,7 @@ router.post("/register", async (req, res, next) => {
     const newUser = new User.Customer({ name, email, password });
     await newUser.save();
 
+
     const userIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
     const token = jwt.sign(

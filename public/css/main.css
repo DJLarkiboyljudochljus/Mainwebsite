@@ -973,6 +973,17 @@ main.dashboard {
   display: none;
 }
 
+#logs-container {
+  height: 700px;
+  width: 100%;
+  background-color: #fff;
+}
+
+#logs-container iframe {
+  height: 100%;
+  width: 100%;
+}
+
 .powered-by {
   text-align: center;
   font-size: 14px;
@@ -1178,7 +1189,7 @@ body.modal-open {
   }
 
   header {
-    flex-direction: column; /* Stack header items */
+    flex-direction: row; /* Stack header items */
     align-items: flex-start;
   }
 
@@ -1209,6 +1220,7 @@ body.modal-open {
     margin-top: 10px;
     display: flex;
     z-index: 2000;
+    margin-right: 50px;
   }
 
   .menu-toggle-checkbox:checked + .menu-toggle + nav {
@@ -1362,5 +1374,11 @@ body.modal-open {
   .username img {
     width: 40px;
     height: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    margin-right: 1vw;
   }
 }

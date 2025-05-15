@@ -2,6 +2,7 @@ const router = require("express").Router();
 const User = require("../models/User");
 const Equipment = require("../models/Equipment");
 const Booking = require("../models/Booking");
+const axios = require("axios");
 
 router.get("/dashboard", async (req, res) => {
   const { activeTab } = req.query;
@@ -28,6 +29,14 @@ router.get("/dashboard", async (req, res) => {
     bookings,
     users,
   });
+});
+
+router.get("/logmanager", async (req, res) => {
+  const url = "http://localhost:9001";
+
+  const response = await axios.get(url);
+
+  res.send(response.data);
 });
 
 module.exports = router;
