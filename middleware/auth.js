@@ -6,19 +6,19 @@ const auth =
       res.status(401).redirect(`/auth/login?n=${req.url}`);
       return;
     }
+
     const rolesToLowercase = roles.map((r) => r.toLowerCase());
 
-    if (
-      rolesToLowercase.includes(req.user.Role.toLowerCase()) ||
-      req.user.Role === "Admin"
-    ) {
+    if (!rolesToLowercase.includes("admin")) rolesToLowercase.push("admin");
+
+    if (rolesToLowercase.includes(req.user.Role.toLowerCase())) {
       next();
     } else {
       req.flash(
         "error",
         "You don't have the right permissions to access this page",
       );
-      res.status(403).redirect(req.n);
+      res.status(403).redirect("/"); // Or redirect to a sensible default
       return;
     }
   };

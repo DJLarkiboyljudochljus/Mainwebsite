@@ -1,10 +1,10 @@
 {
   "name": "mainwebsite",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "cluster.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node .",
+    "dev": "nodemon ."
   },
   "author": "grizak",
   "license": "MIT",

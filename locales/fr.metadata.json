@@ -1,0 +1,746 @@
+[
+  {
+    "key": "title",
+    "value": "DjLarkiboy Events",
+    "comment": "Title of the website",
+    "translated": true
+  },
+  {
+    "key": "home",
+    "value": "Accueil",
+    "comment": "Navigation item for homepage",
+    "translated": true
+  },
+  {
+    "key": "welcome",
+    "value": "Bienvenue chez DjLarkiboy Events",
+    "comment": "Welcome message on homepage",
+    "translated": true
+  },
+  {
+    "key": "homeDesc",
+    "value": "Votre destination ultime pour des expériences de musique, lumière et son !",
+    "comment": "Homepage description text",
+    "translated": true
+  },
+  {
+    "key": "oser",
+    "value": "Nos Services",
+    "comment": "Services section header",
+    "translated": true
+  },
+  {
+    "key": "djServices",
+    "value": "Services DJ",
+    "comment": "DJ services category title",
+    "translated": true
+  },
+  {
+    "key": "djServicesDesc",
+    "value": "Services DJ professionnels pour tous types d'événements",
+    "comment": "DJ services description",
+    "translated": true
+  },
+  {
+    "key": "soundSystem",
+    "value": "Systèmes Sonores",
+    "comment": "Sound systems service title",
+    "translated": true
+  },
+  {
+    "key": "soundSystemDesc",
+    "value": "Équipement audio de haute qualité pour des expériences sonores parfaites",
+    "comment": "Sound systems service description",
+    "translated": true
+  },
+  {
+    "key": "lightSoul",
+    "value": "Solutions d'Éclairage",
+    "comment": "Lighting solutions service title",
+    "translated": true
+  },
+  {
+    "key": "lightSoulDesc",
+    "value": "Solutions d'éclairage personnalisées pour vos événements, du petit au grand",
+    "comment": "Lighting solutions service description",
+    "translated": true
+  },
+  {
+    "key": "soundSystems",
+    "value": "Systèmes Sonores",
+    "comment": "Sound systems category title (duplicate)",
+    "translated": true
+  },
+  {
+    "key": "soundSystemsDesc",
+    "value": "Équipement audio de haute qualité pour des expériences sonores parfaites",
+    "comment": "Sound systems category description (duplicate)",
+    "translated": true
+  },
+  {
+    "key": "eventPlan",
+    "value": "Planification d'Événements",
+    "comment": "Event planning service title",
+    "translated": true
+  },
+  {
+    "key": "eventPlanDesc",
+    "value": "Planifiez votre événement de l'idée à la réalisation, assurant une expérience fluide et agréable.",
+    "comment": "Event planning service description",
+    "translated": true
+  },
+  {
+    "key": "booknow",
+    "value": "Réserver Maintenant",
+    "comment": "Call to action button for booking",
+    "translated": true
+  },
+  {
+    "key": "footerDesc",
+    "value": "Fournisseur de location de son et lumière de haute qualité pour vos événements.",
+    "comment": "Footer description text",
+    "translated": true
+  },
+  {
+    "key": "quickLinks",
+    "value": "Liens Rapides",
+    "comment": "Quick links section header in footer",
+    "translated": true
+  },
+  {
+    "key": "services",
+    "value": "Services",
+    "comment": "Navigation item for services page",
+    "translated": true
+  },
+  {
+    "key": "gallery",
+    "value": "Galerie",
+    "comment": "Navigation item for gallery page",
+    "translated": true
+  },
+  {
+    "key": "contact",
+    "value": "Contact",
+    "comment": "Navigation item for contact page",
+    "translated": true
+  },
+  {
+    "key": "about",
+    "value": "À Propos",
+    "comment": "Navigation item for about page",
+    "translated": true
+  },
+  {
+    "key": "privacy",
+    "value": "Politique de Confidentialité",
+    "comment": "Footer link to privacy policy",
+    "translated": true
+  },
+  {
+    "key": "cookie",
+    "value": "Avis sur les Cookies",
+    "comment": "Footer link to cookie notice",
+    "translated": true
+  },
+  {
+    "key": "copyright",
+    "value": "Sous licence MIT",
+    "comment": "Copyright notice in footer",
+    "translated": true
+  },
+  {
+    "key": "backUp",
+    "value": "Retour en Haut",
+    "comment": "Button to scroll back to top",
+    "translated": true
+  },
+  {
+    "key": "followUs",
+    "value": "Suivez-nous",
+    "comment": "Social media section header",
+    "translated": true
+  },
+  {
+    "key": "contactUs",
+    "value": "Contactez-nous",
+    "comment": "Contact section header",
+    "translated": true
+  },
+  {
+    "key": "email",
+    "value": "E-mail",
+    "comment": "Email contact label",
+    "translated": true
+  },
+  {
+    "key": "phone",
+    "value": "Téléphone",
+    "comment": "Phone contact label",
+    "translated": true
+  },
+  {
+    "key": "links",
+    "value": "Liens",
+    "comment": "Links section header",
+    "translated": true
+  },
+  {
+    "key": "learnMore",
+    "value": "En savoir plus",
+    "comment": "Button to learn more about services",
+    "translated": true
+  },
+  {
+    "key": "faq",
+    "value": "FAQ",
+    "comment": "Navigation item for FAQ page",
+    "translated": true
+  },
+  {
+    "key": "latestNews",
+    "value": "Dernières nouvelles",
+    "comment": "Latest news section header",
+    "translated": true
+  },
+  {
+    "key": "watchVideos",
+    "value": "Regarder des vidéos",
+    "comment": "Link to watch videos",
+    "translated": true
+  },
+  {
+    "key": "listenToMusic",
+    "value": "Écouter de la musique",
+    "comment": "Link to listen to music",
+    "translated": true
+  },
+  {
+    "key": "more",
+    "value": "Plus",
+    "comment": "Button to show more content",
+    "translated": true
+  },
+  {
+    "key": "hello",
+    "value": "Bonjour",
+    "comment": "Greeting for logged-in users",
+    "translated": true
+  },
+  {
+    "key": "cart",
+    "value": "Panier",
+    "comment": "Shopping cart navigation item",
+    "translated": true
+  },
+  {
+    "key": "dashboard",
+    "value": "Tableau de bord",
+    "comment": "User dashboard navigation item",
+    "translated": true
+  },
+  {
+    "key": "login",
+    "value": "Connexion",
+    "comment": "Login button text",
+    "translated": true
+  },
+  {
+    "key": "register",
+    "value": "S'inscrire",
+    "comment": "Register button text",
+    "translated": true
+  },
+  {
+    "key": "logout",
+    "value": "Déconnexion",
+    "comment": "Logout button text",
+    "translated": true
+  },
+  {
+    "key": "profile",
+    "value": "Profil",
+    "comment": "User profile navigation item",
+    "translated": true
+  },
+  {
+    "key": "browse",
+    "value": "Parcourir",
+    "comment": "Browse content button",
+    "translated": true
+  },
+  {
+    "key": "404-title",
+    "value": "🎧🔦 Perdu dans le son et les lumières ? 🔦🎧",
+    "comment": "Title for 404 error page",
+    "translated": true
+  },
+  {
+    "key": "404-message",
+    "value": "Oups ! Il semble que cette page soit désynchronisée.",
+    "comment": "Message for 404 error page",
+    "translated": true
+  },
+  {
+    "key": "404-back-home",
+    "value": "🏠 Retour à l'accueil",
+    "comment": "Button to return to homepage from 404 page",
+    "translated": true
+  },
+  {
+    "key": "404-contact",
+    "value": "📞 Nous contacter",
+    "comment": "Contact button on 404 page",
+    "translated": true
+  },
+  {
+    "key": "404-back",
+    "value": "🡸 Retour",
+    "comment": "Button to go back from 404 page",
+    "translated": true
+  },
+  {
+    "key": "404-vibes",
+    "value": "🎶 En attendant, profitez de l'ambiance pendant que nous trouvons les rythmes manquants ! 🎶",
+    "comment": "Fun message on 404 page",
+    "translated": true
+  },
+  {
+    "key": "404-play",
+    "value": "Jouer le son",
+    "comment": "Button to play sound on 404 page",
+    "translated": true
+  },
+  {
+    "key": "about-desc",
+    "value": "Nous sommes une équipe passionnée dédiée à fournir des équipements de son et de lumière de haute qualité pour des événements de toutes tailles. Avec des années d'expérience, nous nous concentrons sur la garantie que votre événement se déroule sans accroc avec une technologie et un support de premier ordre.",
+    "comment": "Description text for about page",
+    "translated": true
+  },
+  {
+    "key": "search",
+    "value": "Rechercher",
+    "comment": "Search button text",
+    "translated": true
+  },
+  {
+    "key": "search-placeholder",
+    "value": "Rechercher des événements, services ou plus...",
+    "comment": "Placeholder text for search input",
+    "translated": true
+  },
+  {
+    "key": "category",
+    "value": "Catégorie",
+    "comment": "Category filter label",
+    "translated": true
+  },
+  {
+    "key": "all-categories",
+    "value": "Toutes les catégories",
+    "comment": "Option to show all categories",
+    "translated": true
+  },
+  {
+    "key": "prize-range",
+    "value": "Fourchette de prix",
+    "comment": "Price range filter label",
+    "translated": true
+  },
+  {
+    "key": "apply-filters",
+    "value": "Appliquer les filtres",
+    "comment": "Button to apply filters",
+    "translated": true
+  },
+  {
+    "key": "name",
+    "value": "Nom",
+    "comment": "Name field label",
+    "translated": true
+  },
+  {
+    "key": "prize",
+    "value": "Prix",
+    "comment": "Price field label",
+    "translated": true
+  },
+  {
+    "key": "actions",
+    "value": "Actions",
+    "comment": "Actions column header",
+    "translated": true
+  },
+  {
+    "key": "our-team",
+    "value": "Notre équipe",
+    "comment": "Team section header",
+    "translated": true
+  },
+  {
+    "key": "message",
+    "value": "Message",
+    "comment": "Message field label",
+    "translated": true
+  },
+  {
+    "key": "send",
+    "value": "Envoyer",
+    "comment": "Send button text",
+    "translated": true
+  },
+  {
+    "key": "error-notice-prompt",
+    "value": "Si vous souhaitez nous informer de cette erreur, cliquez ",
+    "comment": "Error notification prompt",
+    "translated": true
+  },
+  {
+    "key": "error-title",
+    "value": "Une erreur s'est produite",
+    "comment": "Error page title",
+    "translated": true
+  },
+  {
+    "key": "error-desc",
+    "value": "Une erreur est survenue",
+    "comment": "Generic error description",
+    "translated": true
+  },
+  {
+    "key": "here",
+    "value": "ici",
+    "comment": "Link text for 'here' references",
+    "translated": true
+  },
+  {
+    "key": "error-btn-back",
+    "value": "Retour",
+    "comment": "Button to go back from error page",
+    "translated": true
+  },
+  {
+    "key": "faq-q1",
+    "value": "Que fait DjLarkiboy Events ?",
+    "comment": "First FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a1",
+    "value": "DjLarkiboy Events est un leader dans la fourniture de musique, d'éclairage et de son dans la région. Notre mission est d'offrir un service et une qualité exceptionnels à nos clients, les aidant à créer des événements mémorables et agréables.",
+    "comment": "Answer to first FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-q2",
+    "value": "Comment puis-je trouver DjLarkiboy Events près de chez moi ?",
+    "comment": "Second FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-q3",
+    "value": "Comment louer du matériel ?",
+    "comment": "Third FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-q4",
+    "value": "Quelles sont les options de paiement disponibles pour la location de matériel ?",
+    "comment": "Fourth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-q5",
+    "value": "Comment puis-je vérifier le statut de ma location et mon historique de paiement ?",
+    "comment": "Fifth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a2",
+    "value": "Pour trouver DjLarkiboy Events près de chez vous, nous vous recommandons d'utiliser notre carte ou de contacter notre équipe de service client au (123) 456-7890. Nous serons ravis de vous aider à trouver l'emplacement parfait pour votre événement.",
+    "comment": "Answer to second FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a3",
+    "value": "Pour louer du matériel, procédez comme vous le feriez pour un achat sur n'importe quel autre site web, ajoutez-le à votre panier, sélectionnez quelques préférences personnelles et c'est terminé !",
+    "comment": "Answer to third FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-issues-info-2",
+    "value": " ou utilisez notre ",
+    "comment": "Part of FAQ issues information text",
+    "translated": true
+  },
+  {
+    "key": "faq-a4",
+    "value": "Nous acceptons les paiements par Swish et par carte. Veuillez noter que nous pouvons facturer de petits frais de traitement pour chaque paiement.",
+    "comment": "Answer to fourth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a5",
+    "value": "Pour vérifier le statut de votre location et votre historique de paiement, veuillez vous connecter à votre compte sur ",
+    "comment": "First part of answer to fifth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a5-2",
+    "value": " Une fois connecté, vous pouvez consulter votre historique de location, le statut de vos paiements et toute autre information pertinente.",
+    "comment": "Second part of answer to fifth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "contact-form",
+    "value": "formulaire de contact",
+    "comment": "Contact form reference text",
+    "translated": true
+  },
+  {
+    "key": "faq-issues-info",
+    "value": "Si vous rencontrez des problèmes avec le système, veuillez nous en informer en envoyant un e-mail à ",
+    "comment": "FAQ issues information text",
+    "translated": true
+  },
+  {
+    "key": "password",
+    "value": "Mot de passe",
+    "comment": "Password field label",
+    "translated": true
+  },
+  {
+    "key": "profile-picture",
+    "value": "Photo de profil",
+    "comment": "Profile picture field label",
+    "translated": true
+  },
+  {
+    "key": "powered-by",
+    "value": "Propulsé par",
+    "comment": "Powered by attribution text",
+    "translated": true
+  },
+  {
+    "key": "update",
+    "value": "Mettre à jour",
+    "comment": "Update button text",
+    "translated": true
+  },
+  {
+    "key": "conf-password",
+    "value": "Confirmer le mot de passe",
+    "comment": "Confirm password field label",
+    "translated": true
+  },
+  {
+    "key": "workers",
+    "value": "Employés",
+    "comment": "Workers section header",
+    "translated": true
+  },
+  {
+    "key": "manage-eq",
+    "value": "Gérer l'équipement",
+    "comment": "Equipment management section header",
+    "translated": true
+  },
+  {
+    "key": "bookings",
+    "value": "Réservations",
+    "comment": "Bookings section header",
+    "translated": true
+  },
+  {
+    "key": "chat",
+    "value": "Chat",
+    "comment": "Chat feature label",
+    "translated": true
+  },
+  {
+    "key": "work-title",
+    "value": "Titre du poste",
+    "comment": "Work title field label",
+    "translated": true
+  },
+  {
+    "key": "department",
+    "value": "Département",
+    "comment": "Department field label",
+    "translated": true
+  },
+  {
+    "key": "shift-schedule",
+    "value": "Planning des quarts",
+    "comment": "Shift schedule section header",
+    "translated": true
+  },
+  {
+    "key": "no-eq-available-at-the-moment",
+    "value": "Aucun équipement disponible pour le moment",
+    "comment": "Message when no equipment is available",
+    "translated": true
+  },
+  {
+    "key": "manage-bookings",
+    "value": "Gérer les réservations",
+    "comment": "Booking management section header",
+    "translated": true
+  },
+  {
+    "key": "customer",
+    "value": "Client",
+    "comment": "Customer field label",
+    "translated": true
+  },
+  {
+    "key": "eq",
+    "value": "Équipement",
+    "comment": "Equipment field label",
+    "translated": true
+  },
+  {
+    "key": "start-date",
+    "value": "Date de début",
+    "comment": "Start date field label",
+    "translated": true
+  },
+  {
+    "key": "end-date",
+    "value": "Date de fin",
+    "comment": "End date field label",
+    "translated": true
+  },
+  {
+    "key": "status",
+    "value": "Statut",
+    "comment": "Status field label",
+    "translated": true
+  },
+  {
+    "key": "users",
+    "value": "Utilisateurs",
+    "comment": "Users section header",
+    "translated": true
+  },
+  {
+    "key": "type-a-message",
+    "value": "Tapez un message...",
+    "comment": "Placeholder for message input",
+    "translated": true
+  },
+  {
+    "key": "my-schedule",
+    "value": "Mon emploi du temps",
+    "comment": "Personal schedule section header",
+    "translated": true
+  },
+  {
+    "key": "shift-start",
+    "value": "Début du quart",
+    "comment": "Shift start time label",
+    "translated": true
+  },
+  {
+    "key": "shift-end",
+    "value": "Fin du quart",
+    "comment": "Shift end time label",
+    "translated": true
+  },
+  {
+    "key": "days",
+    "value": "Jours",
+    "comment": "Days label",
+    "translated": true
+  },
+  {
+    "key": "no-eq-available",
+    "value": "Aucun équipement disponible",
+    "comment": "Message when no equipment is available (alternate)",
+    "translated": true
+  },
+  {
+    "key": "logged-in-as",
+    "value": "Connecté en tant que",
+    "comment": "User login status message",
+    "translated": true
+  },
+  {
+    "key": "admin-dashboard",
+    "value": "Tableau de bord administrateur",
+    "comment": "Admin dashboard title",
+    "translated": true
+  },
+  {
+    "key": "logged-out",
+    "value": "Vous avez été déconnecté avec succès.",
+    "comment": "Logout success message",
+    "translated": true
+  },
+  {
+    "key": "error",
+    "value": "erreur",
+    "comment": "Error label",
+    "translated": true
+  },
+  {
+    "key": "chatting-with",
+    "value": "Conversation avec",
+    "comment": "Chat session label",
+    "translated": true
+  },
+  {
+    "key": "next",
+    "value": "Suivant",
+    "comment": "Next button text",
+    "translated": true
+  },
+  {
+    "key": "sa",
+    "value": "Changer de compte",
+    "comment": "Switch account button text",
+    "translated": true
+  },
+  {
+    "key": "invalid-email-or-password",
+    "value": "Email ou mot de passe invalide",
+    "comment": "Login error message",
+    "translated": true
+  },
+  {
+    "key": "reg-admin",
+    "value": "Inscrire un administrateur",
+    "comment": "Admin registration button",
+    "translated": true
+  },
+  {
+    "key": "reg-worker",
+    "value": "Inscrire un employé",
+    "comment": "Worker registration button",
+    "translated": true
+  },
+  {
+    "key": "no-bookings-available",
+    "value": "Aucune réservation disponible",
+    "comment": "Message when no bookings are available",
+    "translated": true
+  },
+  {
+    "key": "ip-mismatch",
+    "value": "Incompatibilité d'adresse IP",
+    "comment": "IP mismatch error message",
+    "translated": true
+  },
+  {
+    "key": "session-expired",
+    "value": "Votre session a expiré. Veuillez vous reconnecter.",
+    "comment": "Session expiration message",
+    "translated": true
+  },
+  {
+    "key": "site-map",
+    "value": "Plan du site",
+    "comment": "Site map label",
+    "translated": true
+  }
+]

@@ -5,7 +5,11 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 
 router.get("/register", (req, res) => {
-  res.render("register", { activeTab: "register", title: res.__("register") });
+  res.render("register", {
+    activeTab: "register",
+    title: res.__("register"),
+    showLoginModal: false,
+  });
 });
 
 router.post("/register", async (req, res, next) => {
@@ -31,8 +35,23 @@ router.post("/register", async (req, res, next) => {
     const newUser = new User.Customer({ name, email, password });
     await newUser.save();
 
-    const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET);
-    res.cookie("jwt", token, { expiresIn: "1d" });
+    const userIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
+    const token = jwt.sign(
+      { email: newUser.email, userIp },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      },
+    );
+    res.cookie("jwt", token, {
+      maxAge: 86400000,
+      secure: true,
+      httpOnly: true,
+      sameSite: "Strict",
+    });
+
+    res.cookie("sessionExpiry", Date.now() + 86400000);
 
     req.flash("success", res.__("registration-successful"));
     res.redirect(req.n);
@@ -65,9 +84,6 @@ router.post("/register/worker", auth(), async (req, res, next) => {
     const newUser = new User.Worker({ name, email, password });
     await newUser.save();
 
-    const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET);
-    res.cookie("jwt", token, { expiresIn: "1d" });
-
     req.flash("success", res.__("registration-successful"));
     res.redirect(req.n);
   } catch (err) {
@@ -99,9 +115,6 @@ router.post("/register/admin", auth(), async (req, res, next) => {
     const newUser = new User.Admin({ name, email, password });
     await newUser.save();
 
-    const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET);
-    res.cookie("jwt", token, { expiresIn: "1d" });
-
     req.flash("success", res.__("registration-successful"));
     res.redirect(req.n);
   } catch (err) {
@@ -111,13 +124,19 @@ router.post("/register/admin", auth(), async (req, res, next) => {
 });
 
 router.get("/login", (req, res) => {
-  res.render("login", { activeTab: "login", title: res.__("login") });
+  res.render("login", {
+    activeTab: "login",
+    title: res.__("login"),
+    headInject: '<link rel="prefetch" href="/auth/login/password" />',
+    showLoginModal: false,
+  });
 });
 
 router.get("/login/password", (req, res) => {
   res.render("login-password", {
     activeTab: "login",
     title: res.__("login"),
+    showLoginModal: false,
   });
 });
 
@@ -135,8 +154,23 @@ router.post("/login", async (req, res, next) => {
       return res.redirect("/login");
     }
 
-    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
-    res.cookie("jwt", token, { expiresIn: "1d" });
+    const userIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
+    const token = jwt.sign(
+      { email: user.email, userIp },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      },
+    );
+    res.cookie("jwt", token, {
+      maxAge: 86400000,
+      secure: true,
+      httpOnly: true,
+      sameSite: "Strict",
+    });
+
+    res.cookie("sessionExpiry", Date.now() + 86400000);
 
     req.flash("success", `${res.__("logged-in-as")} ${user.name}`);
     res.redirect(req.n);
@@ -146,8 +180,9 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.get("/logout", (req, res) => {
+router.get("/logout", auth(["customer", "worker", "admin"]), (req, res) => {
   res.clearCookie("jwt");
+  res.clearCookie("sessionExpiry");
   req.flash("success", res.__("logged-out"));
   res.redirect("/");
 });

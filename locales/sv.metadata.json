@@ -1,0 +1,746 @@
+[
+  {
+    "key": "title",
+    "value": "DjLarkiboy Events",
+    "comment": "Title of the website",
+    "translated": true
+  },
+  {
+    "key": "home",
+    "value": "Hem",
+    "comment": "Navigation item for homepage",
+    "translated": true
+  },
+  {
+    "key": "welcome",
+    "value": "Välkommen till DjLarkiboy Events",
+    "comment": "Welcome message on homepage",
+    "translated": true
+  },
+  {
+    "key": "homeDesc",
+    "value": "Din ultimata destination för musik-, ljus- och ljudupplevelser!",
+    "comment": "Homepage description text",
+    "translated": true
+  },
+  {
+    "key": "oser",
+    "value": "Våra tjänster",
+    "comment": "Services section header",
+    "translated": true
+  },
+  {
+    "key": "djServices",
+    "value": "DJ-tjänster",
+    "comment": "DJ services category title",
+    "translated": true
+  },
+  {
+    "key": "djServicesDesc",
+    "value": "Professionella DJ-tjänster för alla typer av evenemang",
+    "comment": "DJ services description",
+    "translated": true
+  },
+  {
+    "key": "soundSystem",
+    "value": "Ljudsystem",
+    "comment": "Sound systems service title",
+    "translated": true
+  },
+  {
+    "key": "soundSystemDesc",
+    "value": "Högkvalitativ ljudutrustning för perfekta ljudupplevelser",
+    "comment": "Sound systems service description",
+    "translated": true
+  },
+  {
+    "key": "lightSoul",
+    "value": "Ljuslösningar",
+    "comment": "Lighting solutions service title",
+    "translated": true
+  },
+  {
+    "key": "lightSoulDesc",
+    "value": "Anpassade ljuslösningar för dina evenemang, från små till stora",
+    "comment": "Lighting solutions service description",
+    "translated": true
+  },
+  {
+    "key": "soundSystems",
+    "value": "Ljudsystem",
+    "comment": "Sound systems category title (duplicate)",
+    "translated": true
+  },
+  {
+    "key": "soundSystemsDesc",
+    "value": "Högkvalitativ ljudutrustning för perfekta ljudupplevelser",
+    "comment": "Sound systems category description (duplicate)",
+    "translated": true
+  },
+  {
+    "key": "eventPlan",
+    "value": "Evenemangsplanering",
+    "comment": "Event planning service title",
+    "translated": true
+  },
+  {
+    "key": "eventPlanDesc",
+    "value": "Planera ditt evenemang från idé till genomförande, för en smidig och trevlig upplevelse.",
+    "comment": "Event planning service description",
+    "translated": true
+  },
+  {
+    "key": "booknow",
+    "value": "Boka nu",
+    "comment": "Call to action button for booking",
+    "translated": true
+  },
+  {
+    "key": "footerDesc",
+    "value": "Tillhandahåller högkvalitativ ljud- och ljusuthyrning för dina evenemang.",
+    "comment": "Footer description text",
+    "translated": true
+  },
+  {
+    "key": "quickLinks",
+    "value": "Snabblänkar",
+    "comment": "Quick links section header in footer",
+    "translated": true
+  },
+  {
+    "key": "services",
+    "value": "Tjänster",
+    "comment": "Navigation item for services page",
+    "translated": true
+  },
+  {
+    "key": "gallery",
+    "value": "Galleri",
+    "comment": "Navigation item for gallery page",
+    "translated": true
+  },
+  {
+    "key": "contact",
+    "value": "Kontakt",
+    "comment": "Navigation item for contact page",
+    "translated": true
+  },
+  {
+    "key": "about",
+    "value": "Om oss",
+    "comment": "Navigation item for about page",
+    "translated": true
+  },
+  {
+    "key": "privacy",
+    "value": "Integritetspolicy",
+    "comment": "Footer link to privacy policy",
+    "translated": true
+  },
+  {
+    "key": "cookie",
+    "value": "Cookiemeddelande",
+    "comment": "Footer link to cookie notice",
+    "translated": true
+  },
+  {
+    "key": "copyright",
+    "value": "Licensierad med MIT",
+    "comment": "Copyright notice in footer",
+    "translated": true
+  },
+  {
+    "key": "backUp",
+    "value": "Tillbaka upp",
+    "comment": "Button to scroll back to top",
+    "translated": true
+  },
+  {
+    "key": "followUs",
+    "value": "Följ oss",
+    "comment": "Social media section header",
+    "translated": true
+  },
+  {
+    "key": "contactUs",
+    "value": "Kontakta oss",
+    "comment": "Contact section header",
+    "translated": true
+  },
+  {
+    "key": "email",
+    "value": "E-post",
+    "comment": "Email contact label",
+    "translated": true
+  },
+  {
+    "key": "phone",
+    "value": "Telefon",
+    "comment": "Phone contact label",
+    "translated": true
+  },
+  {
+    "key": "links",
+    "value": "Länkar",
+    "comment": "Links section header",
+    "translated": true
+  },
+  {
+    "key": "learnMore",
+    "value": "Läs mer",
+    "comment": "Button to learn more about services",
+    "translated": true
+  },
+  {
+    "key": "faq",
+    "value": "FAQ",
+    "comment": "Navigation item for FAQ page",
+    "translated": true
+  },
+  {
+    "key": "latestNews",
+    "value": "Senaste nytt",
+    "comment": "Latest news section header",
+    "translated": true
+  },
+  {
+    "key": "watchVideos",
+    "value": "Se videos",
+    "comment": "Link to watch videos",
+    "translated": true
+  },
+  {
+    "key": "listenToMusic",
+    "value": "Lyssna på musik",
+    "comment": "Link to listen to music",
+    "translated": true
+  },
+  {
+    "key": "more",
+    "value": "Mer",
+    "comment": "Button to show more content",
+    "translated": true
+  },
+  {
+    "key": "hello",
+    "value": "Hej",
+    "comment": "Greeting for logged-in users",
+    "translated": true
+  },
+  {
+    "key": "cart",
+    "value": "Varukorg",
+    "comment": "Shopping cart navigation item",
+    "translated": true
+  },
+  {
+    "key": "dashboard",
+    "value": "Kontrollpanel",
+    "comment": "User dashboard navigation item",
+    "translated": true
+  },
+  {
+    "key": "login",
+    "value": "Logga in",
+    "comment": "Login button text",
+    "translated": true
+  },
+  {
+    "key": "register",
+    "value": "Registrera",
+    "comment": "Register button text",
+    "translated": true
+  },
+  {
+    "key": "logout",
+    "value": "Logga ut",
+    "comment": "Logout button text",
+    "translated": true
+  },
+  {
+    "key": "profile",
+    "value": "Profil",
+    "comment": "User profile navigation item",
+    "translated": true
+  },
+  {
+    "key": "browse",
+    "value": "Bläddra",
+    "comment": "Browse content button",
+    "translated": true
+  },
+  {
+    "key": "404-title",
+    "value": "🎧🔦 Vilse i ljud och ljus? 🔦🎧",
+    "comment": "Title for 404 error page",
+    "translated": true
+  },
+  {
+    "key": "404-message",
+    "value": "Hoppsan! Det verkar som att den här sidan är ur synk.",
+    "comment": "Message for 404 error page",
+    "translated": true
+  },
+  {
+    "key": "404-back-home",
+    "value": "🏠 Tillbaka till startsidan",
+    "comment": "Button to return to homepage from 404 page",
+    "translated": true
+  },
+  {
+    "key": "404-contact",
+    "value": "📞 Kontakta oss",
+    "comment": "Contact button on 404 page",
+    "translated": true
+  },
+  {
+    "key": "404-back",
+    "value": "🡸 Gå tillbaka",
+    "comment": "Button to go back from 404 page",
+    "translated": true
+  },
+  {
+    "key": "404-vibes",
+    "value": "🎶 Under tiden, njut av lite vibbar medan vi hittar de saknade takterna! 🎶",
+    "comment": "Fun message on 404 page",
+    "translated": true
+  },
+  {
+    "key": "404-play",
+    "value": "Spela ljud",
+    "comment": "Button to play sound on 404 page",
+    "translated": true
+  },
+  {
+    "key": "about-desc",
+    "value": "Vi är ett passionerat team som är dedikerade till att tillhandahålla ljud- och ljusutrustning av hög kvalitet för evenemang av alla storlekar. Med års erfarenhet fokuserar vi på att säkerställa att ditt evenemang fungerar smidigt med toppmodern teknik och support.",
+    "comment": "Description text for about page",
+    "translated": true
+  },
+  {
+    "key": "search",
+    "value": "Sök",
+    "comment": "Search button text",
+    "translated": true
+  },
+  {
+    "key": "search-placeholder",
+    "value": "Sök efter evenemang, tjänster eller mer...",
+    "comment": "Placeholder text for search input",
+    "translated": true
+  },
+  {
+    "key": "category",
+    "value": "Kategori",
+    "comment": "Category filter label",
+    "translated": true
+  },
+  {
+    "key": "all-categories",
+    "value": "Alla kategorier",
+    "comment": "Option to show all categories",
+    "translated": true
+  },
+  {
+    "key": "prize-range",
+    "value": "Prisintervall",
+    "comment": "Price range filter label",
+    "translated": true
+  },
+  {
+    "key": "apply-filters",
+    "value": "Tillämpa filter",
+    "comment": "Button to apply filters",
+    "translated": true
+  },
+  {
+    "key": "name",
+    "value": "Namn",
+    "comment": "Name field label",
+    "translated": true
+  },
+  {
+    "key": "prize",
+    "value": "Pris",
+    "comment": "Price field label",
+    "translated": true
+  },
+  {
+    "key": "actions",
+    "value": "Åtgärder",
+    "comment": "Actions column header",
+    "translated": true
+  },
+  {
+    "key": "our-team",
+    "value": "Vårt team",
+    "comment": "Team section header",
+    "translated": true
+  },
+  {
+    "key": "message",
+    "value": "Meddelande",
+    "comment": "Message field label",
+    "translated": true
+  },
+  {
+    "key": "send",
+    "value": "Skicka",
+    "comment": "Send button text",
+    "translated": true
+  },
+  {
+    "key": "error-notice-prompt",
+    "value": "Om du vill meddela oss om detta fel, klicka ",
+    "comment": "Error notification prompt",
+    "translated": true
+  },
+  {
+    "key": "error-title",
+    "value": "Något gick fel",
+    "comment": "Error page title",
+    "translated": true
+  },
+  {
+    "key": "error-desc",
+    "value": "Ett fel inträffade",
+    "comment": "Generic error description",
+    "translated": true
+  },
+  {
+    "key": "here",
+    "value": "här",
+    "comment": "Link text for 'here' references",
+    "translated": true
+  },
+  {
+    "key": "error-btn-back",
+    "value": "Gå tillbaka",
+    "comment": "Button to go back from error page",
+    "translated": true
+  },
+  {
+    "key": "faq-q1",
+    "value": "Vad gör DjLarkiboy Events?",
+    "comment": "First FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a1",
+    "value": "DjLarkiboy Events är en ledande leverantör av musik, ljus och ljud i regionen. Vår mission är att erbjuda exceptionell service och kvalitet till våra kunder, och hjälpa dem skapa minnesvärda och trevliga evenemang.",
+    "comment": "Answer to first FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-q2",
+    "value": "Hur kan jag hitta DjLarkiboy Events nära mig?",
+    "comment": "Second FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-q3",
+    "value": "Hur hyr jag utrustning?",
+    "comment": "Third FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-q4",
+    "value": "Vilka betalningsalternativ finns tillgängliga för att hyra utrustning?",
+    "comment": "Fourth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-q5",
+    "value": "Hur kan jag kontrollera min hyrningsstatus och betalningshistorik?",
+    "comment": "Fifth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a2",
+    "value": "För att hitta DjLarkiboy Events nära dig rekommenderar vi att du använder vår karta eller kontaktar vårt kundserviceteam på (123) 456-7890. Vi hjälper dig gärna att hitta den perfekta platsen för ditt evenemang.",
+    "comment": "Answer to second FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a3",
+    "value": "För att hyra utrustning gör du som du skulle köpa på vilken annan webbplats som helst, lägg till den i din kundvagn, välj några personliga preferenser och sen är du klar!",
+    "comment": "Answer to third FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-issues-info-2",
+    "value": " eller använd vårt ",
+    "comment": "Part of FAQ issues information text",
+    "translated": true
+  },
+  {
+    "key": "faq-a4",
+    "value": "Vi accepterar betalningar via Swish och kort. Observera att vi kan ta ut en liten behandlingsavgift för varje betalning.",
+    "comment": "Answer to fourth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a5",
+    "value": "För att kontrollera din hyrningsstatus och betalningshistorik, vänligen logga in på ditt konto på ",
+    "comment": "First part of answer to fifth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "faq-a5-2",
+    "value": " När du är inloggad kan du se din hyrningshistorik, betalningsstatus och annan relevant information.",
+    "comment": "Second part of answer to fifth FAQ question",
+    "translated": true
+  },
+  {
+    "key": "contact-form",
+    "value": "kontaktformulär",
+    "comment": "Contact form reference text",
+    "translated": true
+  },
+  {
+    "key": "faq-issues-info",
+    "value": "Om du stöter på några problem med systemet, vänligen informera oss genom att skicka ett e-postmeddelande till ",
+    "comment": "FAQ issues information text",
+    "translated": true
+  },
+  {
+    "key": "password",
+    "value": "Lösenord",
+    "comment": "Password field label",
+    "translated": true
+  },
+  {
+    "key": "profile-picture",
+    "value": "Profilbild",
+    "comment": "Profile picture field label",
+    "translated": true
+  },
+  {
+    "key": "powered-by",
+    "value": "Drivs av",
+    "comment": "Powered by attribution text",
+    "translated": true
+  },
+  {
+    "key": "update",
+    "value": "Uppdatera",
+    "comment": "Update button text",
+    "translated": true
+  },
+  {
+    "key": "conf-password",
+    "value": "Bekräfta lösenord",
+    "comment": "Confirm password field label",
+    "translated": true
+  },
+  {
+    "key": "workers",
+    "value": "Anställda",
+    "comment": "Workers section header",
+    "translated": true
+  },
+  {
+    "key": "manage-eq",
+    "value": "Hantera utrustning",
+    "comment": "Equipment management section header",
+    "translated": true
+  },
+  {
+    "key": "bookings",
+    "value": "Bokningar",
+    "comment": "Bookings section header",
+    "translated": true
+  },
+  {
+    "key": "chat",
+    "value": "Chatt",
+    "comment": "Chat feature label",
+    "translated": true
+  },
+  {
+    "key": "work-title",
+    "value": "Arbetstitel",
+    "comment": "Work title field label",
+    "translated": true
+  },
+  {
+    "key": "department",
+    "value": "Avdelning",
+    "comment": "Department field label",
+    "translated": true
+  },
+  {
+    "key": "shift-schedule",
+    "value": "Skiftschema",
+    "comment": "Shift schedule section header",
+    "translated": true
+  },
+  {
+    "key": "no-eq-available-at-the-moment",
+    "value": "Ingen utrustning tillgänglig för tillfället",
+    "comment": "Message when no equipment is available",
+    "translated": true
+  },
+  {
+    "key": "manage-bookings",
+    "value": "Hantera bokningar",
+    "comment": "Booking management section header",
+    "translated": true
+  },
+  {
+    "key": "customer",
+    "value": "Kund",
+    "comment": "Customer field label",
+    "translated": true
+  },
+  {
+    "key": "eq",
+    "value": "Utrustning",
+    "comment": "Equipment field label",
+    "translated": true
+  },
+  {
+    "key": "start-date",
+    "value": "Startdatum",
+    "comment": "Start date field label",
+    "translated": true
+  },
+  {
+    "key": "end-date",
+    "value": "Slutdatum",
+    "comment": "End date field label",
+    "translated": true
+  },
+  {
+    "key": "status",
+    "value": "Status",
+    "comment": "Status field label",
+    "translated": true
+  },
+  {
+    "key": "users",
+    "value": "Användare",
+    "comment": "Users section header",
+    "translated": true
+  },
+  {
+    "key": "type-a-message",
+    "value": "Skriv ett meddelande...",
+    "comment": "Placeholder for message input",
+    "translated": true
+  },
+  {
+    "key": "my-schedule",
+    "value": "Mitt schema",
+    "comment": "Personal schedule section header",
+    "translated": true
+  },
+  {
+    "key": "shift-start",
+    "value": "Skiftets början",
+    "comment": "Shift start time label",
+    "translated": true
+  },
+  {
+    "key": "shift-end",
+    "value": "Skiftets slut",
+    "comment": "Shift end time label",
+    "translated": true
+  },
+  {
+    "key": "days",
+    "value": "Dagar",
+    "comment": "Days label",
+    "translated": true
+  },
+  {
+    "key": "no-eq-available",
+    "value": "Ingen utrustning tillgänglig",
+    "comment": "Message when no equipment is available (alternate)",
+    "translated": true
+  },
+  {
+    "key": "logged-in-as",
+    "value": "Inloggad som",
+    "comment": "User login status message",
+    "translated": true
+  },
+  {
+    "key": "admin-dashboard",
+    "value": "Adminpanel",
+    "comment": "Admin dashboard title",
+    "translated": true
+  },
+  {
+    "key": "logged-out",
+    "value": "Du har loggats ut.",
+    "comment": "Logout success message",
+    "translated": true
+  },
+  {
+    "key": "error",
+    "value": "fel",
+    "comment": "Error label",
+    "translated": true
+  },
+  {
+    "key": "chatting-with",
+    "value": "Chattar med",
+    "comment": "Chat session label",
+    "translated": true
+  },
+  {
+    "key": "next",
+    "value": "Nästa",
+    "comment": "Next button text",
+    "translated": true
+  },
+  {
+    "key": "sa",
+    "value": "Byt konto",
+    "comment": "Switch account button text",
+    "translated": true
+  },
+  {
+    "key": "invalid-email-or-password",
+    "value": "Ogiltig e-post eller lösenord",
+    "comment": "Login error message",
+    "translated": true
+  },
+  {
+    "key": "reg-admin",
+    "value": "Registrera administratör",
+    "comment": "Admin registration button",
+    "translated": true
+  },
+  {
+    "key": "reg-worker",
+    "value": "Registrera arbetare",
+    "comment": "Worker registration button",
+    "translated": true
+  },
+  {
+    "key": "no-bookings-available",
+    "value": "Inga bokningar tillgängliga",
+    "comment": "Message when no bookings are available",
+    "translated": true
+  },
+  {
+    "key": "ip-mismatch",
+    "value": "IP-adress stämmer inte överens",
+    "comment": "IP mismatch error message",
+    "translated": true
+  },
+  {
+    "key": "session-expired",
+    "value": "Din session har gått ut. Vänligen logga in igen.",
+    "comment": "Session expiration message",
+    "translated": true
+  },
+  {
+    "key": "site-map",
+    "value": "Webbplatskarta",
+    "comment": "Site map label",
+    "translated": true
+  }
+]
