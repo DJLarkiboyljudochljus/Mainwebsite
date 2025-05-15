@@ -22,7 +22,9 @@ const app = express();
 
 // Middleware for logging requests
 app.use((req, res, next) => {
-  logger.info(`Received ${req.method} request at ${req.url} from ${req.ip}`);
+  logger.info(
+    `Received ${req.method} request at ${req.url} from ${req.headers["x-forwarded-for"] || req.socket.remoteAddress}`,
+  );
   next();
 });
 
@@ -120,7 +122,7 @@ app.use(flash());
 
 app.use(async (req, res, next) => {
   let lang;
-  const clientIP = req.ip;
+  const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
   if (Boolean(req.query.bypassQueryAndCookie)) {
     const acceptLang = req.headers["accept-language"]
@@ -173,7 +175,6 @@ app.use(async (req, res, next) => {
   }
 
   res.cookie("lang", lang, { maxAge: 86400000, sameSite: "Lax" });
-
 
   req.setLocale(lang);
 
@@ -255,7 +256,9 @@ app.use(async (req, res, next) => {
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      const userIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+      const userIp =
+        req.headers["x-forwarded-for"].split(",")[0] ||
+        req.socket.remoteAddress;
 
       if (decoded && decoded.userIp !== userIp) {
         logger.warn(
