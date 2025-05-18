@@ -5,3 +5,6 @@ logs.txt
 genSec.js
 .prettierrc
 /logs
+translate.mjs
+translateFrom.json
+/locales/*.metadata.json

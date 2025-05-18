@@ -18,16 +18,18 @@ const MAX_CONCURRENT_REQUESTS = 3; // Limit concurrent requests
 const MAX_RETRIES = 3;
 const MODEL = "claude-3-5-sonnet-20240620"; // Using Claude 3.5 Sonnet for translations
 
+const languageConfig = JSON.parse(
+  await fs.readFile(
+    path.join(process.cwd(), "config", "languages.json"),
+    "utf8",
+  ),
+);
+
 // Target languages to translate to
-const languages = ["sv", "de", "fr"];
+const languages = languageConfig.supported;
 
 // Language display names for prompting
-const languageNames = {
-  sv: "Swedish",
-  de: "German",
-  fr: "French",
-  en: "English",
-};
+const languageNames = languageConfig.languageNamesEn;
 
 // Modified: Source localization file path
 const SOURCE_FILE = path.join(process.cwd(), "translateFrom.json");

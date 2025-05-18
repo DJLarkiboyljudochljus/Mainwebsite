@@ -35,8 +35,18 @@ router.post("/register", async (req, res, next) => {
     const newUser = new User.Customer({ name, email, password });
     await newUser.save();
 
-    const userIp =
-      req.headers["x-forwarded-for"].split(",")[0] || req.socket.remoteAddress;
+    let userIp;
+
+    try {
+      if (!req.headers["x-forwarded-for"]) {
+        userIp = req.socket.remoteAddress;
+      } else {
+        userIp = req.headers["x-forwarded-for"].split(",")[0];
+      }
+    } catch (err) {
+      logger.error("Error getting user IP", err);
+      userIp = "unknown";
+    }
 
     const token = jwt.sign(
       { email: newUser.email, userIp },
@@ -68,18 +78,18 @@ router.post("/register/worker", auth(), async (req, res, next) => {
 
     if (!name || !email || !password || !confirmPassword) {
       req.flash("error", res.__("all-fields-required"));
-      return res.redirect("/register");
+      return res.redirect(req.url);
     }
 
     const existingUser = await User.User.findOne({ email });
     if (existingUser) {
       req.flash("error", res.__("email-already-exists"));
-      return res.redirect("/register");
+      return res.redirect(req.url);
     }
 
     if (password !== confirmPassword) {
       req.flash("error", res.__("passwords-do-not-match"));
-      return res.redirect("/register");
+      return res.redirect(req.url);
     }
 
     const newUser = new User.Worker({ name, email, password });
@@ -99,18 +109,18 @@ router.post("/register/admin", auth(), async (req, res, next) => {
 
     if (!name || !email || !password || !confirmPassword) {
       req.flash("error", res.__("all-fields-required"));
-      return res.redirect("/register");
+      return res.redirect(req.url);
     }
 
     const existingUser = await User.User.findOne({ email });
     if (existingUser) {
       req.flash("error", res.__("email-already-exists"));
-      return res.redirect("/register");
+      return res.redirect(req.url);
     }
 
     if (password !== confirmPassword) {
       req.flash("error", res.__("passwords-do-not-match"));
-      return res.redirect("/register");
+      return res.redirect(req.url);
     }
 
     const newUser = new User.Admin({ name, email, password });
@@ -155,8 +165,18 @@ router.post("/login", async (req, res, next) => {
       return res.redirect("/login");
     }
 
-    const userIp =
-      req.headers["x-forwarded-for"].split(",")[0] || req.socket.remoteAddress;
+    let userIp;
+
+    try {
+      if (!req.headers["x-forwarded-for"]) {
+        userIp = req.socket.remoteAddress;
+      } else {
+        userIp = req.headers["x-forwarded-for"].split(",")[0];
+      }
+    } catch (err) {
+      logger.error("Error getting user IP", err);
+      userIp = "unknown";
+    }
 
     const token = jwt.sign(
       { email: user.email, userIp },
