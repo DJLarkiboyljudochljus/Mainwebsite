@@ -35,18 +35,7 @@ router.post("/register", async (req, res, next) => {
     const newUser = new User.Customer({ name, email, password });
     await newUser.save();
 
-    let userIp;
-
-    try {
-      if (!req.headers["x-forwarded-for"]) {
-        userIp = req.socket.remoteAddress;
-      } else {
-        userIp = req.headers["x-forwarded-for"].split(",")[0];
-      }
-    } catch (err) {
-      logger.error("Error getting user IP", err);
-      userIp = "unknown";
-    }
+    const userIp = req.ip;
 
     const token = jwt.sign(
       { email: newUser.email, userIp },
@@ -165,18 +154,7 @@ router.post("/login", async (req, res, next) => {
       return res.redirect("/login");
     }
 
-    let userIp;
-
-    try {
-      if (!req.headers["x-forwarded-for"]) {
-        userIp = req.socket.remoteAddress;
-      } else {
-        userIp = req.headers["x-forwarded-for"].split(",")[0];
-      }
-    } catch (err) {
-      logger.error("Error getting user IP", err);
-      userIp = "unknown";
-    }
+    const userIp = req.ip;
 
     const token = jwt.sign(
       { email: user.email, userIp },
