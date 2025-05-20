@@ -17,6 +17,8 @@ const socketIo = require("socket.io");
 const axios = require("axios");
 const i18n = require("i18n");
 const auth = require("./middleware/auth");
+const fs = require("fs");
+const cors = require("cors");
 
 const app = express();
 
@@ -28,12 +30,19 @@ app.use((req, res, next) => {
   next();
 });
 
-const PORT = process.env.PORT || 3000;
+app.use(cors());
+
+const languageConfig = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "config", "languages.json"), "utf8"),
+);
 
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const supportedLanguages = ["en", "sv", "de", "fr"];
+const supportedLanguages = languageConfig.supported;
+
+supportedLanguages.push("en");
+
 const ipCache = {};
 const CACHE_EXPIRATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 const DEFAULT_LANGUAGE = "en";
@@ -45,12 +54,7 @@ if (!supportedLanguages.includes(DEFAULT_LANGUAGE)) {
   process.exit(1);
 }
 
-const countryNameMapping = {
-  en: "English",
-  sv: "Svenska",
-  de: "Deutsch",
-  fr: "Français",
-};
+const countryNameMapping = languageConfig.countryNameMapping;
 
 const languages = supportedLanguages.map((lang) => {
   return { code: lang, name: countryNameMapping[lang] };
@@ -75,10 +79,10 @@ i18n.configure({
   syncFiles: true,
   objectNotation: true,
   logWarnFn: function (msg) {
-    logger.warn("Data from i18n: ", msg);
+    logger.warn("Warning from i18n: ", msg);
   },
   logErrorFn: function (msg) {
-    logger.error("Data from i18n: ", msg);
+    logger.error("Error from i18n: ", msg);
   },
 });
 
@@ -243,11 +247,6 @@ app.use((req, res, next) => {
   next();
 });
 
-("nonce-${res.locals.nonce}");
-("unsafe-hashes");
-("sha256-udQJaD2iLjLPwDBs5CIgWma5W3O8BHOI9Sy+17DR6tk=");
-("nonce-${res.locals.nonce}");
-
 // Middleware for parsing JWT tokens
 app.use(async (req, res, next) => {
   try {
@@ -256,9 +255,7 @@ app.use(async (req, res, next) => {
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      const userIp =
-        req.headers["x-forwarded-for"].split(",")[0] ||
-        req.socket.remoteAddress;
+      const userIp = req.ip;
 
       if (decoded && decoded.userIp !== userIp) {
         logger.warn(
@@ -268,7 +265,7 @@ app.use(async (req, res, next) => {
         res.locals.loginError = res.__("ip-mismatch");
       }
 
-      if (decoded.userIp === userIp) {
+      if (decoded && decoded.userIp === userIp) {
         req.user = await User.User.findOne({ email: decoded.email }).lean();
       }
     } else {
@@ -498,6 +495,7 @@ app.use("/auth", require(path.join(__dirname, "routes", "auth.js")));
 app.use("/user", require(path.join(__dirname, "routes", "user.js")));
 app.use("/equipment", require(path.join(__dirname, "routes", "equip.js")));
 app.use("/worker", require(path.join(__dirname, "routes", "worker.js")));
+app.use("/status", require(path.join(__dirname, "routes", "uptimerobot.js")));
 
 // Error handling for 404
 app.use((req, res, next) => {

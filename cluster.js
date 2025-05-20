@@ -1,6 +1,6 @@
+require("dotenv").config();
 const cluster = require("cluster");
 const app = require("./app");
-require("dotenv").config();
 const os = require("os");
 const logger = require("./config/logger");
 

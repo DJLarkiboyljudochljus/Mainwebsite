@@ -1,0 +1,15 @@
+{
+  "supported": ["sv", "de", "fr"],
+  "countryNameMapping": {
+    "sv": "Svenska",
+    "de": "Deutsch",
+    "fr": "Français",
+    "en": "English"
+  },
+  "languageNamesEn": {
+    "sv": "Swedish",
+    "de": "German",
+    "fr": "French",
+    "en": "English"
+  }
+}
