@@ -20,7 +20,7 @@
 
       sessionStorage.setItem("email", email); // Store the email in session storage
 
-      window.location.href = "/auth/login/password"; // Redirect to the password page
+      form.submit();
     });
 
     const email = sessionStorage.getItem("email");
