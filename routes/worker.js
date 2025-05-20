@@ -8,6 +8,7 @@ router.get("/dashboard", async (req, res) => {
     activetab: "dashboard",
     equipment,
     page: "worker dashboard",
+    titleEn: "Dashboard",
   });
 });
 

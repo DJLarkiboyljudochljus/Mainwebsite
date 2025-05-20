@@ -1,4 +1,6 @@
 {
+  "401": "Du måste logga in för att se denna resurs",
+  "403": "",
   "title": "DjLarkiboy Events",
   "home": "Hem",
   "welcome": "Välkommen till DjLarkiboy Events",

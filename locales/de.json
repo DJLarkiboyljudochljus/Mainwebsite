@@ -1,4 +1,6 @@
 {
+  "401": "Sie müssen sich anmelden, um diese Ressource anzuzeigen",
+  "403": "",
   "title": "DjLarkiboy Events",
   "home": "Startseite",
   "welcome": "Willkommen bei DjLarkiboy Events",
