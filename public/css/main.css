@@ -819,14 +819,9 @@ main.dashboard {
   border-radius: 8px;
   display: none;
 }
-#logs-container {
-  height: 700px;
+#status-container iframe {
   width: 100%;
-  background-color: #fff;
-}
-#logs-container iframe {
-  height: 100%;
-  width: 100%;
+  height: 490px;
 }
 .powered-by {
   text-align: center;

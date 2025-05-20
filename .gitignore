@@ -8,3 +8,4 @@ genSec.js
 translate.mjs
 translateFrom.json
 /locales/*.metadata.json
+dev.sh

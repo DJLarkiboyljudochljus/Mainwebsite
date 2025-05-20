@@ -18,19 +18,19 @@ const axios = require("axios");
 const i18n = require("i18n");
 const auth = require("./middleware/auth");
 const fs = require("fs");
+const cors = require("cors");
 
 const app = express();
 
 // Middleware for logging requests
 app.use((req, res, next) => {
   logger.info(
-    `Received ${req.method} request at ${req.url} from ${
-      //req.headers["x-forwarded-for"] ||
-      req.socket.remoteAddress
-    }`,
+    `Received ${req.method} request at ${req.url} from ${req.headers["x-forwarded-for"] || req.socket.remoteAddress}`,
   );
   next();
 });
+
+app.use(cors());
 
 const languageConfig = JSON.parse(
   fs.readFileSync(path.join(__dirname, "config", "languages.json"), "utf8"),
@@ -247,8 +247,6 @@ app.use((req, res, next) => {
   next();
 });
 
-("nonce-${res.locals.nonce}");
-
 // Middleware for parsing JWT tokens
 app.use(async (req, res, next) => {
   try {
@@ -257,9 +255,7 @@ app.use(async (req, res, next) => {
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      const userIp =
-        req.headers["x-forwarded-for"].split(",")[0] ||
-        req.socket.remoteAddress;
+      const userIp = req.ip;
 
       if (decoded && decoded.userIp !== userIp) {
         logger.warn(
@@ -499,6 +495,7 @@ app.use("/auth", require(path.join(__dirname, "routes", "auth.js")));
 app.use("/user", require(path.join(__dirname, "routes", "user.js")));
 app.use("/equipment", require(path.join(__dirname, "routes", "equip.js")));
 app.use("/worker", require(path.join(__dirname, "routes", "worker.js")));
+app.use("/status", require(path.join(__dirname, "routes", "uptimerobot.js")));
 
 // Error handling for 404
 app.use((req, res, next) => {

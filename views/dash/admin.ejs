@@ -8,7 +8,7 @@
   <button id="chat" aria-selected="false"><%= __("chat") %></button>
   <button id="reg-admin" aria-selected="false"><%= __("reg-admin") %></button>
   <button id="reg-worker" aria-selected="false"><%= __("reg-worker") %></button>
-  <button id="logs" aria-selected="false"><%= __("logs") %></button>
+  <button id="status" aria-selected="false"><%= __("status") %></button>
 </aside>
 
 <div id="home-container" class="tab-container">
@@ -205,12 +205,12 @@
   </form>
 </div>
 
-<div id="logs-container">
-  <iframe src="/admin/logmanager" frameborder="0"></iframe>
+<div id="status-container" class="tab-container">
+  <iframe src="/status" frameborder="0"></iframe>
 </div>
 
 <script nonce="<%= nonce %>">
-  const buttons = document.querySelectorAll("aside button");
+  const buttons = document.querySelectorAll("aside.ad button");
   const containers = document.querySelectorAll(".tab-container");
 
   // Get active tab from URL
