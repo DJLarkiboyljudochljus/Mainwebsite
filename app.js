@@ -126,9 +126,10 @@ app.use(flash());
 
 app.use(async (req, res, next) => {
   let lang;
-  const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const clientIP =
+    req.headers["x-forwarded-for"] || req.socket.remoteAddress.split(",")[0];
 
-  if (Boolean(req.query.bypassQueryAndCookie)) {
+  if (req.query.bypassQueryAndCookie === "true") {
     const acceptLang = req.headers["accept-language"]
       ?.split(",")[0]
       ?.split("-")[0];
@@ -291,7 +292,7 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/sitemap", (req, res) => {
-  res.render("more", { title: res.__("site-map"), activeTab: "more" });
+  res.render("more", { title: res.__("site-map"), activeTab: res.__("more") });
 });
 
 app.get("/url", (req, res, next) => {
@@ -356,7 +357,7 @@ app.get("/url", (req, res, next) => {
 });
 
 app.get("/faq", (req, res) => {
-  res.render("faq", { title: res.__("faq"), activetab: "faq" });
+  res.render("faq", { title: res.__("faq"), activetab: res.__("faq") });
 });
 
 if (process.env.NODE_ENV === "development") {
@@ -387,7 +388,7 @@ app.get("/my-account", (req, res, next) => {
 });
 
 app.get("/about", (req, res) => {
-  res.render("about", { title: res.__("about"), activetab: "about us" });
+  res.render("about", { title: res.__("about"), activetab: res.__("about") });
 });
 
 app.get("/unsubscribe", async (req, res, next) => {
@@ -399,7 +400,7 @@ app.get("/unsubscribe", async (req, res, next) => {
       return res.redirect(req.n);
     }
 
-    user.unsubscribed = false;
+    user.unsubscribed = true;
     await user.save();
   } catch (err) {
     next(err);
@@ -409,14 +410,14 @@ app.get("/unsubscribe", async (req, res, next) => {
 app.get("/privacy-policy", (req, res) => {
   res.render("privacy-policy", {
     title: res.__("privacy"),
-    activetab: "privacy policy",
+    activetab: res.__("privacy"),
   });
 });
 
 app.get("/cookie-notice", (req, res) => {
   res.render("cookie-notice", {
     title: res.__("cookie"),
-    activetab: "cookie notice",
+    activetab: res.__("cookie"),
   });
 });
 
@@ -478,7 +479,7 @@ app.get("/browse", async (req, res, next) => {
       categories,
       query: req.query,
       title: res.__("browse"),
-      activetab: "browse",
+      activetab: res.__("browse"),
     });
   } catch (err) {
     logger.error(err);

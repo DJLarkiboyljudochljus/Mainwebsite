@@ -26,7 +26,7 @@
         <th><%= __("name") %></th>
         <th><%= __("work-title") %></th>
         <th><%= __("department") %></th>
-        <th><%= __("shift-schedule") %>/th></th>
+        <th><%= __("shift-schedule") %></th>
       </tr>
     </thead>
     <tbody>
@@ -141,41 +141,9 @@
   </div>
 </div>
 
-<div id="reg-admin-container" class="tab-container">
-  <form action="/auth/register/admin" method="post">
-    <h2><%= __("reg-admin") %></h2><br>
-    <div class="form-part">
-      <label for="name"><%= __("name") %>:</label>
-      <input type="text" id="name" name="name" required />
-    </div>
-
-    <div class="form-part">
-      <label for="email"><%= __("email") %>:</label>
-      <input type="email" id="email" name="email" required />
-    </div>
-
-    <div class="form-part">
-      <label for="password"><%= __("password") %>:</label>
-      <input type="password" id="password" name="password" required />
-    </div>
-
-    <div class="form-part">
-      <label for="confirmPassword"><%= __("conf-password") %>:</label>
-      <input
-        type="password"
-        id="confirmPassword"
-        name="confirmPassword"
-        required
-      />
-    </div>
-
-    <button type="submit"><%= __("register") %></button>
-  </form>
-</div>
-
-<div id="reg-worker-container" class="tab-container">
-  <form action="/auth/register/worker" method="post">
-    <h2><%= __("reg-worker") %></h2><br>
+<div id="reg-container" class="tab-container">
+  <form action="" method="post">
+    <h2></h2><br>
     <div class="form-part">
       <label for="name"><%= __("name") %>:</label>
       <input type="text" id="name" name="name" required />
@@ -219,25 +187,52 @@
 
   function updateUI(tab) {
     // Hide all containers
-    containers.forEach((container) => (container.style.display = "none"));
+    containers.forEach((container) => (container.style.display = "none"));    
 
-    // Show the selected container
-    document.getElementById(`${tab}-container`).style.display = "block";
+    if (tab.startsWith("reg-")) {
+      document.querySelector("#reg-container").style.display = "block";
+
+      let formAction = "";
+      let h2Text = ""
+
+      switch (tab) {
+        case "reg-admin":
+          formAction = "/auth/register/admin";
+          h2Text = "<%= __("reg-admin") %>";
+          break;
+        case "reg-worker":
+          formAction = "/auth/register/worker";
+          h2Text = "<%= __("reg-worker") %>";
+          break;
+        default:
+          break;
+      }
+
+      document.querySelector("#reg-container form").action = formAction;
+      document.querySelector("#reg-container form h2").textContent = h2Text
+    } else {
+      document.getElementById(`${tab}-container`).style.display = "block";
+    }
 
     // Update button selection
     buttons.forEach((btn) => btn.setAttribute("aria-selected", btn.id === tab));
 
+    const tabBtn = document.querySelector(`button#${tab}`);
+
     // Update document title
-    document.title = `${tab.charAt(0).toUpperCase() + tab.slice(1)} - <%= __("dashboard") %> - <%= __("title") %>`;
+    document.title = `${tabBtn.textContent} - <%= __("dashboard") %> - <%= __("title") %>`;
   }
 
   buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
       const newTab = e.target.id;
+      const url = new URL(window.location);
+      url.searchParams.set("activeTab", newTab); // Replaces existing or adds new
+      
       window.history.pushState(
         {},
         "",
-        `${location.pathname}?activeTab=${newTab}`,
+        url.toString()
       );
       updateUI(newTab);
     });
