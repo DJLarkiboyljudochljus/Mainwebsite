@@ -28,6 +28,7 @@ router.get("/dashboard", async (req, res) => {
     activeTab,
     bookings,
     users,
+    titleEn: "Admin Dashboard",
   });
 });
 

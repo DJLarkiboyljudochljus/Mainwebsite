@@ -1,4 +1,6 @@
 {
+  "401": "Vous devez vous connecter pour voir cette ressource",
+  "403": "",
   "title": "DjLarkiboy Events",
   "home": "Accueil",
   "welcome": "Bienvenue chez DjLarkiboy Events",

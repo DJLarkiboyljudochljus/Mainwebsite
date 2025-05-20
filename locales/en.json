@@ -1,4 +1,6 @@
 {
+  "401": "You have to login to view this resource",
+  "403": "You don't have the right permissions to access this page",
   "title": "DjLarkiboy Events",
   "home": "Home",
   "welcome": "Welcome to DjLarkiboy Events",

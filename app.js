@@ -210,6 +210,7 @@ app.use((req, res, next) => {
     loginError: null,
     languages: languages,
     currentLanguage: req.getLocale(),
+    titleEn: "",
   };
 
   next();

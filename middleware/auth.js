@@ -2,7 +2,7 @@ const auth =
   (roles = ["admin", "worker", "customer"]) =>
   (req, res, next) => {
     if (!req.user) {
-      req.flash("error", "You have to login to view this resource");
+      req.flash("error", res.__("401"));
       res.status(401).redirect(`/auth/login?n=${req.url}`);
       return;
     }

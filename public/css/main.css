@@ -527,6 +527,11 @@ form {
 #send-button:hover {
   background-color: #17d9d9;
 }
+.tab-container {
+  background-color: var(--light-bg-color);
+  padding: 10px;
+  border-radius: 8px;
+}
 main.faq {
   background-color: #222;
   color: #f8f8f8;
@@ -996,7 +1001,7 @@ body.modal-open {
   border-radius: 6px;
   z-index: 100000;
 }
-@media (max-width: 1430px) {
+@media (max-width: 1440px) {
   body {
     padding: 10px;
   }
