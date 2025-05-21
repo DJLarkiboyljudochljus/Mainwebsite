@@ -25,7 +25,7 @@
 
       .monitors {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
         gap: 20px;
       }
 
@@ -93,15 +93,49 @@
       }
 
       .monitor-stats {
-        display: flex;
-        justify-content: space-between;
         margin-top: 15px;
         font-size: 0.9rem;
+      }
+
+      .stats-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
       }
 
       .uptime {
         display: flex;
         align-items: center;
+      }
+
+      .uptime-bar {
+        height: 8px;
+        width: 100%;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        overflow: hidden;
+      }
+
+      .uptime-fill {
+        height: 100%;
+        background-color: #28a745;
+        border-radius: 4px;
+      }
+
+      .time-periods {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .time-period {
+        background-color: #e9ecef;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.85rem;
       }
 
       .refresh-section {
@@ -131,58 +165,319 @@
         background-color: #0069d9;
       }
 
+      .return-btn {
+        background-color: #1affff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      .return-btn:hover {
+        background-color: #16cece;
+      }
+
+      .measurement-period {
+        background-color: #f1f3f5;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 12px;
+        font-size: 0.85rem;
+      }
+
+      .measurement-title {
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .measurement-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
       footer {
         margin-top: 3rem;
         text-align: center;
         font-size: 0.9rem;
         color: #6c757d;
       }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 18px;
+        color: #6c757d;
+      }
+
+      .loading-spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border-left-color: #007bff;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error-message {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        margin: 20px 0;
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <h1>Status Dashboard</h1>
+    <h1>Status Dashboard - Dj Larkiboy Events</h1>
 
     <div class="refresh-section">
-      <div class="last-updated">Last updated: <%= lastUpdated %></div>
-      <button class="refresh-button">Refresh Status</button>
+      <div class="last-updated">
+        Last updated: <span id="last-updated-time">Loading...</span>
+        <span id="countdown-timer"></span>
+      </div>
+      <button class="refresh-button" id="refresh-button">Refresh Status</button>
+      <button class="return-btn" id="return-btn">Return Home</button>
     </div>
 
-    <div class="monitors">
-      <% monitors.forEach(monitor => { %>
-      <div class="monitor-card">
-        <div class="monitor-name"><%= monitor.name %></div>
-        <div class="monitor-url"><%= monitor.url %></div>
-        <div class="status-indicator <%= monitor.statusClass %>">
-          <%= monitor.status %>
-        </div>
-        <div class="monitor-stats">
-          <div class="uptime">
-            <strong>Uptime:</strong>
-            <%= monitor.uptime %>%
-          </div>
-          <div class="last-downtime">
-            <strong>Last down:</strong>
-            <%= monitor.lastDowntime %>
-          </div>
-        </div>
-      </div>
-      <% }); %>
+    <div id="error-message" class="error-message">
+      Unable to load monitor data. Please try refreshing the page.
+    </div>
+
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+      Loading status information...
+    </div>
+
+    <div class="monitors" id="monitors-container">
+      <!-- Monitor data will be loaded here -->
     </div>
 
     <footer>
       Powered by
       <img src="/img/uptime-robot-logo.svg" alt="Uptimerobot" height="14" />
+      &copy; 2025 Dj Larkiboy Events
     </footer>
 
     <script nonce="<%= nonce %>">
-      // Auto-refresh the page every 5 minutes
-      setTimeout(() => {
-        location.reload();
-      }, 30 * 1000);
+      // Variables for refresh timer
+      const refreshInterval = 30; // seconds
+      let secondsLeft = refreshInterval;
+      let refreshTimer = null;
+      let isRefreshing = false;
+      let countDownInterval = null;
 
-      document
-        .querySelector(".refresh-button")
-        .addEventListener("click", () => location.reload());
+      // DOM elements
+      const monitorsContainer = document.getElementById("monitors-container");
+      const loadingElement = document.getElementById("loading");
+      const errorElement = document.getElementById("error-message");
+      const lastUpdatedElement = document.getElementById("last-updated-time");
+      const countdownElement = document.getElementById("countdown-timer");
+      const refreshButton = document.getElementById("refresh-button");
+      const returnButton = document.getElementById("return-btn");
+
+      // Check if in iframe
+      function checkIfInIframe() {
+        // Method 1: Compare window.self with window.top
+        const isInIframeMethod1 = window.self !== window.top;
+
+        // Method 2: Compare window.self with window.parent
+        const isInIframeMethod2 = window.self !== window.parent;
+
+        // Method 3: Check window.frameElement (will be null if not in iframe)
+        // Note: This may throw security errors in cross-origin situations
+        let isInIframeMethod3 = false;
+        try {
+          isInIframeMethod3 = window.frameElement !== null;
+        } catch (e) {
+          // If we get a security error, we're likely in a cross-origin iframe
+          isInIframeMethod3 = true;
+        }
+
+        return {
+          isInIframe:
+            isInIframeMethod1 || isInIframeMethod2 || isInIframeMethod3,
+          method1: isInIframeMethod1,
+          method2: isInIframeMethod2,
+          method3: isInIframeMethod3,
+        };
+      }
+
+      // Hide return button if in iframe
+      if (checkIfInIframe().isInIframe) {
+        returnButton.setAttribute("hidden", "true");
+      }
+
+      // Format dates
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleString();
+      }
+
+      // Format duration
+      function formatDuration(duration) {
+        let result = "";
+        if (duration.days > 0) result += `${duration.days}d `;
+        if (duration.hours > 0) result += `${duration.hours}h `;
+        if (duration.minutes > 0) result += `${duration.minutes}m `;
+        if (duration.seconds > 0) result += `${duration.seconds}s`;
+        return result.trim() || "0s";
+      }
+
+      // Fetch monitor data from API
+      async function fetchMonitorData() {
+        if (isRefreshing) return;
+
+        isRefreshing = true;
+        loadingElement.style.display = "block";
+        errorElement.style.display = "none";
+
+        try {
+          const response = await fetch("/status/api/monitors");
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch monitor data");
+          }
+
+          const data = await response.json();
+          displayMonitorData(data);
+          startCountdownTimer();
+          isRefreshing = false;
+        } catch (error) {
+          console.error("Error fetching monitor data:", error);
+          loadingElement.style.display = "none";
+          errorElement.style.display = "block";
+          isRefreshing = false;
+        }
+      }
+
+      // Display monitor data
+      function displayMonitorData(data) {
+        // Clear existing monitors
+        monitorsContainer.innerHTML = "";
+
+        // Create and append monitor cards
+        data.monitors.forEach((monitor) => {
+          const monitorCard = document.createElement("div");
+          monitorCard.className = "monitor-card";
+
+          // Calculate the uptime percentage fill width
+          const uptimePercentage = parseFloat(monitor.uptime.uptimePercentage);
+
+          // Create HTML structure for the monitor card
+          monitorCard.innerHTML = `
+            <div class="monitor-name">${monitor.name}</div>
+            <div class="monitor-url">${monitor.url}</div>
+            <div class="status-indicator ${monitor.statusClass}">
+              ${monitor.status}
+            </div>
+
+            <div class="uptime-bar">
+              <div class="uptime-fill" style="width: ${uptimePercentage}%"></div>
+            </div>
+
+            <div class="monitor-stats">
+              <div class="stats-row">
+                <div><strong>Uptime:</strong> ${uptimePercentage.toFixed(3)}%</div>
+                <div><strong>Last down:</strong> ${monitor.lastDowntime}</div>
+              </div>
+
+              <div class="stats-row">
+                <div><strong>Uptime duration:</strong> ${formatDuration(monitor.uptime.statistics.uptimeDuration)}</div>
+                <div><strong>Downtime duration:</strong> ${formatDuration(monitor.uptime.statistics.downtimeDuration)}</div>
+              </div>
+            </div>
+
+            <div class="measurement-period">
+              <div class="measurement-title">Measurement Period</div>
+              <div class="measurement-details">
+                <div><strong>Start:</strong> ${formatDate(monitor.uptime.measurementPeriod.startDate)}</div>
+                <div><strong>End:</strong> ${formatDate(monitor.uptime.measurementPeriod.endDate)}</div>
+                <div><strong>Total Duration:</strong> ${formatDuration(monitor.uptime.measurementPeriod.totalDuration)}</div>
+                <div><strong>Monitored:</strong> ${formatDuration(monitor.uptime.measurementPeriod.monitoredDuration)}</div>
+                <div><strong>Paused:</strong> ${formatDuration(monitor.uptime.measurementPeriod.pausedDuration)}</div>
+              </div>
+            </div>
+          `;
+
+          monitorsContainer.appendChild(monitorCard);
+        });
+
+        // Update last updated time
+        lastUpdatedElement.textContent = data.lastUpdated;
+
+        // Hide loading element
+        loadingElement.style.display = "none";
+      }
+
+      // Start countdown timer for next refresh
+      function startCountdownTimer() {
+        // Clear any existing timer
+        if (refreshTimer) {
+          clearTimeout(refreshTimer);
+        }
+
+        // Reset seconds left
+        secondsLeft = refreshInterval;
+
+        // Update countdown display
+        function updateCountdown() {
+          countdownElement.textContent = `(Updating in ${secondsLeft}s)`;
+          secondsLeft--;
+
+          if (secondsLeft >= 0) {
+            countDownInterval = setTimeout(updateCountdown, 1000);
+          } else {
+            fetchMonitorData();
+          }
+        }
+
+        // Start countdown
+        updateCountdown();
+
+        // Set timer for next refresh
+        refreshTimer = setTimeout(
+          () => {
+            fetchMonitorData();
+          },
+          refreshInterval * 1000 + 500,
+        );
+      }
+
+      // Event listeners
+      refreshButton.addEventListener("click", () => {
+        if (refreshTimer) {
+          clearTimeout(refreshTimer);
+        }
+        if (countDownInterval) {
+          clearTimeout(countDownInterval);
+        }
+
+        // Fetch new data
+        fetchMonitorData();
+      });
+
+      returnButton.addEventListener("click", () => {
+        window.location.href = "/";
+      });
+
+      // Initial data load when page loads
+      document.addEventListener("DOMContentLoaded", fetchMonitorData);
     </script>
   </body>
 </html>

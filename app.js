@@ -19,6 +19,7 @@ const i18n = require("i18n");
 const auth = require("./middleware/auth");
 const fs = require("fs");
 const cors = require("cors");
+const Slide = require("./models/Slide");
 
 const app = express();
 
@@ -40,8 +41,6 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 const supportedLanguages = languageConfig.supported;
-
-supportedLanguages.push("en");
 
 const ipCache = {};
 const CACHE_EXPIRATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
@@ -242,7 +241,7 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; img-src 'self' https://res.cloudinary.com https://*; script-src 'self' 'nonce-${res.locals.nonce}'; style-src 'self' 'nonce-${res.locals.nonce}'; report-to /contact/csp-security-violation; connect-src https://*.google.com`,
+    `default-src 'self'; img-src 'self' https://res.cloudinary.com https://*; script-src 'self' 'nonce-${res.locals.nonce}'; style-src 'self' 'nonce-${res.locals.nonce}'; report-uri /contact/csp-security-violation; connect-src 'self' https://*.google.com`,
   );
 
   res.removeHeader("X-Powered-By");
@@ -293,6 +292,33 @@ app.get("/", async (req, res) => {
 
 app.get("/sitemap", (req, res) => {
   res.render("more", { title: res.__("site-map"), activeTab: res.__("more") });
+});
+
+app.get("/slideshow", async (req, res) => {
+  const slides = await Slide.find({ active: true });
+
+  res.render("slideshow", {
+    h: false,
+    slides,
+    headInject: `
+      <style nonce="${res.locals.nonce}">
+        body: { overflow-y: hidden }
+        .flash-messages: { display: none, margin: 0 }
+        .slideshow-container { position: relative; max-width: 800px; margin: 2rem auto; }
+        .slide { min-height: 350px; padding: 2rem; border-radius: 1rem; box-shadow: 0 2px 8px #0002; }
+        .slide-content { text-align: center; }
+        .slide-html { margin: 1rem 0; }
+        .slide-qr img { width: 120px; height: 120px; margin: 1rem auto; display: block; }
+        .slide-link a { color: #007bff; text-decoration: underline; }
+        .slide-nav { position: absolute; top: 50%; transform: translateY(-50%); background: #fff8; border: none; font-size: 2rem; padding: 0.5rem 1rem; cursor: pointer; border-radius: 50%; }
+        .slide-nav.prev { left: 10px; }
+        .slide-nav.next { right: 10px; }
+        .slide-indicators { text-align: center; margin-top: 1rem; }
+        .indicator { display: inline-block; width: 12px; height: 12px; margin: 0 4px; background: #bbb; border-radius: 50%; cursor: pointer; }
+        .indicator.active { background: #333; }
+      </style>
+    `,
+  });
 });
 
 app.get("/url", (req, res, next) => {

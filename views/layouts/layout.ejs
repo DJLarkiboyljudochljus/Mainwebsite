@@ -10,6 +10,32 @@
       crossorigin="anonymous"
       nonce="<%= nonce %>"
     ></script>
+    <script nonce="<%= nonce %>">
+      function checkIfInIframe() {
+        // Method 1: Compare window.self with window.top
+        const isInIframeMethod1 = window.self !== window.top;
+        
+        // Method 2: Compare window.self with window.parent
+        const isInIframeMethod2 = window.self !== window.parent;
+        
+        // Method 3: Check window.frameElement (will be null if not in iframe)
+        // Note: This may throw security errors in cross-origin situations
+        let isInIframeMethod3 = false;
+        try {
+          isInIframeMethod3 = window.frameElement !== null;
+        } catch (e) {
+          // If we get a security error, we're likely in a cross-origin iframe
+          isInIframeMethod3 = true;
+        }
+        
+        return {
+          isInIframe: isInIframeMethod1 || isInIframeMethod2 || isInIframeMethod3,
+          method1: isInIframeMethod1,
+          method2: isInIframeMethod2,
+          method3: isInIframeMethod3
+        };
+      }
+    </script>
     <title><%= title === "" ? "" : title + " - " %><%= __("title") %></title>
     <link rel="stylesheet" href="/css/main.css" />
     <%- headInject %>
@@ -17,7 +43,6 @@
   <body>
     <% if (h) { %>
     <%- include("../partials/header") %>
-    <% } %>
 
     <select id="change-language" class="change-language">
       <% languages.forEach((lang) => { %>
@@ -26,6 +51,7 @@
       </option>
       <% }); %>
     </select>
+    <% } %>
 
     <!-- Flash Messages -->
     <div class="flash-messages">

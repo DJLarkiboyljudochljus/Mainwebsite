@@ -1,5 +1,5 @@
 {
-  "supported": ["sv", "de", "fr"],
+  "supported": ["en", "sv", "de", "fr"],
   "countryNameMapping": {
     "sv": "Svenska",
     "de": "Deutsch",
