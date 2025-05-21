@@ -34,5 +34,7 @@ module.exports = {
   userImageUpload: createUploader("user_images"),
   equipmentImageUpload: createUploader("equipment_images"),
   galleryImageUpload: createUploader("gallery_images"),
+  slideUpload: createUploader("slides"),
+  upload: cloudinary.uploader.upload,
   deleteFile,
 };

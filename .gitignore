@@ -9,3 +9,6 @@ translate.mjs
 translateFrom.json
 /locales/*.metadata.json
 dev.sh
+
+# In testing
+views/slideshow.ejs
