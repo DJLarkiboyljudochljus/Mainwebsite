@@ -165,6 +165,11 @@
         background-color: #0069d9;
       }
 
+      .refresh-button:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+      }
+
       .return-btn {
         background-color: #1affff;
         color: white;
@@ -276,13 +281,12 @@
 
     <script nonce="<%= nonce %>">
       // Variables for refresh timer
-      const refreshInterval = 30; // seconds
-      let secondsLeft = refreshInterval;
-      let refreshTimer = null;
+      const REFRESH_INTERVAL = 30; // seconds
+      let refreshTimeoutId = null;
+      let countdownIntervalId = null;
       let isRefreshing = false;
-      let countDownInterval = null;
 
-      // DOM elements
+      // DOM elements - with null checks
       const monitorsContainer = document.getElementById("monitors-container");
       const loadingElement = document.getElementById("loading");
       const errorElement = document.getElementById("error-message");
@@ -291,46 +295,54 @@
       const refreshButton = document.getElementById("refresh-button");
       const returnButton = document.getElementById("return-btn");
 
-      // Check if in iframe
-      function checkIfInIframe() {
-        // Method 1: Compare window.self with window.top
-        const isInIframeMethod1 = window.self !== window.top;
+      // Check if required DOM elements exist
+      if (
+        !monitorsContainer ||
+        !loadingElement ||
+        !errorElement ||
+        !lastUpdatedElement ||
+        !countdownElement ||
+        !refreshButton ||
+        !returnButton
+      ) {
+        console.error("Required DOM elements not found");
+      }
 
-        // Method 2: Compare window.self with window.parent
-        const isInIframeMethod2 = window.self !== window.parent;
-
-        // Method 3: Check window.frameElement (will be null if not in iframe)
-        // Note: This may throw security errors in cross-origin situations
-        let isInIframeMethod3 = false;
+      // Simplified iframe detection
+      function isInIframe() {
         try {
-          isInIframeMethod3 = window.frameElement !== null;
+          return window.self !== window.top;
         } catch (e) {
-          // If we get a security error, we're likely in a cross-origin iframe
-          isInIframeMethod3 = true;
+          // Security error indicates we're in a cross-origin iframe
+          return true;
         }
-
-        return {
-          isInIframe:
-            isInIframeMethod1 || isInIframeMethod2 || isInIframeMethod3,
-          method1: isInIframeMethod1,
-          method2: isInIframeMethod2,
-          method3: isInIframeMethod3,
-        };
       }
 
       // Hide return button if in iframe
-      if (checkIfInIframe().isInIframe) {
-        returnButton.setAttribute("hidden", "true");
+      if (isInIframe() && returnButton) {
+        returnButton.style.display = "none";
       }
 
-      // Format dates
+      // Format dates with error handling
       function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleString();
+        try {
+          const date = new Date(dateString);
+          if (isNaN(date.getTime())) {
+            return "Invalid date";
+          }
+          return date.toLocaleString();
+        } catch (error) {
+          console.error("Error formatting date:", error);
+          return "Invalid date";
+        }
       }
 
-      // Format duration
+      // Format duration with validation
       function formatDuration(duration) {
+        if (!duration || typeof duration !== "object") {
+          return "0s";
+        }
+
         let result = "";
         if (duration.days > 0) result += `${duration.days}d `;
         if (duration.hours > 0) result += `${duration.hours}h `;
@@ -339,144 +351,227 @@
         return result.trim() || "0s";
       }
 
+      // Clear all timers
+      function clearAllTimers() {
+        if (refreshTimeoutId) {
+          clearTimeout(refreshTimeoutId);
+          refreshTimeoutId = null;
+        }
+        if (countdownIntervalId) {
+          clearInterval(countdownIntervalId);
+          countdownIntervalId = null;
+        }
+      }
+
       // Fetch monitor data from API
       async function fetchMonitorData() {
         if (isRefreshing) return;
 
         isRefreshing = true;
-        loadingElement.style.display = "block";
-        errorElement.style.display = "none";
+
+        // Clear existing timers
+        clearAllTimers();
+
+        // Update UI
+        if (loadingElement) loadingElement.style.display = "block";
+        if (errorElement) errorElement.style.display = "none";
+        if (refreshButton) refreshButton.disabled = true;
+        if (countdownElement) countdownElement.textContent = "";
 
         try {
           const response = await fetch("/status/api/monitors");
 
           if (!response.ok) {
-            throw new Error("Failed to fetch monitor data");
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
           const data = await response.json();
+
+          // Validate response structure
+          if (!data || !Array.isArray(data.monitors)) {
+            throw new Error("Invalid response format");
+          }
+
           displayMonitorData(data);
           startCountdownTimer();
-          isRefreshing = false;
         } catch (error) {
           console.error("Error fetching monitor data:", error);
-          loadingElement.style.display = "none";
-          errorElement.style.display = "block";
+          if (loadingElement) loadingElement.style.display = "none";
+          if (errorElement) {
+            errorElement.style.display = "block";
+            errorElement.textContent = `Unable to load monitor data: ${error.message}`;
+          }
+          // Still start countdown timer to retry
+          startCountdownTimer();
+        } finally {
           isRefreshing = false;
+          if (refreshButton) refreshButton.disabled = false;
         }
       }
 
-      // Display monitor data
+      // Display monitor data with validation
       function displayMonitorData(data) {
+        if (!monitorsContainer) return;
+
         // Clear existing monitors
         monitorsContainer.innerHTML = "";
 
+        // Validate monitors array
+        if (!data.monitors || !Array.isArray(data.monitors)) {
+          console.error("Invalid monitors data");
+          return;
+        }
+
         // Create and append monitor cards
-        data.monitors.forEach((monitor) => {
-          const monitorCard = document.createElement("div");
-          monitorCard.className = "monitor-card";
+        data.monitors.forEach((monitor, index) => {
+          try {
+            const monitorCard = document.createElement("div");
+            monitorCard.className = "monitor-card";
 
-          // Calculate the uptime percentage fill width
-          const uptimePercentage = parseFloat(monitor.uptime.uptimePercentage);
+            // Validate monitor data
+            const name = monitor.name || `Monitor ${index + 1}`;
+            const url = monitor.url || "Unknown URL";
+            const status = monitor.status || "Unknown";
+            const statusClass = monitor.statusClass || "status-unknown";
+            const lastDowntime = monitor.lastDowntime || "Never";
 
-          // Create HTML structure for the monitor card
-          monitorCard.innerHTML = `
-            <div class="monitor-name">${monitor.name}</div>
-            <div class="monitor-url">${monitor.url}</div>
-            <div class="status-indicator ${monitor.statusClass}">
-              ${monitor.status}
-            </div>
+            // Safely get uptime percentage
+            const uptimePercentage = monitor.uptime?.uptimePercentage
+              ? parseFloat(monitor.uptime.uptimePercentage)
+              : 0;
 
-            <div class="uptime-bar">
-              <div class="uptime-fill"></div>
-            </div>
-
-            <div class="monitor-stats">
-              <div class="stats-row">
-                <div><strong>Uptime:</strong> ${uptimePercentage.toFixed(3)}%</div>
-                <div><strong>Last down:</strong> ${monitor.lastDowntime}</div>
+            // Create HTML structure for the monitor card
+            monitorCard.innerHTML = `
+              <div class="monitor-name">${escapeHtml(name)}</div>
+              <div class="monitor-url">${escapeHtml(url)}</div>
+              <div class="status-indicator ${statusClass}">
+                ${escapeHtml(status)}
               </div>
 
-              <div class="stats-row">
-                <div><strong>Uptime duration:</strong> ${formatDuration(monitor.uptime.statistics.uptimeDuration)}</div>
-                <div><strong>Downtime duration:</strong> ${formatDuration(monitor.uptime.statistics.downtimeDuration)}</div>
+              <div class="uptime-bar">
+                <div class="uptime-fill"></div>
               </div>
-            </div>
 
-            <div class="measurement-period">
-              <div class="measurement-title">Measurement Period</div>
-              <div class="measurement-details">
-                <div><strong>Start:</strong> ${formatDate(monitor.uptime.measurementPeriod.startDate)}</div>
-                <div><strong>End:</strong> ${formatDate(monitor.uptime.measurementPeriod.endDate)}</div>
-                <div><strong>Total Duration:</strong> ${formatDuration(monitor.uptime.measurementPeriod.totalDuration)}</div>
-                <div><strong>Monitored:</strong> ${formatDuration(monitor.uptime.measurementPeriod.monitoredDuration)}</div>
-                <div><strong>Paused:</strong> ${formatDuration(monitor.uptime.measurementPeriod.pausedDuration)}</div>
+              <div class="monitor-stats">
+                <div class="stats-row">
+                  <div><strong>Uptime:</strong> ${uptimePercentage.toFixed(3)}%</div>
+                  <div><strong>Last down:</strong> ${escapeHtml(lastDowntime)}</div>
+                </div>
+
+                <div class="stats-row">
+                  <div><strong>Uptime duration:</strong> ${formatDuration(monitor.uptime?.statistics?.uptimeDuration)}</div>
+                  <div><strong>Downtime duration:</strong> ${formatDuration(monitor.uptime?.statistics?.downtimeDuration)}</div>
+                </div>
               </div>
-            </div>
-          `;
 
-          monitorCard.querySelector(".uptime-fill").style.width =
-            `${uptimePercentage}%`;
+              ${
+                monitor.uptime?.measurementPeriod
+                  ? `
+                <div class="measurement-period">
+                  <div class="measurement-title">Measurement Period</div>
+                  <div class="measurement-details">
+                    <div><strong>Start:</strong> ${formatDate(monitor.uptime.measurementPeriod.startDate)}</div>
+                    <div><strong>End:</strong> ${formatDate(monitor.uptime.measurementPeriod.endDate)}</div>
+                    <div><strong>Total Duration:</strong> ${formatDuration(monitor.uptime.measurementPeriod.totalDuration)}</div>
+                    <div><strong>Monitored:</strong> ${formatDuration(monitor.uptime.measurementPeriod.monitoredDuration)}</div>
+                    <div><strong>Paused:</strong> ${formatDuration(monitor.uptime.measurementPeriod.pausedDuration)}</div>
+                  </div>
+                </div>
+              `
+                  : ""
+              }
+            `;
 
-          monitorsContainer.appendChild(monitorCard);
+            // Set uptime bar width
+            const uptimeFill = monitorCard.querySelector(".uptime-fill");
+            if (uptimeFill) {
+              uptimeFill.style.width = `${Math.max(0, Math.min(100, uptimePercentage))}%`;
+            }
+
+            monitorsContainer.appendChild(monitorCard);
+          } catch (error) {
+            console.error(
+              `Error creating monitor card for monitor ${index}:`,
+              error,
+            );
+          }
         });
 
         // Update last updated time
-        lastUpdatedElement.textContent = data.lastUpdated;
+        if (lastUpdatedElement) {
+          lastUpdatedElement.textContent =
+            data.lastUpdated || new Date().toLocaleString();
+        }
 
         // Hide loading element
-        loadingElement.style.display = "none";
+        if (loadingElement) {
+          loadingElement.style.display = "none";
+        }
+      }
+
+      // Simple HTML escaping
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
       }
 
       // Start countdown timer for next refresh
       function startCountdownTimer() {
-        // Clear any existing timer
-        if (refreshTimer) {
-          clearTimeout(refreshTimer);
-        }
+        // Clear any existing timers
+        clearAllTimers();
 
-        // Reset seconds left
-        secondsLeft = refreshInterval;
+        let secondsLeft = REFRESH_INTERVAL;
 
         // Update countdown display
         function updateCountdown() {
-          countdownElement.textContent = `(Updating in ${secondsLeft}s)`;
-          secondsLeft--;
-
-          if (secondsLeft >= 0) {
-            countDownInterval = setTimeout(updateCountdown, 1000);
-          } else {
-            fetchMonitorData();
+          if (countdownElement) {
+            if (secondsLeft > 0) {
+              countdownElement.textContent = `(Updating in ${secondsLeft}s)`;
+            } else {
+              countdownElement.textContent = "(Updating...)";
+            }
           }
+
+          secondsLeft--;
         }
 
-        // Start countdown
+        // Start countdown immediately
         updateCountdown();
 
-        // Set timer for next refresh
-        refreshTimer = setTimeout(
-          () => {
-            fetchMonitorData();
-          },
-          refreshInterval * 1000 + 500,
-        );
+        // Set interval for countdown updates
+        countdownIntervalId = setInterval(() => {
+          updateCountdown();
+
+          // Stop countdown when it reaches -1
+          if (secondsLeft < -1) {
+            clearInterval(countdownIntervalId);
+            countdownIntervalId = null;
+          }
+        }, 1000);
+
+        // Set timeout for next refresh
+        refreshTimeoutId = setTimeout(() => {
+          fetchMonitorData();
+        }, REFRESH_INTERVAL * 1000);
       }
 
       // Event listeners
-      refreshButton.addEventListener("click", () => {
-        if (refreshTimer) {
-          clearTimeout(refreshTimer);
-        }
-        if (countDownInterval) {
-          clearTimeout(countDownInterval);
-        }
+      if (refreshButton) {
+        refreshButton.addEventListener("click", () => {
+          fetchMonitorData();
+        });
+      }
 
-        // Fetch new data
-        fetchMonitorData();
-      });
+      if (returnButton) {
+        returnButton.addEventListener("click", () => {
+          window.location.href = "/";
+        });
+      }
 
-      returnButton.addEventListener("click", () => {
-        window.location.href = "/";
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", () => {
+        clearAllTimers();
       });
 
       // Initial data load when page loads
