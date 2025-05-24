@@ -99,6 +99,8 @@ app.get("/apple-touch-icon-precompressed.png", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "img", "favicon.ico"));
 });
 
+app.get("/sw.js", (req, res) => res.sendFile(path.join(__dirname, "sw.js")));
+
 app.use((req, res, next) => {
   res.locals.previousUrl = req.cookies.previousUrl || ""; // Ensure it's always available in templates
 

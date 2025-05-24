@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline</title>
+    <link rel="icon" href="/img/favicon.ico" />
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: #f2f2f2;
+        color: #333;
+        text-align: center;
+        padding: 2rem;
+      }
+      .card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+      .emoji {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin: 0.5rem 0;
+      }
+      p {
+        font-size: 1rem;
+        color: #666;
+      }
+      a {
+        display: inline-block;
+        margin-top: 1rem;
+        color: #1affff;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="emoji">📡</div>
+      <h1>No Internet Connection</h1>
+      <p>
+        It looks like you're offline. Please check your network and try again.
+      </p>
+      <a id="reload">Try Reloading</a>
+    </div>
+
+    <script>
+      window.addEventListener("online", () => {
+        location.reload();
+      });
+
+      document.querySelector("#reload").addEventListener("click", (event) => {
+        event.preventDefault();
+        location.reload();
+      });
+    </script>
+  </body>
+</html>
