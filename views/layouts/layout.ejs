@@ -10,6 +10,9 @@
       crossorigin="anonymous"
       nonce="<%= nonce %>"
     ></script>
+
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1affff">
     <script nonce="<%= nonce %>">
       function checkIfInIframe() {
         // Method 1: Compare window.self with window.top
@@ -192,6 +195,10 @@
         newUrl.searchParams.set("lang", selectedLanguage);
         window.location.href = newUrl.toString();
       });
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").then(() => console.log("Service Worker registered"));
+      };
     </script>
   </body>
 </html>

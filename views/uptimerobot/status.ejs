@@ -388,7 +388,7 @@
             </div>
 
             <div class="uptime-bar">
-              <div class="uptime-fill" style="width: ${uptimePercentage}%"></div>
+              <div class="uptime-fill"></div>
             </div>
 
             <div class="monitor-stats">
@@ -414,6 +414,9 @@
               </div>
             </div>
           `;
+
+          monitorCard.querySelector(".uptime-fill").style.width =
+            `${uptimePercentage}%`;
 
           monitorsContainer.appendChild(monitorCard);
         });
