@@ -23,6 +23,121 @@
         color: #2c3e50;
       }
 
+      .controls-section {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-container {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+      }
+
+      .search-field {
+        flex: 1;
+        min-width: 250px;
+        padding: 10px 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.2s ease-in-out;
+      }
+
+      .search-field:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+
+      .search-field::placeholder {
+        color: #6c757d;
+      }
+
+      .clear-search {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      .clear-search:hover {
+        background-color: #5a6268;
+      }
+
+      .clear-search:disabled {
+        background-color: #dee2e6;
+        cursor: not-allowed;
+      }
+
+      .search-stats {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 10px;
+      }
+
+      .refresh-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .last-updated {
+        font-size: 0.9rem;
+        color: #6c757d;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      .refresh-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      .refresh-button:hover {
+        background-color: #0069d9;
+      }
+
+      .refresh-button:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+      }
+
+      .return-btn {
+        background-color: #1affff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      .return-btn:hover {
+        background-color: #16cece;
+      }
+
       .monitors {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -39,6 +154,10 @@
 
       .monitor-card:hover {
         transform: translateY(-5px);
+      }
+
+      .monitor-card.hidden {
+        display: none;
       }
 
       .monitor-name {
@@ -138,53 +257,6 @@
         font-size: 0.85rem;
       }
 
-      .refresh-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 2rem 0;
-      }
-
-      .last-updated {
-        font-size: 0.9rem;
-        color: #6c757d;
-      }
-
-      .refresh-button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background-color 0.2s ease-in-out;
-      }
-
-      .refresh-button:hover {
-        background-color: #0069d9;
-      }
-
-      .refresh-button:disabled {
-        background-color: #6c757d;
-        cursor: not-allowed;
-      }
-
-      .return-btn {
-        background-color: #1affff;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background-color 0.2s ease-in-out;
-      }
-
-      .return-btn:hover {
-        background-color: #16cece;
-      }
-
       .measurement-period {
         background-color: #f1f3f5;
         border-radius: 8px;
@@ -202,6 +274,23 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 40px;
+        color: #6c757d;
+        font-size: 1.1rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: none;
+      }
+
+      .no-results-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.3;
       }
 
       footer {
@@ -246,18 +335,63 @@
         margin: 20px 0;
         display: none;
       }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .search-container {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-field {
+          min-width: auto;
+        }
+
+        .refresh-section {
+          flex-direction: column;
+          align-items: stretch;
+          text-align: center;
+        }
+
+        .button-group {
+          justify-content: center;
+        }
+
+        .measurement-details {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
     <h1>Status Dashboard - Dj Larkiboy Events</h1>
 
-    <div class="refresh-section">
-      <div class="last-updated">
-        Last updated: <span id="last-updated-time">Loading...</span>
-        <span id="countdown-timer"></span>
+    <div class="controls-section">
+      <div class="search-container">
+        <input
+          type="text"
+          id="search-field"
+          class="search-field"
+          placeholder="Search monitors by name or URL..."
+          autocomplete="off"
+        />
+        <button class="clear-search" id="clear-search">Clear</button>
       </div>
-      <button class="refresh-button" id="refresh-button">Refresh Status</button>
-      <button class="return-btn" id="return-btn">Return Home</button>
+
+      <div class="search-stats" id="search-stats">Showing all monitors</div>
+
+      <div class="refresh-section">
+        <div class="last-updated">
+          Last updated: <span id="last-updated-time">Loading...</span>
+          <span id="countdown-timer"></span>
+        </div>
+        <div class="button-group">
+          <button class="refresh-button" id="refresh-button">
+            Refresh Status
+          </button>
+          <button class="return-btn" id="return-btn">Return Home</button>
+        </div>
+      </div>
     </div>
 
     <div id="error-message" class="error-message">
@@ -267,6 +401,14 @@
     <div id="loading" class="loading">
       <div class="loading-spinner"></div>
       Loading status information...
+    </div>
+
+    <div class="no-results" id="no-results">
+      <div class="no-results-icon">🔍</div>
+      <div>No monitors found matching your search</div>
+      <div style="margin-top: 10px; font-size: 0.9rem">
+        Try adjusting your search terms or clear the search to see all monitors
+      </div>
     </div>
 
     <div class="monitors" id="monitors-container">
@@ -285,6 +427,7 @@
       let refreshTimeoutId = null;
       let countdownIntervalId = null;
       let isRefreshing = false;
+      let allMonitors = []; // Store all monitor data for filtering
 
       // DOM elements - with null checks
       const monitorsContainer = document.getElementById("monitors-container");
@@ -294,6 +437,10 @@
       const countdownElement = document.getElementById("countdown-timer");
       const refreshButton = document.getElementById("refresh-button");
       const returnButton = document.getElementById("return-btn");
+      const searchField = document.getElementById("search-field");
+      const clearSearchButton = document.getElementById("clear-search");
+      const searchStats = document.getElementById("search-stats");
+      const noResults = document.getElementById("no-results");
 
       // Check if required DOM elements exist
       if (
@@ -303,7 +450,11 @@
         !lastUpdatedElement ||
         !countdownElement ||
         !refreshButton ||
-        !returnButton
+        !returnButton ||
+        !searchField ||
+        !clearSearchButton ||
+        !searchStats ||
+        !noResults
       ) {
         console.error("Required DOM elements not found");
       }
@@ -363,6 +514,65 @@
         }
       }
 
+      // Search functionality
+      function filterMonitors(searchTerm) {
+        const term = searchTerm.toLowerCase().trim();
+        const monitorCards = document.querySelectorAll(".monitor-card");
+        let visibleCount = 0;
+
+        monitorCards.forEach((card, index) => {
+          const monitor = allMonitors[index];
+          if (!monitor) return;
+
+          const name = (monitor.name || "").toLowerCase();
+          const url = (monitor.url || "").toLowerCase();
+          const status = (monitor.status || "").toLowerCase();
+
+          const isMatch =
+            term === "" ||
+            name.includes(term) ||
+            url.includes(term) ||
+            status.includes(term);
+
+          if (isMatch) {
+            card.classList.remove("hidden");
+            visibleCount++;
+          } else {
+            card.classList.add("hidden");
+          }
+        });
+
+        // Update search stats
+        updateSearchStats(term, visibleCount, allMonitors.length);
+
+        // Show/hide no results message
+        if (visibleCount === 0 && term !== "") {
+          noResults.style.display = "block";
+          monitorsContainer.style.display = "none";
+        } else {
+          noResults.style.display = "none";
+          monitorsContainer.style.display = "grid";
+        }
+      }
+
+      function updateSearchStats(searchTerm, visibleCount, totalCount) {
+        if (!searchStats) return;
+
+        if (searchTerm === "") {
+          searchStats.textContent = `Showing all ${totalCount} monitors`;
+        } else {
+          searchStats.textContent = `Showing ${visibleCount} of ${totalCount} monitors for "${searchTerm}"`;
+        }
+      }
+
+      function clearSearch() {
+        if (searchField) {
+          searchField.value = "";
+          filterMonitors("");
+          searchField.focus();
+        }
+      }
+
       // Fetch monitor data from API
       async function fetchMonitorData() {
         if (isRefreshing) return;
@@ -379,7 +589,16 @@
         if (countdownElement) countdownElement.textContent = "";
 
         try {
-          const response = await fetch("/status/api/monitors");
+          const monitorsToFetch = new URLSearchParams(location.search).get(
+            "monitors",
+          );
+
+          let url = "/status/api/monitors";
+          if (monitorsToFetch && monitorsToFetch.trim() !== "") {
+            url += `?monitors=${encodeURIComponent(monitorsToFetch)}`;
+          }
+
+          const response = await fetch(url);
 
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -412,6 +631,9 @@
       // Display monitor data with validation
       function displayMonitorData(data) {
         if (!monitorsContainer) return;
+
+        // Store all monitors for filtering
+        allMonitors = data.monitors || [];
 
         // Clear existing monitors
         monitorsContainer.innerHTML = "";
@@ -497,6 +719,13 @@
           }
         });
 
+        // Apply current search filter
+        if (searchField && searchField.value) {
+          filterMonitors(searchField.value);
+        } else {
+          updateSearchStats("", allMonitors.length, allMonitors.length);
+        }
+
         // Update last updated time
         if (lastUpdatedElement) {
           lastUpdatedElement.textContent =
@@ -567,6 +796,23 @@
         returnButton.addEventListener("click", () => {
           window.location.href = "/";
         });
+      }
+
+      // Search field event listeners
+      if (searchField) {
+        searchField.addEventListener("input", (e) => {
+          filterMonitors(e.target.value);
+        });
+
+        searchField.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            clearSearch();
+          }
+        });
+      }
+
+      if (clearSearchButton) {
+        clearSearchButton.addEventListener("click", clearSearch);
       }
 
       // Cleanup on page unload
