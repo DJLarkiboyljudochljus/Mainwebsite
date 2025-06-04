@@ -20,6 +20,7 @@ const auth = require("./middleware/auth");
 const fs = require("fs");
 const cors = require("cors");
 const Slide = require("./models/Slide");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 
@@ -526,6 +527,14 @@ app.use("/user", require(path.join(__dirname, "routes", "user.js")));
 app.use("/equipment", require(path.join(__dirname, "routes", "equip.js")));
 app.use("/worker", require(path.join(__dirname, "routes", "worker.js")));
 app.use("/status", require(path.join(__dirname, "routes", "uptimerobot.js")));
+app.use(
+  "/loggerServer",
+  createProxyMiddleware({
+    target: "http://localhost:9001",
+    changeOrigin: true,
+    pathRewrite: { "^/loggerServer": "" },
+  }),
+);
 
 // Error handling for 404
 app.use((req, res, next) => {

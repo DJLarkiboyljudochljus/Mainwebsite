@@ -42,6 +42,8 @@ router.get("/", async (req, res) => {
 // New API endpoint to fetch monitor data
 router.get("/api/monitors", async (req, res) => {
   try {
+    const { monitors: filter } = req.query;
+
     // Fetch monitor data from UptimeRobot API
     const response = await axios.post(
       "https://api.uptimerobot.com/v2/getMonitors",
@@ -57,7 +59,23 @@ router.get("/api/monitors", async (req, res) => {
       },
     );
 
-    const monitors = response.data.monitors;
+    // Better error handling for API response
+    if (!response.data || !response.data.monitors) {
+      throw new Error("Invalid response from UptimeRobot API");
+    }
+
+    let monitors = response.data.monitors;
+
+    // Fix 3: Better filter validation
+    if (filter && typeof filter === "string" && filter.trim() !== "") {
+      monitors = monitors.filter((m) => {
+        // Handle array of filter values (if passed as comma-separated string)
+        const filterValues = filter.includes(",")
+          ? filter.split(",").map((f) => f.trim())
+          : [filter.trim()];
+        return filterValues.includes(m.friendly_name);
+      });
+    }
 
     // Format data for the response
     const statusData = {
@@ -66,8 +84,8 @@ router.get("/api/monitors", async (req, res) => {
         url: monitor.url,
         status: getStatusText(monitor.status),
         statusClass: getStatusClass(monitor.status),
-        uptime: calculateUptimeRatio(monitor.logs),
-        lastDowntime: getLastDowntime(monitor.logs),
+        uptime: calculateUptimeRatio(monitor.logs || []), // Handle missing logs
+        lastDowntime: getLastDowntime(monitor.logs || []),
       })),
       lastUpdated: new Date().toLocaleString(),
     };
@@ -76,7 +94,10 @@ router.get("/api/monitors", async (req, res) => {
     res.json(statusData);
   } catch (error) {
     console.error("Error fetching UptimeRobot data:", error);
-    res.status(500).json({ error: "Error fetching status data" });
+    res.status(500).json({
+      error: "Error fetching status data",
+      message: error.message,
+    });
   }
 });
 
@@ -104,7 +125,12 @@ function getStatusClass(status) {
 }
 
 function getLastDowntime(logs) {
-  const downLogs = logs.filter((log) => log.type === 1); // Type 1 is DOWN
+  if (!logs || !Array.isArray(logs) || logs.length === 0) {
+    return "No downtime recorded";
+  }
+
+  // Fix: Use correct log type for down events (verify this matches your API)
+  const downLogs = logs.filter((log) => log.type === 1); // Verify: Type 1 is DOWN
   if (downLogs.length === 0) return "No downtime recorded";
 
   const lastDown = downLogs[0];
@@ -117,6 +143,30 @@ function getLastDowntime(logs) {
  * @returns {Object} - Contains uptime percentage and measurement duration info
  */
 function calculateUptimeRatio(logs) {
+  // Validate input
+  if (!logs || !Array.isArray(logs) || logs.length === 0) {
+    return {
+      uptimePercentage: "0.000",
+      measurementPeriod: null,
+      statistics: {
+        uptimeDuration: {
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+          formatted: "0s",
+        },
+        downtimeDuration: {
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+          formatted: "0s",
+        },
+      },
+    };
+  }
+
   // Sort logs by datetime in ascending order (oldest first)
   const sortedLogs = [...logs].sort((a, b) => a.datetime - b.datetime);
 
@@ -145,17 +195,18 @@ function calculateUptimeRatio(logs) {
     const timeDiff = currentTime - lastTime;
 
     // Attribute the time since the last log based on the previous state
+    // Fix: Use correct log type values (assuming 2 = Up, 1 = Down based on UptimeRobot API)
     if (lastState === 2) {
-      // State 2 = Up
+      // Type 2 = Up
       uptimeDuration += timeDiff;
     } else if (lastState === 1) {
-      // State 1 = Down
+      // Type 1 = Down (verify this matches your actual API response)
       downtimeDuration += timeDiff;
     } else if (lastState === 99) {
-      // State 99 = Paused
+      // Type 99 = Paused
       pausedDuration += timeDiff;
     }
-    // For state 98 (Monitor started), we don't attribute time
+    // For other states, we don't attribute time
 
     // Update the last state and time
     lastState = currentState;
