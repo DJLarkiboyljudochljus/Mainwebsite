@@ -7,7 +7,7 @@ genSec.js
 logs
 translate.mjs
 translateFrom.json
-locales/*.metadata.json
+server/locales/*.metadata.json
 dev.sh
 
 # In testing
