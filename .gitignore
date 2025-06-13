@@ -1,13 +1,13 @@
-/node_modules
+node_modules
 .vscode
 logs.txt
 .env
 genSec.js
 .prettierrc
-/logs
+logs
 translate.mjs
 translateFrom.json
-/locales/*.metadata.json
+locales/*.metadata.json
 dev.sh
 
 # In testing
