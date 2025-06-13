@@ -30,7 +30,7 @@
     "i18n": "^0.15.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
-    "multer": "^2.0.0",
+    "multer": "^2.0.1",
     "multer-storage-cloudinary": "^4.0.0",
     "node": "^18.20.7",
     "nodeloggerg": "^4.2.0",
