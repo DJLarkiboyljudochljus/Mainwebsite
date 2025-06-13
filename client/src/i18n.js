@@ -8,7 +8,7 @@ i18n
   .init({
     fallbackLng: "en",
     lng: "en",
-    supportedLngs: ["en", "sv", "fr", "de"],
+    supportedLngs: ["en", "sv", "fr", "de", "zh", "es"],
     backend: {
       loadPath: "/api/i18n/{{lng}}",
     },
