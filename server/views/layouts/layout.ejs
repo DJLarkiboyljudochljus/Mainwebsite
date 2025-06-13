@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="<%= lang.code %>" dir="<%= lang.dir %>">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-adsense-account" content="ca-pub-5671784078924834" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5671784078924834"
+      crossorigin="anonymous"
+      nonce="<%= nonce %>"
+    ></script>
+
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1affff">
+    <script nonce="<%= nonce %>">
+      function checkIfInIframe() {
+        // Method 1: Compare window.self with window.top
+        const isInIframeMethod1 = window.self !== window.top;
+        
+        // Method 2: Compare window.self with window.parent
+        const isInIframeMethod2 = window.self !== window.parent;
+        
+        // Method 3: Check window.frameElement (will be null if not in iframe)
+        // Note: This may throw security errors in cross-origin situations
+        let isInIframeMethod3 = false;
+        try {
+          isInIframeMethod3 = window.frameElement !== null;
+        } catch (e) {
+          // If we get a security error, we're likely in a cross-origin iframe
+          isInIframeMethod3 = true;
+        }
+        
+        return {
+          isInIframe: isInIframeMethod1 || isInIframeMethod2 || isInIframeMethod3,
+          method1: isInIframeMethod1,
+          method2: isInIframeMethod2,
+          method3: isInIframeMethod3
+        };
+      }
+    </script>
+    <title><%= title === "" ? "" : title + " - " %><%= __("title") %></title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <%- headInject %>
+  </head>
+  <body>
+    <% if (h) { %>
+    <%- include("../partials/header") %>
+
+    <select id="change-language" class="change-language">
+      <% languages.forEach((lang) => { %>
+      <option value="<%= lang.code %>" <%= lang.code === currentLanguage ? "selected" : "" %>>
+        <%= lang.name %>
+      </option>
+      <% }); %>
+    </select>
+    <% } %>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+      <% ['success', 'error', 'info', 'successWC', 'errorWC', 'infoWC',
+      "warning", "warningWC"].forEach(type => { %>
+      <% if
+      (messages[type]) { %>
+      <% messages[type].forEach(msg => { %>
+      <div class="alert alert-<%= type %>">
+        <%= msg %>
+        <button>x</button>
+      </div>
+      <% }); %>
+      <% } %>
+      <% }); %>
+    </div>
+
+    <main class="<%= titleEn.toLowerCase() %>"><%- body %></main>
+
+    <div class="spacer"></div>
+
+    <div class="login-modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2><%= __("login") %></h2> <p><%= loginError %></p>
+        <form action="/auth/login/password" method="get" id="login-form">
+          <div class="form-part">
+            <label for="email"><%= __("email") %>:</label>
+            <input type="email" id="email" required />
+          </div>
+          <button type="submit"><%= __("next") %></button>
+        </form>
+      </div>
+    </div>
+    <div class="modal-overlay"></div>
+
+    <% if (h) { %>
+    <%- include("../partials/footer") %>
+    <% } %>
+
+    <script nonce="<%= nonce %>">
+      function removeParent() {
+        this.parentElement.remove();
+      }
+
+      const alertButtons = document.querySelectorAll(".alert button");
+      alertButtons.forEach((button) => {
+        button.addEventListener("click", removeParent);
+      });
+
+      const spacer = document.querySelector(".spacer");
+      switch ("<%= page %>") {
+        case "admin dashboard":
+          spacer.style.height = "600px";
+          break;
+        case "worker dashboard":
+          spacer.style.height = "600px";
+          break;
+        default:
+          spacer.style.height = "0";
+          break;
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          const alert = document.querySelectorAll(".alert")[0];
+          if (alert) {
+            alert.remove();
+          }
+        }
+      });
+
+      const showLoginModalCarry = "<%= showLoginModal %>" === "true";
+      const loginModalCookie = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("rejectedLoginModal="));
+      const showLoginModal = () => {
+        const loginModal = document.querySelector(".login-modal");
+        if (loginModal) {
+          loginModal.style.display = "block";
+          document.body.classList.add("modal-open");
+          const modalOverlay = document.querySelector(".modal-overlay");
+          modalOverlay.style.display = "block";
+          modalOverlay.addEventListener("click", () => {
+            loginModal.style.display = "none";
+            modalOverlay.style.display = "none";
+            document.body.classList.remove("modal-open");
+          });
+          const closeButton = loginModal.querySelector(".close");
+          closeButton.addEventListener("click", () => {
+            loginModal.style.display = "none";
+            modalOverlay.style.display = "none";
+            document.body.classList.remove("modal-open");
+            document.cookie += ";rejectedLoginModal=true; path=/";
+          });
+        }
+      };
+
+      window.addEventListener("DOMContentLoaded", () => {
+        if ((showLoginModalCarry || new URLSearchParams(location.search).get("showLoginModal")) && !loginModalCookie) {
+          showLoginModal();
+        }
+      });
+
+      document.querySelector(".login-modal .modal-content #login-form").addEventListener("submit", (e) => {
+        e.preventDefault(); // Prevent the default form submission
+
+        const emailInput = document.getElementById("email");
+        const email = emailInput.value.trim();
+
+        try {
+          // Store the email in session storage
+          sessionStorage.setItem("email", email);
+          
+          // Verify the storage was successful
+          const storedEmail = sessionStorage.getItem("email");
+          
+          if (storedEmail === email) {
+            // Only redirect after confirming storage was successful
+            window.location.href = `/auth/login/password?n=${encodeURIComponent(location.href)}`;
+          } else {
+            // Handle storage failure
+            console.error("Failed to store email in session storage");
+            alert("There was a problem with your login. Please try again.");
+          }
+        } catch (error) {
+          // Handle any exceptions that might occur
+          console.error("Error storing email:", error);
+          alert("There was a problem with your login. Please try again.");
+        }
+      });
+
+      const changeLanguageSelect = document.getElementById("change-language");
+      changeLanguageSelect.addEventListener("change", (event) => {
+        const selectedLanguage = event.target.value;
+        const currentUrl = window.location.href;
+        const newUrl = new URL(currentUrl);
+        newUrl.searchParams.set("lang", selectedLanguage);
+        window.location.href = newUrl.toString();
+      });
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").then(() => console.log("Service Worker registered"));
+      };
+    </script>
+  </body>
+</html>
