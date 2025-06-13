@@ -32,6 +32,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.head("/", (req, res) => res.status(200).json({ status: "Healty" }));
+
 app.use(cors());
 
 let languageConfig = {
